@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (C) 2010-2014 Modeling Virtual Environments and Simulation
+  (MOVES) Institute at the Naval Postgraduate School (NPS)
+  http://www.MovesInstitute.org and http://www.nps.edu
+ 
+  This file is part of Mmowgli.
+  
+  Mmowgli is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  any later version.
+
+  Mmowgli is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with Mmowgli in the form of a file named COPYING.  If not,
+  see <http://www.gnu.org/licenses/>
+-->
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
+  <display-name>Mmowgli2 V7 Test</display-name>
+  <context-param>
+    <description>Vaadin production mode</description>
+    <!-- in debug mode, you get: debug window, display of dbg info in dbg win and server console, on-the-fly sass compilation -->
+    <param-name>productionMode</param-name>
+    <param-value>false</param-value>
+  </context-param>
+  <context-param>
+    <description>Normally the value is game, test or cluster, but can be localhost for dev</description>
+    <param-name>deployment</param-name>
+    <param-value>localhost</param-value>
+  </context-param>
+  <context-param>
+    <description>The db within the mysql server for the pii classes</description>
+    <param-name>piiDbName</param-name>
+    <param-value>mmowgli_dev</param-value>
+  </context-param>
+  <context-param>
+    <description>The db within the mysql server</description>
+    <param-name>dbName</param-name>
+    <param-value>mmowgli_dev</param-value>
+  </context-param>
+  <context-param>
+    <description>IP location of mmowgli mysql server</description>
+    <param-name>dbUrl</param-name>
+    <param-value>jdbc:mysql://localhost:3306/</param-value>
+  </context-param>
+  <context-param>
+    <description>User account for access by the app code to the mysql server</description>
+    <param-name>dbUser</param-name>
+    <param-value>mmowgli</param-value>
+  </context-param>
+  <context-param>
+    <description>Password for application user account on mysql server</description>
+    <param-name>dbPassword</param-name>
+    <param-value>gwtservelet</param-value>
+  </context-param>
+  <context-param>
+    <description>This is dangerous to do!! Only flip to true to create the db tables at the beginning of life! </description>
+    <param-name>dbDropAndCreate</param-name>
+    <param-value>false</param-value>
+  </context-param>
+  <context-param>
+    <description>production 200, archive 20</description>
+    <param-name>c3p0MaxSize</param-name>
+    <param-value>200</param-value>
+  </context-param>
+  <context-param>
+    <description>production 20, archive 5</description>
+    <param-name>c3p0MinSize</param-name>
+    <param-value>20</param-value>
+  </context-param>
+  <context-param>
+    <description>production 10, archive 5</description>
+    <param-name>c3p0AcquireIncrement</param-name>
+    <param-value>10</param-value>
+  </context-param>
+  <context-param>
+    <description>in seconds</description>
+    <param-name>c3p0Timeout</param-name>
+    <param-value>3600</param-value>
+  </context-param>
+  <context-param>
+    <description>in seconds</description>
+    <param-name>c3p0IdleTestPeriod</param-name>
+    <param-value>1800</param-value>
+  </context-param>
+  <context-param>
+    <description>Where on the local machine the hibernate-lucene indices are put</description>
+    <param-name>hibernateSearchIndexPath</param-name>
+    <param-value>/tmp/mmowgliLucene/localhost</param-value>
+  </context-param>
+  <context-param>
+    <description>class which selects cluster manager node</description>
+    <param-name>clusterMasterArbiter</param-name>
+    <param-value>SingleDeployment</param-value> <!-- alternatives: SingleDeployment,SharedFileLockGetter, WebXmlParameterReader -->
+  </context-param>
+  <!--   
+  <context-param>
+     <description>Parameter for SharedFileLockGetter</description>
+    <param-name>clusterMasterLockPath</param-name>
+    <param-value>/tmp/mmowgli/{{DEPLOY}}/</param-value>
+  </context-param> -->
+  <context-param>
+    <description>Parameter for WebXmlParameterReader</description>
+    <param-name>clusterMaster</param-name>
+    <param-value>GrannySmith.local</param-value>
+  </context-param>
+
+  <context-param>
+    <description>Where mmowgli sends emails to be delivered</description>
+    <param-name>smtpHost</param-name>
+    <param-value>mule.nps.edu</param-value>
+  </context-param>
+  <context-param>
+    <description>JMS URL</description>
+    <param-name>jmsUrl</param-name>
+    <param-value>tcp://web4:61616?wireFormat.maxInactivityDuration=0</param-value>
+  </context-param>
+  <context-param>
+    <description>JMS Topic</description>
+    <param-name>jmsTopic</param-name>
+    <param-value>mmowgli</param-value>
+  </context-param>
+  <context-param>
+    <description>Time between keep-alive polls in millisecs</description>
+    <param-name>jmsKeepAliveIntervalMS</param-name>
+    <param-value>300000</param-value>
+  </context-param>
+  <context-param>
+    <description>Token specifying insertion of deployment string</description>
+    <param-name>deploymentToken</param-name>
+    <param-value>{{DEPLOY}}</param-value>
+  </context-param>
+  <context-param>
+    <description>Token specifying insertion of base game url</description>
+    <param-name>gameUrlToken</param-name>
+    <param-value>{{GAMEURL}}</param-value>
+  </context-param>
+  <context-param>
+    <description>Where the game images reside, normally same place game css files point to</description>
+    <param-name>gameImagesUrl</param-name>
+    <param-value>https://web.mmowgli.nps.edu/mmowMedia/images/</param-value>
+  </context-param>
+  <context-param>
+    <description>File system path on server where uploaded images sit</description>
+    <param-name>userImagesPath</param-name>
+    <param-value>/Library/WebServer/Documents/mmowgli/shared/images/{{DEPLOY}}/</param-value>
+  </context-param>
+  <context-param>
+    <description>Url pointing to the uploaded images repository</description>
+    <param-name>userImagesUrl</param-name>
+    <param-value>http://localhost/mmowgli/shared/images/{{DEPLOY}}/</param-value>
+  </context-param>
+  <context-param>
+    <description>File system path on server where uploaded reports sit</description>
+    <param-name>gameReportsPath</param-name>
+    <param-value>/Library/WebServer/Documents/mmowgli/shared/images/reports/{{DEPLOY}}/</param-value>
+  </context-param>
+  <context-param>
+    <description>Url pointing to the uploaded reports repository</description>
+    <param-name>gameReportsUrl</param-name>
+    <param-value>http://localhost/mmowgli/shared/images/reports/{{DEPLOY}}/</param-value>
+  </context-param>
+  <context-param>
+    <description>The prefix added to image names to form the relative url in an action plan</description>
+    <param-name>reports2ImagesPrefix</param-name>
+    <param-value>../images/</param-value>
+  </context-param>
+  <!-- omit if not installed
+  <context-param>
+    <description>path to clamscan virus checker (optional)</description>
+    <param-name>clamScanPath</param-name>
+    <param-value>/usr/local/clamXav/bin/clamscan</param-value>
+  </context-param>
+  <context-param>
+    <description>The prefix added to image names to form the relative url in an action plan</description>
+    <param-name>clamScanArgument</param-name>
+    <param-value>dashdashno-summary</param-value>
+  </context-param>
+  -->
+  <context-param>
+    <description>In seconds, what we programmatically set the session timeout to if gm</description>
+    <param-name>gameMasterTimeout</param-name>
+    <param-value>1800</param-value>
+  </context-param>
+  <context-param>
+    <description>Time between keep-alive polls in millisecs</description>
+    <param-name>jmsKeepAliveIntervalMS</param-name>
+    <param-value>300000</param-value>
+  </context-param>
+  <listener>
+    <listener-class>org.atmosphere.cpr.SessionSupport</listener-class>
+  </listener>
+  <filter>
+    <filter-name>monitoring</filter-name>
+    <filter-class>net.bull.javamelody.MonitoringFilter</filter-class>
+    <async-supported>true</async-supported>
+  </filter>
+  <filter-mapping>
+    <filter-name>monitoring</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <listener>
+    <listener-class>net.bull.javamelody.SessionListener</listener-class>
+  </listener>
+  <login-config>
+    <auth-method>BASIC</auth-method>
+    <realm-name>Monitoring</realm-name>
+  </login-config>
+  <security-role>
+    <role-name>monitoring</role-name>
+  </security-role>
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>Monitoring</web-resource-name>
+      <url-pattern>/monitoring</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>monitoring</role-name>
+    </auth-constraint>
+  </security-constraint>
+  <session-config>
+    <session-timeout>15</session-timeout>
+    <tracking-mode>COOKIE</tracking-mode>  <!-- the alternative is URL session IDs, which is insecure -->
+  </session-config>
+  <context-param>
+    <param-name>heartbeatInterval</param-name>
+    <param-value>120</param-value> <!-- seconds -->
+  </context-param>
+  <servlet>
+    <servlet-name>Mmowgli2</servlet-name>
+    <servlet-class>edu.nps.moves.mmowgli.Mmowgli2VaadinServlet</servlet-class>
+   <!--<init-param>
+     <param-name>disable-xsrf-protection</param-name>
+     <param-value>true</param-value>
+    </init-param>--> <!-- removing this keeps the protection in place-->
+  </servlet>
+  <listener>
+    <listener-class>org.atmosphere.cpr.SessionSupport</listener-class>
+  </listener>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+</web-app>

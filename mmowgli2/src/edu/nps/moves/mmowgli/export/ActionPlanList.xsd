@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="ActionPlanList">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="GameTitle"/>
+        <xs:element ref="GameAcronym"/>
+        <xs:element ref="GameSecurity"/>
+        <xs:element ref="GameSummary"/>
+        <xs:element ref="CallToAction"/>
+        
+        <xs:element maxOccurs="unbounded" ref="ActionPlan"/>
+      </xs:sequence>
+      <xs:attribute name="exported" use="required"/>
+      <xs:attribute name="multipleMoves" type="xs:boolean"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GameTitle" type="xs:string"/>
+  <xs:element name="GameAcronym" type="xs:string"/>
+  <xs:element name="GameSecurity" type="xs:string"/>
+  <xs:element name="GameSummary" type="xs:string"/>
+  <xs:element name="CallToAction">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="VideoYouTubeID"/>
+        <xs:element ref="VideoAlternateUrl"/>
+        <xs:element ref="BriefingText"/>
+        <xs:element ref="OrientationSummary"/>
+      </xs:sequence>
+            <xs:attribute name="round" use="required"/>
+            <xs:attribute name="phase" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ActionPlan">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Title"/>
+        <xs:element ref="ID"/>
+        <xs:element ref="CardChainRoot"/>
+        <xs:element ref="WhoIsInvolved"/>
+        <xs:element ref="WhatIsIt"/>
+        <xs:element ref="WhatWillItTake"/>
+        <xs:element ref="HowWillItWork"/>
+        <xs:element ref="HowWillItChangeThings"/>
+        <xs:element maxOccurs="unbounded" ref="Author"/>
+        <xs:element ref="CommentList"/>
+        <xs:element ref="ImageList"/>
+        <xs:element ref="VideoList"/>
+        <xs:element ref="ChatLog"/>
+      </xs:sequence>
+      <xs:attribute name="thumbs" use="required" type="xs:decimal"/>
+      <xs:attribute name="sumThumbs" use="required" type="xs:decimal"/>
+      <xs:attribute name="numVoters" use="required" type="xs:integer"/>
+      <xs:attribute name="roundRanking" use="required" type="xs:integer"/>
+      <xs:attribute name="hidden" type="xs:boolean"/>
+      <xs:attribute name="moveNumber" type="xs:integer"/>
+      <xs:attribute name="superInteresting" type="xs:boolean"/>
+      <xs:attribute name="creationDate" type="xs:dateTime"/>          
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Title" type="xs:string"/>
+  <xs:element name="ID" type="xs:integer"/>
+  <xs:element name="WhoIsInvolved" type="xs:string"/>
+  <xs:element name="WhatIsIt" type="xs:string"/>
+  <xs:element name="WhatWillItTake" type="xs:string"/>
+  <xs:element name="HowWillItWork" type="xs:string"/>
+  <xs:element name="HowWillItChangeThings" type="xs:string"/>
+  <xs:element name="VideoYouTubeID" type="xs:string"/>
+  <xs:element name="VideoAlternateUrl" type="xs:string"/>
+  <xs:element name="BriefingText" type="xs:string"/>
+  <xs:element name="BriefingSummary" type="xs:string"/>
+  <xs:element name="OrientationSummary" type="xs:string"/>
+  
+  <xs:element name="Author">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="GameName"/>
+      <!--   <xs:element ref="GameId"/>--> 
+        <xs:element ref="Location" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CardChainRoot">
+    <xs:complexType>
+      <xs:attribute name="type" type="xs:string"/>
+      <xs:attribute name="author" type="xs:string"/>
+      <xs:attribute name="ID" type="xs:integer"/>
+      <xs:attribute name="date" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GameName" type="xs:string"/>
+  <xs:element name="Location" type="xs:string"/>
+  <xs:element name="CommentList">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="Comment"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Comment">
+    <xs:complexType mixed="true">
+      <xs:attribute name="from" use="required"/>
+      <xs:attribute name="postTime" use="required"/>
+      <xs:attribute name="superInteresting" type="xs:boolean"/>
+      <xs:attribute name="hidden" type="xs:boolean"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ImageList">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="Image"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Image">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Title"/>
+        <xs:element ref="Caption"/>
+        <xs:element ref="Description"/>
+        <xs:element ref="URL"/>
+        <xs:element ref="ImagePngBase64"/>
+      </xs:sequence>
+    	<xs:attribute name="width" use="optional" type="xs:integer"/>
+    	<xs:attribute name="height" use="optional" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ImagePngBase64" type="xs:string"/>
+  <xs:element name="VideoList">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="Video"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Video">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Title"/>
+        <xs:element ref="Caption"/>
+        <xs:element ref="Description"/>
+        <xs:element ref="URL"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ChatLog">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="Message"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Message">
+    <xs:complexType mixed="true">
+      <xs:attribute name="from" use="required"/>
+      <xs:attribute name="postTime" use="required"/>
+      <xs:attribute name="superInteresting" type="xs:boolean"/>
+      <xs:attribute name="hidden" type="xs:boolean"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Caption" type="xs:string"/>
+  <xs:element name="Description" type="xs:string"/>
+  <xs:element name="URL" type="xs:anyURI"/>
+</xs:schema>

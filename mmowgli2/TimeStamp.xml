@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Mmowgli" default="buildTimeStamp" basedir=".">
+   <target name="buildTimeStamp">
+   		<copy         file="src/edu/nps/moves/mmowgli/buildstamp.properties.template" 
+   		        	tofile="src/edu/nps/moves/mmowgli/buildstamp.properties"/>
+		<propertyfile file="src/edu/nps/moves/mmowgli/buildstamp.properties" comment="Date of last build of mmowgli code" >		
+			<entry key="build.datetime" type="date" value="now" pattern="yyMMddHHmmss"/>
+		</propertyfile>
+   	</target>
+</project>

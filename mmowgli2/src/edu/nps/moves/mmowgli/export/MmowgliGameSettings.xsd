@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:element name="MmowgliGame">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="HeaderFooter"/>
+				<xs:element ref="Welcome"/>
+				<xs:element ref="CallToAction" maxOccurs="unbounded"/>
+				<xs:element ref="TopCards"/>
+				<xs:element ref="SubCards"/>
+				<xs:element ref="SeedCards"/>
+				<xs:element ref="ActionPlans"/>
+				<xs:element ref="Map"/>
+				<xs:element ref="Other"/>
+			</xs:sequence>
+			<xs:attribute name="description" use="required"/>
+			<xs:attribute name="exported" use="required"/>
+            <xs:attribute name="acronym" use="required" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ApplicationURLs">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Game" />
+				<xs:element ref="Reports" />
+				<xs:element ref="AlternateVideo" />
+				<xs:element ref="PdfAvailable" />
+				<xs:element ref="TroubleEmailAddress" />
+				<xs:element ref="ShowingPriorMovesCards" />
+				<xs:element ref="ShowingPriorMovesActionPlans" />
+				<xs:element ref="ActiveRound" />
+				<xs:element ref="ActivePhase" />
+                <xs:element ref="MobileUrl" />
+                <xs:element ref="MobileQRImageUrl" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="HeaderFooter">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ScreenShot"/>
+				<xs:element ref="BrandingText"/>
+				<xs:element ref="BlogURL"/>
+				<xs:element ref="LearnMoreURL"/>
+				<xs:element ref="TroubleURL"/>
+				<xs:element ref="AboutURL"/>
+				<xs:element ref="CreditsURL"/>
+				<xs:element ref="FaqURL"/>
+				<xs:element ref="TermsURL"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Game" type="xs:anyURI"/>
+	<xs:element name="Reports" type="xs:anyURI"/>
+	<xs:element name="AlternateVideo" type="xs:anyURI"/>
+	<xs:element name="PdfAvailable" type="xs:boolean"/>
+	<xs:element name="TroubleEmailAddress" type="xs:string"/>
+	<xs:element name="ShowingPriorMovesCards" type="xs:boolean"/>
+	<xs:element name="ShowingPriorMovesActionPlans" type="xs:boolean"/>
+	<xs:element name="BrandingText" type="xs:NCName"/>
+	<xs:element name="BlogURL" type="xs:anyURI"/>
+	<xs:element name="LearnMoreURL" type="xs:anyURI"/>
+	<xs:element name="TroubleURL" type="xs:anyURI"/>
+	<xs:element name="AboutURL" type="xs:anyURI"/>
+	<xs:element name="CreditsURL" type="xs:anyURI"/>
+	<xs:element name="FaqURL" type="xs:anyURI"/>
+	<xs:element name="TermsURL" type="xs:anyURI"/>
+	<xs:element name="ActiveRound" type="xs:int"/>
+	<xs:element name="ActivePhase" type="xs:string"/>
+    <xs:element name="MobileUrl" type="xs:anyURI"/>
+    <xs:element name="MobileQRImageUrl" type="xs:anyURI"/>  
+    <xs:element name="VideoYouTubeID" type="xs:string"/>
+    <xs:element name="VideoAlternateUrl" type="xs:string"/>
+  
+	<xs:element name="Welcome">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ScreenShot"/>
+				<xs:element ref="WindowTitle"/>
+				<xs:element ref="Video"/>
+				<xs:element ref="CallToActionText"/>
+				<xs:element ref="OrientationHeadline"/>
+				<xs:element ref="OrientationSummary"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="WindowTitle" type="xs:string"/>
+	<xs:element name="CallToActionText" type="xs:string"/>
+	<xs:element name="OrientationHeadline" type="xs:string"/>
+	<xs:element name="OrientationSummary" type="xs:string"/>
+    <xs:element name="CallToAction">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="VideoYouTubeID"/>
+        <xs:element ref="VideoAlternateUrl"/>
+        <xs:element ref="BriefingText"/>
+        <xs:element ref="OrientationSummary"/>
+      </xs:sequence>
+            <xs:attribute name="round" use="required"/>
+            <xs:attribute name="phase" use="required"/>
+    </xs:complexType>
+  </xs:element>
+	<xs:element name="BriefingSummary" type="xs:string"/>
+	<xs:element name="BriefingText" type="xs:string"/>
+	<xs:element name="TopCards">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ScreenShot"/>
+				<xs:element ref="PlayACardText"/>
+				<xs:element ref="PositiveTitle"/>
+				<xs:element ref="PositivePrompt"/>
+				<xs:element ref="PositiveSummaryHeader"/>
+				<xs:element ref="NegativeTitle"/>
+				<xs:element ref="NegativePrompt"/>
+				<xs:element ref="NegativeSummaryHeader"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="PlayACardText" type="xs:string"/>
+	<xs:element name="PositiveTitle" type="xs:NCName"/>
+	<xs:element name="PositivePrompt" type="xs:string"/>
+	<xs:element name="PositiveSummaryHeader" type="xs:NCName"/>
+	<xs:element name="NegativeTitle" type="xs:string"/>
+	<xs:element name="NegativePrompt" type="xs:string"/>
+	<xs:element name="NegativeSummaryHeader" type="xs:string"/>
+	<xs:element name="SubCards">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ScreenShot"/>
+				<xs:element ref="SubCard1Title"/>
+				<xs:element ref="SubCard1Prompt"/>
+				<xs:element ref="SubCard1SummaryHeader"/>
+				<xs:element ref="SubCard2Title"/>
+				<xs:element ref="SubCard2Prompt"/>
+				<xs:element ref="SubCard2SummaryHeader"/>
+				<xs:element ref="SubCard3Title"/>
+				<xs:element ref="SubCard3Prompt"/>
+				<xs:element ref="SubCard3SummaryHeader"/>
+				<xs:element ref="SubCard4Title"/>
+				<xs:element ref="SubCard4Prompt"/>
+				<xs:element ref="SubCard4SummaryHeader"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="SubCard1Title" type="xs:NCName"/>
+	<xs:element name="SubCard1Prompt" type="xs:string"/>
+	<xs:element name="SubCard1SummaryHeader" type="xs:NCName"/>
+	<xs:element name="SubCard2Title" type="xs:NCName"/>
+	<xs:element name="SubCard2Prompt" type="xs:string"/>
+	<xs:element name="SubCard2SummaryHeader" type="xs:NCName"/>
+	<xs:element name="SubCard3Title" type="xs:NCName"/>
+	<xs:element name="SubCard3Prompt" type="xs:string"/>
+	<xs:element name="SubCard3SummaryHeader" type="xs:NCName"/>
+	<xs:element name="SubCard4Title" type="xs:NCName"/>
+	<xs:element name="SubCard4Prompt" type="xs:string"/>
+	<xs:element name="SubCard4SummaryHeader" type="xs:NCName"/>
+	<xs:element name="SeedCards">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ScreenShot"/>
+				<xs:element ref="InnovateSeedCard1"/>
+				<xs:element ref="InnovateSeedCard2"/>
+				<xs:element ref="InnovateSeedCard3"/>
+				<xs:element ref="InnovateSeedCard4"/>
+				<xs:element ref="InnovateSeedCard5"/>
+				<xs:element ref="DefendSeedCard6"/>
+				<xs:element ref="DefendSeedCard7"/>
+				<xs:element ref="DefendSeedCard8"/>
+				<xs:element ref="DefendSeedCard9"/>
+				<xs:element ref="DefendSeedCard10"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="InnovateSeedCard1" type="xs:string"/>
+	<xs:element name="InnovateSeedCard2" type="xs:string"/>
+	<xs:element name="InnovateSeedCard3" type="xs:string"/>
+	<xs:element name="InnovateSeedCard4" type="xs:string"/>
+	<xs:element name="InnovateSeedCard5" type="xs:string"/>
+	<xs:element name="DefendSeedCard6" type="xs:string"/>
+	<xs:element name="DefendSeedCard7" type="xs:string"/>
+	<xs:element name="DefendSeedCard8" type="xs:string"/>
+	<xs:element name="DefendSeedCard9" type="xs:string"/>
+	<xs:element name="DefendSeedCard10" type="xs:string"/>
+	<xs:element name="ActionPlans">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ScreenShot"/>
+				<xs:element ref="ThePlanInstructions"/>
+				<xs:element ref="TalkItOverInstructions"/>
+				<xs:element ref="ImagesInstructions"/>
+				<xs:element ref="VideosInstructions"/>
+				<xs:element ref="MapInstructions"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ThePlanInstructions" type="xs:string"/>
+	<xs:element name="TalkItOverInstructions" type="xs:string"/>
+	<xs:element name="ImagesInstructions" type="xs:string"/>
+	<xs:element name="VideosInstructions" type="xs:string"/>
+	<xs:element name="MapInstructions" type="xs:string"/>
+	<xs:element name="Map">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ScreenShot"/>
+				<xs:element ref="Title"/>
+				<xs:choice maxOccurs="unbounded">
+					<xs:element ref="InitialLatitude"/>
+					<xs:element ref="InitialLongitude"/>
+					<xs:element ref="InitialZoom"/>
+				</xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Title" type="xs:string"/>
+	<!-- TODO schema datatypes for lat/long are inconsistent and likely incorrect...s -->
+	<xs:element name="InitialLatitude" type="xs:NMTOKEN"/>
+	<xs:element name="InitialLongitude" type="xs:decimal"/>
+	<xs:element name="InitialZoom" type="xs:integer"/>
+	<xs:element name="Msid" type="xs:string"/>
+	<xs:element name="Other">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ScreenShot"/>
+				<xs:element ref="ReportsPublishingIntervalMinutes"/>
+				<xs:element ref="GameTitle"/>
+				<xs:element ref="GameAcronym"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ReportsPublishingIntervalMinutes" type="xs:integer"/>
+	<xs:element name="GameTitle" type="xs:string"/>
+	<xs:element name="GameAcronym" type="xs:NMTOKEN"/>
+	<xs:element name="GameSecurity" type="xs:string"/>
+	<xs:element name="ScreenShot" type="xs:NCName"/>
+	<xs:element name="Video" type="xs:NCName"/>
+</xs:schema>

@@ -1,0 +1,26 @@
+<project name="CompileStyleSheet" default="compile" xmlns:ivy="antlib:org.apache.ivy.ant">
+  <target name="compile" depends="resolve">
+  	<antcall target="_compile"/>
+  </target>
+  <target name="quickcompile">
+	<antcall target="_compile"/>
+  </target>
+  	
+  <target name="_compile">
+  	<java classname="com.vaadin.sass.SassCompiler">
+  		<classpath>
+  		  <path>
+  		    <fileset dir="temp/lib">
+  		        <include name="*.jar"/>
+  		    </fileset>
+  		  </path>
+  		</classpath>
+  		<arg value="WebContent/VAADIN/themes/mmowgli2/styles.scss"/>
+  		<arg value="WebContent/VAADIN/themes/mmowgli2/styles.css"/>
+  	</java>
+  </target>
+  		
+  <target name="resolve">
+    <ivy:retrieve pattern="temp/lib/[module]-[type]-[artifact]-[revision].[ext]"/>
+  </target>
+</project>

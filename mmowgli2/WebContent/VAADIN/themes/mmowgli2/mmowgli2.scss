@@ -1,0 +1,2185 @@
+@import "mmowgliScssParams.scss";
+
+/* Import the reindeer theme.*/
+/* This only allows us to use the mixins defined in it and does not add any styles by itself. */
+@import "../reindeer/styles.scss";
+
+/* This contains all of your theme.*/
+/* If somebody wants to extend the theme she will include this mixin. */
+
+/* 13 Mar 2014: images gotten from "background: transparent url('#{$imageRepo}/blah.png') no-repeat;" don't get their token replaced
+   apparently have to use explicit background-image.... */
+   
+@mixin mmowgli2 { 
+  /* Include all the styles from the reindeer theme */
+  @include reindeer;
+
+  /* this works around an apparent style bug for treetable where double arrows were showing */
+  .v-table-cell-content-m-cardchain-row .v-table-cell-wrapper .v-treetable-node-open,
+  .v-table-cell-content-m-cardchain-row .v-table-cell-wrapper .v-treetable-node-closed {
+    background:none;
+  }
+  
+  /* these 2 work together */
+  .m-mmowgliouterframe {
+    padding-left: 45px;
+  }
+  .m-cssleft-45 {
+    position: relative;
+    left: -45px;
+  }
+   
+  /* Insert your theme rules here */
+  .m-redborder {
+	border: 1px solid #FF0000;
+  }
+  .m-blueborder {
+    border: 1px solid #0000FF;
+  }
+  .m-greenborder {
+    border: 1px solid #00FF00;
+  }
+  .m-cyanborder {
+	border: 1px solid cyan;
+  }
+  .m-yellowborder {
+    border: 1px solid yellow;
+  }
+  .m-blackborder {
+    border: 1px solid black;
+  }
+  .m-darkgreyborder {
+    border: 1px solid #58595B;
+  } 
+  .m-greenborder, .v-textarea-m-greenborder {
+	border: 1px solid #00FF00;
+}
+.m-lightgrey-border {
+   border: 1px solid #D6D6D6; 	
+}
+.m-redbutton .v-button-wrap .v-button-caption {
+	color: #A90A0A;
+}
+.m-actionplan-zoom-button {
+    width: 24px;
+    height: 24px;
+}
+
+div .m-textarea-greyborder, .m-greyborder {
+	border: 1px solid #B6BBBC;
+	/*padding: 5px;*/
+}
+
+.m-greyborder5 {
+	border: 5px solid #B6BBBC;
+}
+.m-orangeborder5 {
+  border: 5px solid orange;
+}
+.m-greyborder3 {
+	border: 3px solid #B6BBBC;	
+}
+.m-ghostBoxHead {
+    background:transparent no-repeat;
+    background-image:url('#{$imageRepo}/ghostBoxHead261w20h.png');	
+}
+.m-ghostBoxMiddle {
+    background: transparent repeat-y;
+    background-image:url('#{$imageRepo}/ghostBoxMiddle261w270h.png');		
+    padding-left:25px;
+    padding-right:20px;	
+}
+.m-ghostBoxContent {
+	padding-left:inherit;
+	padding-right:inherit;
+}
+  
+.m-ghostBoxFoot {
+    background: transparent no-repeat;
+    background-image:url('#{$imageRepo}/ghostBoxFoot261w20h.png');
+}
+.m-background-red {
+	background-color:red;
+}
+.m-background-canary-yellow {
+	background-color:#FFEF00;
+}
+.m-background-green {
+    background-color:green;
+}
+.m-background-olivedrab {
+	background-color:olivedrab;
+}
+.m-background-skyblue {
+	background-color:skyblue;
+}
+.m-background-dodgerblue {
+	background-color:dodgerblue;
+}
+.m-background-lightgrey {
+	background-color:lightgrey;
+}
+.m-background-orange {
+	background-color:orange;
+}
+.m-background-mediumvioletred {
+	background-color:mediumvioletred;
+}
+.m-background-greenyellow {
+	background-color:greenyellow;
+}
+  .m-header-movenum-text {
+    color: #6C6D6F;
+    font-family: helvetica;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 100%;
+    text-align: left;
+    margin-left: 25px;
+  }
+  .m-header-branding-text {
+    color: black;
+    font-family:arial;
+    font-weight:900;
+    font-size: 28px;
+    line-height: 100%;
+    text-align: left;
+    font-style: italic;
+    margin-top:10px;
+    margin-left:25px;
+  } 
+  .m-text-align-right {
+    text-align:right;
+  }
+  .m-text-align-center {
+    text-align:center;
+  }
+  div .m-header-searchfield {
+    background: transparent;
+    font-size: 11px;
+    line-height: 100%;
+    color:black;
+    border:none;
+    resize: none;
+  }
+  .m-header-search-text .v-nativebutton-caption {
+    color: #6C6D6F;
+    font-family: helvetica;
+    font-size: 18px;
+  }  
+  div div .m-header-blogheadline-link {
+    color: #6C6D6F;
+    font-family: helvetica; /* font-family: 'Special Elite', cursive;*/
+    font-style: italic;
+    font-size: 20px;
+  }
+  .m-header-blogheadline-text .v-nativebutton-caption {
+    color: #6C6D6F;
+    font-family: helvetica; /* font-family: 'Special Elite', cursive;*/
+    font-style: italic;
+    font-size: 20px;
+  }
+  .m-header-grey-text .v-nativebutton-caption {
+    color: #6C6D6F;
+    font-family: helvetica;
+    font-size: 12px;
+  }
+  .m-header-grey-text .v-nativebutton-caption:hover {
+	color:#5689D9; /* blue */  
+  }
+  .m-padding-0 {
+	padding:0px;
+  }
+  .m-header-link {
+    color: #6C6D6F;
+    font-family: helvetica;
+    font-size: 12px;	
+    /*margin-left:10px;*/
+    line-height:14.4px;
+  }
+  .m-marginleft-30 {
+    margin-left:30px;
+  }
+  .m-marginleft-25 {
+    margin-left:25px;
+  }
+  .m-marginleft-40 {
+    margin-left:40px;
+  }
+  .m-marginleft-20 {
+    margin-left:20px;
+  }
+  .m-marginleft-60 {
+	margin-left: 60px;
+  } 
+  .m-margintop-5 {
+    margin-top: 5px;
+  }
+  .m-margintop-20 {
+    margin-top: 20px;
+  }
+  .m-marginbottom-5 {
+    margin-bottom: 5px;
+  }
+  .m-header-link a span {
+    text-decoration: none !important;
+  }
+  .m-header-link a:visited span {
+	color:#6C6D6F;
+  }
+  .m-header-link a:link span {
+	color:#6C6D6F;
+  }
+  .m-header-link a:active span {
+	color:#6C6D6F;
+  }
+  .m-header-link a:hover span {
+	color:#5689D9; /* blue */
+  }
+  .v-nativebutton-m-playIdeaButton {
+    border-style:none;
+    width:142px;
+    height:85px;
+  }
+  .v-nativebutton-m-takeActionButton {
+  	background: transparent no-repeat;
+    background-image: url('#{$imageRepo}/takeActionButt145w93h.png');
+    border-style:none;
+    width:145px;
+    height:93px;
+  }
+  .v-nativebutton-m-takeActionButtonDisabled {
+ 	background: transparent no-repeat;
+    background-image: url('#{$imageRepo}/takeActionButtDisabled145w93h.png');
+    border-style:none;
+    width:145px;
+    height:93px;
+  }
+  .v-nativebutton-m-callToActionButton {
+    background: transparent no-repeat;
+    background-image: url('#{$imageRepo}/empty353w135h.png');  
+    border-style:none;
+    width:353px;
+    height:135px;	
+  }
+  .v-nativebutton-m-signOutButton {
+    background: transparent no-repeat;
+    background-image: url('#{$imageRepo}/signOutButt72w30h.png');
+    border-style:none;
+    width:72px;
+    height:30px;
+  }
+  .v-nativebutton-m-signOutButton:hover {
+    background: transparent no-repeat;
+    background-image: url('#{$imageRepo}/signOutButtHover72w30h.png');
+    border-style:none;
+    width:72px;
+    height:30px;
+  }
+  
+  .v-nativebutton-m-gotoIdeaDashboardButton {
+  background: transparent no-repeat; 
+  background-image:url('#{$imageRepo}/goToIdeaDashboard205w158h.png');
+  border-style:none;
+  width:205px;
+  height:158px;
+  }
+
+.v-nativebutton-m-gotoIdeaDashboardButton:hover {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/goToIdeaDashboardHover205w158h.png');
+  border-style:none;
+  width:205px;
+  height:158px;
+}
+.v-nativebutton-m-gotoTopLevelButton {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/toplevelcards222w80h.png');
+  border-style:none;
+  width:222px;
+  height:80px;
+}
+.v-nativebutton-m-gotoTopLevelButton:hover {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/toplevelcardshilight222w80h.png');
+  border-style:none;
+  width:222px;
+  height:80px;
+}
+.v-nativebutton-m-viewCardChainButton {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/viewCardChain132w124h.png');
+  border-style:none;
+  width:132px;
+  height:124px;
+} 
+.v-nativebutton-m-viewCardChainButton:hover {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/viewCardChainHover132w124h.png');
+  border-style:none;
+  width:132px;
+  height:124px;
+ } 
+  
+ .v-nativebutton-m-howToPlayButton {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/howToPlay181w103h.png');
+  border-style:none;
+  width:181px;
+  height:103px;
+} 
+.v-nativebutton-m-howToPlayButton:hover {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/howToPlayHover181w103h.png');
+  border-style:none;
+  width:181px;
+  height:103px;
+ } 
+.m-newcardpopup {
+  color: red;
+  font-family: helvetica; /* font-family: 'Special Elite', cursive;*/
+  font-style: italic;
+  font-size: 12px;
+  text-align: right;
+/*  line-height: 125%;
+  background: transparent;
+  margin-left:200px;
+  margin-bottom:20px; */
+}
+  
+  .m-header-big-text .v-nativebutton-caption {
+    color: white;
+    font-family: helvetica;
+    font-size: 18px;
+  }
+  .m-header-username-text .v-nativebutton-caption {
+    color: #6C6D6F;
+    font-family: helvetica;
+    font-size: 22px;
+  }
+  .m-implscore-text, .m-header-smallscore-text {
+    color:white; /*color: #58595B;*/
+    font-family: helvetica;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 100%;
+  }		
+  .m-explscore-text, .m-header-score-text {
+    color: white;
+    font-family: helvetica;
+    font-size: 22px;
+    /*font-weight: bold;*/
+    line-height: 100%;
+  }  
+  .v-nativebutton-borderless {
+	border: none;
+	background: transparent;
+  }
+  .m-footer-servername {
+	color: #58595B;
+	font-family: helvetica;
+	font-size: 10px;
+	line-height:normal;
+  }
+  .v-nativebutton-m-acceptAndContinueButton {
+    background: transparent url('#{$imageRepo}/acceptAndContinueButt202w50h.png') no-repeat;
+    border-style:none;
+    width:202px;
+    height:50px;
+  }
+  .v-nativebutton-m-acceptAndContinueButton:hover {
+    background: transparent no-repeat;
+    background-image: url('#{$imageRepo}/acceptAndContinueButtHover202w50h.png');
+    border-style:none;
+    width:202px;
+    height:50px;
+  }
+  .v-nativebutton-m-rejectNoThanksButton {
+    background: transparent  no-repeat;
+    background-image: url('#{$imageRepo}/rejectNoThanksButt188w37h.png');
+    border-style:none;
+    width:188px;
+    height:37px;
+  }
+  .v-nativebutton-m-rejectNoThanksButton:hover {
+    background: transparent  no-repeat;
+    background-image: url('#{$imageRepo}/rejectNoThanksButtHover188w37h.png');
+    border-style:none;
+    width:188px;
+    height:37px;
+  }
+  .m-calltoaction {
+    background: transparent no-repeat;
+    background-image: url('#{$imageRepo}/callToActionBackground.png');
+    border-style:none;
+    width:988px;
+    /*height:446px;*/	
+  }
+  .m-calltoaction-novideo {
+    background: transparent no-repeat;
+    background-image: url('#{$imageRepo}/callToActionBackgroundNoVideo988w446h.png');
+    border-style:none;
+    width:988px;
+    /*height:446px;	*/
+  }
+  .m-orientation-heading, .m-calltoaction-thesituation-heading {
+	color: #58595B;
+	font-family: helvetica;
+	font-weight: bold;
+	font-size: 22px;
+	line-height: 110%;		
+  }
+  .m-calltoaction-thesituation-summary {
+	color: #58595B;
+	font-family: helvetica;
+	font-size: 16px;
+  }
+  .m-calltoaction-thesituation-text, .m-calltoaction-thesituation-prompt {
+	color: #58595B;
+	font-family: helvetica;
+	font-size: 11px; /*move 1 12px */
+  }
+  .m-calltoaction-playprompt, .m-calltoaction-playprompt .v-nativebutton-caption{
+	color: #58595B;
+	font-family: helvetica; /* should be vagabond */
+	font-size: 30px;
+	font-weight: bold;
+	line-height: 110%;
+  }
+ .m-calltoaction-playprompt-subtext {
+	color: #58595B;
+	font-family: helvetica; /* should be vagabond */
+	font-size: 18px;
+	line-height:125%;
+} 
+.v-caption-m-parent-card-summary{
+  text-align:center;
+}
+
+.m-cardsummarylist-header-title {
+	color: white; 
+    font-size: 17px; /*18px;*/ /*30px;*/
+	font-weight: bold;
+    line-height: 100%;
+    white-space:nowrap;  /* never 2 lines */
+}
+.m-cardsummarylist-header-content {
+	color: white;
+    font-size: 16px;
+	font-weight: normal;
+    line-height: 100%;
+}
+.m-cardsummary-header {
+  font-size: 10px; /*12px;*/
+  font-weight: bold;
+  /*letter-spacing: -0.03em;*/	
+  white-space:nowrap;  /* never 2 lines */
+}
+.m-cardsummary-header-small {
+    font-size: 6px; /*8px;*/
+	font-weight: bold;
+	line-height: 100%;	
+    white-space:nowrap;  /* never 2 lines */
+}
+.m-cardsummary-content {
+	color: #58595B;
+	font-family: helvetica;
+	font-size: 12px;
+}
+.m-cardsummary-content-small {
+	color: #58595B;
+	font-family: helvetica;
+	font-size: 8px;
+	line-height:normal;
+}
+.m-cardsummary-user {
+	line-height: 100%; /* lose leading */
+	font-size: 12px;
+	color: grey;
+}
+.m-cardsummary-user-small {
+	line-height: 100%; /* lose leading */
+	font-size: 8px;
+	color: grey;
+}
+.m-cardsummary-hidden {
+	background: transparent no-repeat;
+    background-image:url('#{$imageRepo}/hiddentext.png');
+    background-position: center center;
+    opacity:0.4;
+    filter:alpha(opacity=40); /* For IE8 and earlier */	
+}
+.m-cardsummary-hidden-small {
+    background: transparent no-repeat;
+    background-image:url('#{$imageRepo}/hiddentextsmall.png');
+    background-position: center center;
+    opacity:0.4;
+    filter:alpha(opacity=40); /* For IE8 and earlier */		
+}
+.m-cardsummary-movelabel {
+  color: #6C6D6F;
+  font-family: helvetica;
+  font-size: 10px;
+  font-weight: bold;
+  line-height: 100%;
+  font-style: italic;
+  text-align:center;
+}
+.m-cardsummary-movelabel-small {
+  color: #6C6D6F;
+  font-family: helvetica;
+  font-size: 8px;
+  line-height: 100%;
+  font-style: italic;
+  text-align:center;
+}
+.v-nativebutton-m-continueButton {
+    background: transparent no-repeat;
+    background-image: url('#{$imageRepo}/continueButt100w38h.png');
+    border-style:none;
+    width:100px;
+    height:38px;
+}
+.v-nativebutton-m-continueButton:hover {
+    background: transparent no-repeat;
+    background-image: url('#{$imageRepo}/continueButtHover100w38h.png');
+    border-style:none;
+    width:100px;
+    height:38px;
+}
+.v-nativebutton-m-continueButton:focus {
+  outline:0;
+}
+div .v-nativebutton-m-signin-forgotButton {
+  background: transparent;
+  border-style: none;
+  color: #3987c5;
+  height: 18px;
+  margin-right: 10px;
+} 
+.v-nativebutton-m-cancelButton {
+    background: transparent no-repeat;
+    background-image:url('#{$imageRepo}/cancelButt89w38h.png');
+    border-style:none;
+    width:89px;
+    height:38px;
+}
+.v-nativebutton-m-cancelButton:hover {
+  background: transparent no-repeat;
+  background-image:url('#{$imageRepo}/cancelButtHover89w38h.png');
+  border-style:none;
+  width:89px;
+  height:38px;
+}
+.v-nativebutton-m-cancelButton:focus {
+  outline:0;
+ }
+ 
+.v-nativebutton-m-saveChangesButton {
+  background: transparent url('#{$imageRepo}/saveChangesButton119w24h.png') no-repeat;
+  border-style:none;
+  width:119px;
+  height:24px;
+}
+.v-nativebutton-m-saveChangesButton:focus {
+  outline:0;
+}
+
+.v-nativebutton-m-weNeedYourHelpButton {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/weNeedYourHelp328w78h.png');
+  border-style:none;
+  width:328px;
+  height:78px;
+  cursor:default;
+  overflow:visible;
+  padding:0px;
+}
+.m-login-form .v-textfield, .m-role-page .v-textfield{
+  color: #58595B;
+  font-family: helvetica;
+  font-size: 14px;
+  line-height: 100%;
+  background-color: #F1F1F1;	
+  border: 1px solid #CCCECF;
+  margin-left:0px;
+}
+.m-dialog-label{
+  color: #58595B;
+  font-family: helvetica;
+  font-size: 14px;
+  line-height: 100%;
+  /*margin-top:8px;*/
+/* test  margin-left:50px; */
+padding-left:50px;
+  /*margin-bottom:5px;*/
+  padding-bottom:5px;
+}
+.m-dialog-entryfield, .v-verticallayout div .m-dialog-entryfield  {
+  color: #58595B;
+  font-family: helvetica;
+  font-size: 14px;
+  line-height: 100%;
+  margin-left:50px;
+  padding-bottom:5px;
+}
+
+.m-dialog-label-noindent {
+  color: #58595B;
+  font-family: helvetica;
+  font-size: 14px;
+  line-height: 100%;
+}
+.m-dialog-text {
+  color: #58595B;
+  font-family: helvetica;
+  font-size: 14px;
+  line-height: 100%;		
+}
+.m-dialog-title {
+  color: #677B74;
+  font-family: helvetica;
+  font-size: 24px;
+  line-height: 100%;		
+}
+.m-dialog-title-smaller {
+  color: #677B74;
+  font-family: helvetica;
+  font-size: 20px;
+  line-height: 100%;		
+}
+.m-dialog2-title {
+  color: #677B74;
+  font-family: helvetica;
+  font-size: 24px;
+  line-height: 100%;
+ /* test margin-left:30px;	*/	
+}
+.m-dialog2-title-smaller {
+  color: #677B74;
+  font-family: helvetica;
+  font-size: 20px;
+  line-height: 100%;
+/* test  margin-left:30px;		 */
+}
+.m-dialog-toplabel, .m-dialog-textfield {
+  color: #58595B;
+  font-family: helvetica;
+  font-size: 14px;
+  line-height: 100%;
+  margin-top:40px;
+/*  margin-left:50px; test */
+  padding-left:50px;
+/*  margin-bottom:8px; */
+  padding-bottom:8px;
+}
+.m-dialog-label {
+  color: #58595B;
+  font-family: helvetica;
+  font-size: 14px;
+  line-height: 100%;
+  /*margin-top:8px;*/
+ /* test margin-left:50px; */
+ padding-left:50px;
+ /* test margin-bottom:5px; */
+ padding-bottom:5px;
+}
+.m-dialog-content {
+    background: transparent repeat-y;
+    background-image: url('#{$imageRepo}/lightboxDialogContentBckgrnd.png');
+}
+.m-dialog-content .v-imagestrip {
+	padding: 5px;
+}
+/* Here's the pattern!  For the layout containing a text field, addStyle("m-dialog-content"); then textfields therein are styled!*/
+.m-dialog-content .v-textfield {
+  color: #58595B;
+  font-family: helvetica;
+  font-size: 14px;
+  line-height: 100%;
+  background-color: #F1F1F1;	
+  border: 1px solid #CCCECF;
+/*  margin-left:50px; */
+  padding-left:50px;
+}
+.m-dialog-content .v-caption{
+  color: #58595B;
+  font-family: helvetica;
+  font-size: 14px;	
+  line-height: 100%;
+}  
+.m-mmowglidialog2 .popupContent .v-window-wrap {
+  border:none;
+}
+.m-mmowglidialog2 .v-window-outerheader{
+  background-image: none;
+  background-color:transparent;
+}
+.m-mmowglidialog2 .v-window-outerheader:hover {
+  background-color: transparent;
+  background-image:url("https://web.mmowgli.nps.edu/mmowMedia/images/dialog2DragHere136w52h.png");
+  background-repeat: no-repeat;   	
+  margin-left:234px;
+  margin-right:230px;
+}
+.m-mmowglidialog2 .v-window-maximizebox {
+  visibility: hidden;
+}
+.m-mmowglidialog2 .v-window-footer {
+	background-color: transparent;
+    background-image: none;
+    height: 15px;
+    overflow:visible;
+}
+.m-mmowglidialog2-middle, .m-background-white {
+	background-color:white;
+}
+.m-mmowglidialog2 .v-window-footer .v-window-resizebox {
+	top:-33px;
+	right:11px;
+	background: transparent url('#{$imageRepo}/resizehandle15w15h.png');	
+    height:15px;
+    width:15px;
+}
+.m-mmowglidialog2-header {
+  background-image:url('#{$imageRepo}/dialog2Header2000w75h.png');
+  background-repeat:no-repeat;
+  
+}
+.m-mmowglidialog2-footer {
+  background-image:url('#{$imageRepo}/dialog2Footer2000w36h.png');
+  background-repeat:no-repeat;
+}
+.m-mmowglidialog2-rightedge {
+  background-image:url('#{$imageRepo}/dialog2RightEdge28w1000h.png');
+  background-repeat:no-repeat;
+}
+.m-mmowglidialog2-leftedge {
+  background-image:url('#{$imageRepo}/dialog2LeftEdge10w1000h.png');
+  background-repeat:no-repeat;
+}
+  
+/*
+.m-dialog-content .v-treetable .v-table-body,
+
+.m-tabpanel-right .v-treetable .v-table-body,
+.m-cardChainTreeTable .v-table-body {
+	background-color: transparent;
+	background-image: none;
+	border-style: none;
+}
+*/
+.m-dialog-content .v-treetable .v-table-header-wrap,
+.m-tabpanel-right .v-treetable .v-table-header-wrap,
+.m-cardChainTreeTable .v-table-header-wrap .v-table-header .v-table-header-cell .v-table-caption-container,
+.m-signupstable .v-table-header-wrap .v-table-header td .v-table-caption-container {
+	background-color: transparent;
+    color: #58595B;
+    font-family: helvetica;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: normal;
+}
+.m-tabpanel-right
+{
+	background-color: transparent;
+    color: #58595B;
+    font-family: helvetica;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: normal;
+}
+/* used to be in above
+    border-color: #58595B;
+    border-width: 1px;   
+    border-bottom-style:solid;
+    border-top-style:none;
+    border-left-style:solid;
+    border-right-style:none;
+*/
+.v-table-m-userprofile-table .v-table-header-wrap,
+.v-table-m-userprofile-table .v-table-header-wrap .v-table-header .v-table-header-cell .v-table-caption-container {
+	background-color: transparent;
+	background-image: none;
+	color: #58595B;
+	font-family: helvetica;
+	font-size: 14px;
+	font-weight: bold;
+	/*border-style: solid;
+	border-width: 1px;
+	border-color: #58595b; */
+	line-height: normal; 
+}
+/*
+.v-table-cell-content-m-cardchain-row {
+  background-color: transparent;
+  color: #58595B;
+  font-family: helvetica;
+  font-size: 14px;	
+  line-height: normal
+  vertical-align:middle;
+  display: inline;
+}
+*/
+.m-display-inline {
+  display:inline;
+}
+.v-selected .v-table-cell-content-m-cardchain-row {
+	color:#FFFFFF;
+}
+.v-table-row-m-cardchain-row .v-table-cell-content .v-table-cell-wrapper .m-cardchain-icon,
+.v-table-row-m-cardchain-row .v-table-cell-content {
+  vertical-align:middle;
+ }
+.v-table-cell-content-m-cardchain-row .v-table-cell-wrapper {
+  vertical-align:middle;
+}
+	
+/* this one kills the colored square:*/
+.v-table-row-m-cardchain-row .v-table-cell-content .v-table-cell-wrapper .v-widget {
+  background-color: transparent;
+  color: #58595B;
+  font-family: helvetica;
+  font-size: 14px;	
+  line-height: normal;
+  white-space: nowrap;
+  vertical-align:middle;
+}	
+.m-noborder {
+  border:none;
+  box-shadow: none;
+}
+.m-dialog-header {
+    background: transparent no-repeat;
+    background-image:url('#{$imageRepo}/lightboxDialogHeaderBckgrnd.png');
+}
+.m-transparent .popupContent .v-window-wrap .v-window-wrap2 .v-window-contents {
+	background-color: transparent;
+}
+.m-transparent div .v-window-contents {
+    background-color: transparent;
+ }
+.m-transparent, .m-transparent .v-filterselect-input {
+	background-color: transparent;
+	background-image: none;
+}
+.m-transparent-background {
+	background-color: transparent;
+	background-image: none;
+}
+.v-slot-m-transparent-background .m-transparent-background {
+	background-color: transparent;
+	background-image: none;
+}
+.m-greybackground {
+	background-color: #EFEFF0;
+}
+
+.m-mmowglidialog {
+	background-color: transparent;
+	border:none;
+	box-shadow:none; /* test */
+}
+.m-mmowglidialog .popupContent .v-window-wrap {
+	border:none;
+}
+/* the following works, and removes the shadows from all windows. Use for graphical backgrounds w/ their own shadows (LoginPopup)  */
+/* don't think so...v-shadow-window is a sibling of m-mmowglidialog, not child ;  I don't think this does anything*/
+
+.m-mmowglidialog .v-shadow-window {
+    display:none;
+}
+/*the following also works, and removes the top little bar. Can't drag a window without this */
+.m-mmowglidialog .v-window-outerheader{
+	display:none;
+}
+
+.m-orientation-summary {
+	color: #58595B;
+	font-family: helvetica;
+	/*font-weight: bold;*/
+	font-size: 16px;
+}
+.m-orientation-text, .m-orientation-prompt {
+	color: #58595B;
+	font-family: helvetica;
+	font-size: 16px;
+}
+.m-boxshadow-5 {
+  -webkit-box-shadow: 5px 5px 14px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 5px 5px 14px 0px rgba(0,0,0,0.75);
+  box-shadow: 5px 5px 14px 0px rgba(0,0,0,0.75);
+}
+div .v-nativebutton-m-userprofile3-changeemailbutt {
+  background: transparent;
+  border-style:none;
+  color:#3987c5;
+  width: 100px;
+  height:18px
+} 
+
+.v-nativebutton-m-vcrBackButton{
+  background: transparent no-repeat;
+  background-image:url('#{$imageRepo}/vcrBack15w15h.png');
+  border-style:none;
+  width:15px;
+  height:15px;
+  padding:0px;
+  margin:0px;
+}
+.v-nativebutton-m-vcrBackAllButton{
+  background: transparent no-repeat;
+  background-image:url('#{$imageRepo}/vcrBackAll15w15h.png');
+  border-style:none;
+  width:15px;
+  height:15px;
+  padding:0px;
+  margin:0px;
+}
+.v-nativebutton-m-vcrFwdButton{
+  background: transparent no-repeat;
+  background-image:url('#{$imageRepo}/vcrFwd15w15h.png');
+  border-style:none;
+  width:15px;
+  height:15px;
+  padding:0px;
+  margin:0px;
+}
+.v-nativebutton-m-vcrFwdAllButton{
+  background: transparent no-repeat;
+  background-image:url('#{$imageRepo}/vcrFwdAll15w15h.png');
+  border-style:none;
+  width:15px;
+  height:15px;
+  padding:0px;
+  margin:0px;
+}
+
+.v-nativebutton-m-vcrBackButtonRA{
+  background: transparent no-repeat;
+  background-image:url('#{$imageRepo}/vcrBackRightAligned15w15h.png');
+  border-style:none;
+  width:15px;
+  height:15px;
+  padding:0px;
+  margin:0px;
+}
+.v-nativebutton-m-vcrBackAllButtonRA{
+  background: transparent no-repeat;
+  background-image:url('#{$imageRepo}/vcrBackAll15w15h.png');
+  border-style:none;
+  width:15px;
+  height:15px;
+  padding:0px;
+  margin:0px;
+}
+div div .m-vcr-fonticon{
+  background: transparent no-repeat;
+  border-style:none;
+  padding:0px;
+  margin:0px;
+  color: #58595B;
+  font-size:large;
+}
+.v-nativebutton-m-vcrFwdButtonLA{
+  background: transparent no-repeat;
+  background-image:url('#{$imageRepo}/vcrFwdLeftAligned15w15h.png');
+  border-style:none;
+  width:15px;
+  height:15px;
+  padding:0px;
+  margin:0px;
+}
+.v-nativebutton-m-vcrFwdAllButtonLA{
+  background: transparent no-repeat;
+  background-image:url('#{$imageRepo}/vcrFwdAll15w15h.png');
+  border-style:none;
+  width:15px;
+  height:15px;
+  padding:0px;
+  margin:0px;
+}
+.m-cardlarge-title {
+    font-size: 18px;
+	font-weight: bold;
+	/*letter-spacing: -0.03em;*/		
+}
+.m-cardlarge-id {
+	text-align:right;
+	color: #808285;
+	font-family: helvetica;
+	font-size: 12px;
+}
+.m-cardlarge-content {
+	color: #58595B;
+	font-family: helvetica;
+	font-size: 21px;
+	line-height: 110%;
+}
+.m-cardlarge-user {
+	color: #808285;
+	font-family: helvetica;
+	font-size: 18px;
+}
+.m-cardlarge-movelabel {
+  color: #6C6D6F;
+  font-family: helvetica;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 100%;
+  text-align: right;
+}
+.m-cursor-pointer {
+	cursor: pointer;
+}
+.m-cardlarge-markings .v-label{
+	color: #808285;
+	font-family: helvetica;
+	font-size: 12px;
+	text-align: right;
+}	
+.m-cardlarge-hidden-label {
+  color: #6C6D6F;
+  font-family: helvetica;
+  font-size: 20px;	
+}
+.m-cardlarge-movelabel {
+  color: #6C6D6F;
+  font-family: helvetica;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 100%;
+  text-align: right;	
+}
+
+/* User profile */
+.m-userprofile3top {
+    background-color: transparent;
+    background-image: url('#{$imageRepo}/userProfile4TopRev945w579h.png');
+    background-repeat: no-repeat;
+}
+.v-gridlayout-m-headgrid .v-gridlayout-spacing-on {
+	/* adjust spacing size */
+	padding: 1px;
+}
+.m-coverUpChangePW{	
+	background-color: white;
+}
+.m-userProfile3-learn-label {
+	font-family: helvetica;
+	font-size: 10px; /*Changed from 8px to be consistent with questions above*/
+	font-weight: bold;
+	color: #4D2D28;
+	line-height:150%;
+	text-align:right;
+	padding-top:5px;
+}
+.m-userProfile3-explorescore-label {
+	font-family: helvetica;
+	font-size: 16px;
+	color: #555555;
+	line-height:100%;	
+}
+.m-userprofile3name, div div .m-userprofile3name {
+	font-family: "Special Elite", cursive;
+	font-size: 20px;
+	line-height: 100%;	
+}
+.v-nativebutton-m-userprofile3-changepasswordbutt{
+  background: transparent;
+  border-style:none;
+  width:106px;
+  height:18px
+}
+.v-nativebutton-m-userprofile3-changepasswordbutt:hover {
+  border: 1px solid grey;
+}
+div .v-nativebutton-m-userprofile3-sendemailbutt {
+  background: transparent;
+  border-style:none;
+  color:#3987c5;
+  width: 200px;
+  height:18px
+}
+.v-nativebutton-m-userprofile3-sendemailbutt:hover {
+  border: 1px solid grey;
+ }
+
+
+div .v-nativebutton-m-userprofile3-changeemailbutt {
+  background: transparent;
+  border-style:none;
+  color:#3987c5;
+  width: 100px;
+  height:18px
+}
+.m-userProfile3-follow-button{
+	text-align:right;
+}
+.m-userProfile3-follow-button label {
+	font-family: helvetica;
+	font-size: 12px;
+	color: #1B75BC;
+	line-height:100%;
+}
+.v-nativebutton-m-badgeButton{
+  background: transparent;
+  border-style:none;
+  width:55px;
+  height:55px;
+  padding:0px;
+}
+.v-nativebutton-m-badgeButton .v-icon {
+  margin:0px;
+ }
+.m-userprofile-linkbuttons {
+	font-family: helvetica;
+	font-size: 14px;
+	color: #1B75BC;
+    text-align: left;	
+}
+ 
+
+.m-userprofile3-text-border {
+	border: 1px solid rgba(232,232,232,0.6);	
+}
+
+.m-userprofile3-avatar {
+	border-style:none;
+	padding:0px;
+	background-color:transparent;
+}
+
+.m-userprofile3-avatar .v-icon {
+	margin:0px;
+	width:inherit;
+	height:inherit;
+}
+
+.m-userProfile3-scores-label {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/scores273w67h.png');
+  border-style:none;
+  width:273px;
+  height:67px;	
+}
+
+.m-userProfile3-exploreonlyscore-label {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/userProfilePointsOnly273w67h.png');
+  border-style:none;
+  width:273px;
+  height:67px;	
+}
+.m-userProfile3-explorescorebig-label {
+	font-family: helvetica;
+	font-size: 22px;
+	color: #555555;
+	line-height:100%;	
+}
+.m-myideaprofile-table, .m-actionplan-comment {
+	border: 1px solid #58595B;
+	background-color: #F1F1F1; /*#EFEFF0;*/
+	padding: 5px;
+}
+.m-userprofile-text {
+	color: #58595B;
+	font-family: helvetica;
+	font-size: 18px;
+}
+.m-tabpanel-right-title,
+.v-caption-m-cardsummary-small div.v_captiontext,
+.m-tabpanel-left .v-widget,
+.m-tabpanel-left .v-button
+{
+	color: #58595B;
+	font-family: helvetica; /* should be vagabond */
+	font-size: 18px;
+}
+.m-userprofiletabpanel-left{
+	color: #58595B;
+	font-family: helvetica; /* should be vagabond */
+	font-size: 18px;
+	padding-left: 15px;
+	/*padding-right: 15px;*/
+	/*width: 205px; *//*total 250*/
+}
+.v-slot-m-userprofiletabpanel-left .m-userprofiletabpanel-left .v-slot .v-widget{
+	color: #58595B;
+	font-family: helvetica; /* should be vagabond */
+	font-size: 18px;
+	/*padding-left: 30px;*/
+	/*padding-right: 15px;*/
+	/*width: 205px; *//*total 250*/
+}
+.m-userprofile-tabpanel-font {
+	color: #58595B;
+	font-family: helvetica; /* should be vagabond */
+	font-size: 18px; 
+}
+
+.m-userprofile-table .v-table-body .v-table-table .v-table-row .v-table-cell-content .v-table-cell-wrapper .v-widget,
+.m-userprofile-table .v-table-body .v-table-table .v-table-row-odd .v-table-cell-content .v-table-cell-wrapper .v-widget {
+	color: #58595B;
+	font-family: helvetica;
+	font-size: 14px;
+	white-space: nowrap;
+	overflow: hidden;
+	/*line-height:normal;*/
+	vertical-align:middle;
+}
+
+/* doc says this should work: */
+/* .m-actiondashboard-table .v-table-body .v-table-table .v-table-row .v-table-cell-content */
+
+.m-actiondashboard-table .v-table-body .v-table-table .v-table-row     .v-table-cell-content .v-table-cell-wrapper .v-widget,
+.m-actiondashboard-table .v-table-body .v-table-table .v-table-row-odd .v-table-cell-content .v-table-cell-wrapper .v-widget {
+	color: #58595B;
+	font-family: helvetica;
+	font-size: 14px;
+	white-space: nowrap;
+	overflow: hidden;
+	line-height:normal;
+}
+/* these two should have equal specificity, so the latter one wins; i.e., the following one */
+.m-actiondashboard-table .v-table-body .v-table-table .v-table-row     .v-table-cell-content .v-table-cell-wrapper .m-actionplan-redtext,
+.m-actiondashboard-table .v-table-body .v-table-table .v-table-row-odd .v-table-cell-content .v-table-cell-wrapper .m-actionplan-redtext {
+	color: #CB0613;
+    font-weight: bold;
+}
+
+.m-actiondashboard-table .v-table-body .v-table-table .v-table-row     .v-table-cell-content .v-table-cell-wrapper .m-actionplan-highlighted_background,
+.m-actiondashboard-table .v-table-body .v-table-table .v-table-row-odd .v-table-cell-content .v-table-cell-wrapper .m-actionplan-highlighted_background {
+    background-color: #FFD300; /* yellow */
+}
+.m-actiondashboard-table .v-table-header-wrap .v-table-header .v-table-caption-container{
+	color: #58595B;
+	font-family: helvetica;
+	font-size: 14px;
+	font-weight: bold;
+	white-space: nowrap;
+	overflow: hidden;
+	line-height:normal;
+}
+
+.m-userprofile3bottom {
+    background-color: transparent;
+    background-image:url('#{$imageRepo}/userProfile3Bottom969x841.png');
+    background-repeat: no-repeat;
+}
+.m-userprofile3HisBottom {
+    background-color: transparent;
+    background-image:url('#{$imageRepo}/userProfile3NotMeBottom969x841.png');
+    background-repeat: no-repeat;
+}
+.v-nativebutton-m-userProfile3MyMailTab {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/userprofile3_mymail_white_tab_173w81h.png');
+  border-style:none;
+  width:173px;
+  height:81px;
+}
+.v-nativebutton-m-userProfile3MyBuddiesTab {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/userprofile3_mybuds_white_tab_176w81h.png');
+  border-style:none;
+  width:176px;
+  height:81px;
+}
+.v-nativebutton-m-userProfile3MyActionPlansTab {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/userprofile3_myaps_white_tab_215w81h.png');
+  border-style:none;
+  width:215px;
+  height:81px;
+}
+.v-nativebutton-m-userProfile3MyIdeasTab {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/userprofile3_myideas_white_tab_184w81h.png');
+  border-style:none;
+  width:184px;
+  height:81px;
+}
+.v-nativebutton-m-userProfile3HisBuddiesTab {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/userprofile3_hisbuds_white_tab_176w81h.png');
+  border-style:none;
+  width:176px;
+  height:81px;
+}
+.v-nativebutton-m-userProfile3HisActionPlansTab {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/userprofile3_hisaps_white_tab_215w81h.png');
+  border-style:none;
+  width:215px;
+  height:81px;
+}
+.v-nativebutton-m-userProfile3HisIdeasTab {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/userprofile3_hisideas_white_tab_184w81h.png');
+  border-style:none;
+  width:184px;
+  height:81px;
+}
+.m-whitepage-header {
+	background-color: transparent;
+	background-image:url('#{$imageRepo}/whiteGradientPageTop988w446h.png');
+	background-repeat:no-repeat;
+	background-position:center top;
+}
+.v-table-m-leaderboard-table .v-table-cell-content,
+.v-table-cell-wrapper .m-userTableText {
+	height: 25px;
+	line-height:25px;
+}
+		
+
+div .v-nativebutton-m-link-button .v-nativebutton-caption,
+.m-checkbox-like-link, .m-learn-more-link{
+	color: #42699f; /* blue */
+	font-size: 16px;
+	font-weight: normal;
+}
+div .v-nativebutton-m-link-button-14 .v-nativebutton-caption,
+.v-link-m-rfeLink{
+	color: #42699f; /* blue */
+	font-size: 14px;
+	font-weight: normal;
+}
+div .v-nativebutton-m-link-button-dim .v-nativebutton-caption {
+	color: #c5d6ed; /* lt-blue */
+	font-size: 16px;
+	font-weight: normal;
+}
+div .v-nativebutton-m-link-button-18 .v-nativebutton-caption{
+	color: #42699f; /* blue */
+	font-size: 18px;
+	font-weight: normal;
+	vertical-align: baseline;
+}
+
+.m-actionDashboardBlackTabs {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/actionDashboardBlackTabs778w60h.png');
+  border-style:none;
+  width:778px;
+  height:60px;
+}
+.m-actionplan-mission-title-text {
+	color: #58595B;
+	font-family: helvetica;
+	font-size: 18px; /*24px;*/
+	line-height: 110%;
+	font-style: italic;
+	font-weight: bold;
+}
+
+.m-actionplan-mission-content-text{
+	color: #58595B;
+	font-family: helvetica;
+	font-size: 12px; /*14px;*/	
+}
+
+
+/* This is the way to do image buttons: in code, butt.setStyleName("m-blah") */
+.v-nativebutton-m-howToWinAction {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/howToWinAction157w77h.png');
+  border-style:none;
+  width:157px;
+  height:77px;
+}
+.v-nativebutton-m-howToWinAction:hover {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/howToWinActionHover157w77h.png');
+  border-style:none;
+  width:157px;
+  height:77px;
+}
+
+.v-nativebutton-m-actionDashboardActionPlansTab {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/actionPlansWhiteTab246w60h.png');
+  border-style:none;
+  width:246px;
+  height:60px;
+}
+.v-nativebutton-m-actionDashboardActionPlansTab:focus {
+  outline:0; 
+}
+
+.v-nativebutton-m-actionDashboardMyPlansTab {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/actionPlanMyPlansWhiteTab248w60h.png');
+  border-style:none;
+  width:248px;
+  height:60px;
+}
+.v-nativebutton-m-actionDashboardMyPlansTab:focus {
+  outline:0; 
+}
+
+.v-nativebutton-m-actionDashboardNeedAuthorsTab {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/actionsPlanNeedAuthorsWhiteTab263w60h.png');
+  border-style:none;
+  width:263px;
+  height:60px;
+}
+.v-nativebutton-m-actionDashboardNeedAuthorsTab:focus {
+  outline:0;
+}
+
+.m-actionplan-addimage-butt {
+	width: 189px;
+	height: 50px;
+}
+.m-actionplan-authorlist-sublabel {
+	color: #58595B;
+	font-family: helvetica;
+	font-size: 12px;
+}
+.m-actionplan-background2 {
+    background-color: transparent;
+    background-image:url('#{$imageRepo}/actionPlanBackNew1089w1821h.png');  /* url rel to this css file, so will get from VAADIN/themes/mmowgliOne/ */
+    background-repeat: no-repeat;
+}
+.m-actionplan-comment-text, .m-actionplan-comment-superinteresting label {
+    color: #58595B;
+    font-family: helvetica;
+    font-size: 12px;
+    font-weight: lighter;
+}
+.m-actionplan-comments-button .v-nativebutton-caption {
+	font-family: helvetica;
+	font-size: 14px;
+	color: #1B75BC;
+    text-align: left;	
+}
+.m-actionplan-edit-notification {
+	color:#58595b;
+	background-color: #A5D39F; /* lt green */
+}
+.v-nativebutton-m-actionplan-envelope-button {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/envelopeIcon80x44.png');
+  border-style:none;
+  width:90px;
+  height:44px;
+  margin-left:10px;	
+}
+.m-actionplan-title, .m-actionplan-header-container .m-actionplan-title {
+	color: #231F20;
+	font-family: helvetica;
+	font-size: 20px; /*26px; 36px;*/
+	line-height: 110%;
+	background-color: #f1f1f1; /* gray */	
+	border-style:none; /*border: 1px solid #D6D6D6;*/ /* little darker gray */
+}
+.m-actionplan-history-button .v-nativebutton-caption {
+	font-family: helvetica;
+	font-size: 10px;
+	color: #1B75BC;
+    text-align: left;
+    margin-right:10px;	
+}
+.m-actionplan-nothumbs-button .v-nativebutton-caption {
+	font-family: helvetica;
+	font-size: 10px;
+	color: #1B75BC;
+    /*text-align: left;	*/
+}
+.m-actionplan-plan-rightside .m-actionplan-plan-answer {
+	color: #58595B;
+	font-family: helvetica;
+	font-size: 12px;
+	background-color: #EFEFF0; /* gray */	
+	border: 1px solid #58595B;	
+}
+.m-actionplan-plan-rightside .m-actionplan-plan-question {
+	color: #58595B;
+	font-family: helvetica;
+	font-size: 18px;
+}
+.m-actionplan-searchlibrary-butt {
+	width: 188px;
+	height: 50px;
+}
+.m-actionplan-image-panel{
+	color: #58595B;
+	font-family: helvetica;
+	font-size: 12px;
+	background-color: #f1f1f1; /* gray */	
+	border: 1px solid #D6D6D6; /* little darker gray */
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+.m-actionplan-image-title {
+	color: #58595B;
+	font-family: helvetica;
+	font-size: 12px;
+	background-color: #f1f1f1; /* gray */	
+	border: none;
+}
+.m-actionplan-textentry, .m-actionplan-images-caption {
+	color: #58595B;
+	font-family: helvetica;
+	font-size: 12px;
+	background-color: #f1f1f1; /* gray */	
+	border: 1px solid #D6D6D6; /* little darker gray */
+}
+.v-nativebutton-m-actionPlanAddAuthorButt {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/addAuthorButt137w31h.png');
+  border-style:none;
+  width:137px;
+  height:31px;
+}
+.m-actionPlanAddAuthorList {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/actionPlanAuthorList190w198h.png');
+  border-style:none;
+  width:190px;
+  height:198px;
+}
+.m-actionPlanBlackTabs {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/actionPlanBlackTabs785w60h.png');
+  border-style:none;
+  width:785px;
+  height:60px;
+}
+.v-nativebutton-m-actionPlanBlackThumb {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/blackThumb21w29h.png');
+  border-style:none;
+  width:21px;
+  height:29px;
+}
+.v-nativebutton-m-actionPlanGreyThumb {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/greyThumb21w29h.png');
+  border-style:none;
+  width:21px;
+  height:29px;
+}
+
+.m-actionplancomment_leftborder {
+	border-left-color:#58595B;
+	border-left-style:solid;
+	border-left-width:1px;
+	padding-left:5px;
+}
+.v-nativebutton-m-actionPlanThePlanTab {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/thePlanWhiteTab162w60h.png');
+  border-style:none;
+  width:162px;
+  height:60px;
+}
+.v-nativebutton-m-actionPlanTalkItOverTab {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/talkItOverWhiteTab197w60h.png');
+  border-style:none;
+  width:197px;
+  height:60px;
+}
+.v-nativebutton-m-actionPlanImagesTab {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/imagesWhiteTab152w60h.png');
+  border-style:none;
+  width:152px;
+  height:60px;
+}
+.v-nativebutton-m-actionPlanVideosTab {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/videoWhiteTab131w60h.png');
+  border-style:none;
+  width:131px;
+  height:60px;
+}
+.v-nativebutton-m-actionPlanMapTab {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/mapWhiteTab115w60h.png');
+  border-style:none;
+  width:115px;
+  height:60px;
+}
+.v-panel-content .m-actionplan-theplan-fields, .m-actionplan-theplan-fields {
+	color: #58595B;
+	font-family: helvetica;
+	font-size: 12px;
+	background-color: #EFEFF0; /* gray */	
+	border-style:none;	
+}
+.m-actionplan-theplan-fields-white {
+	color: #58595B;
+	font-family: helvetica;
+	font-size: 12px;
+	background-color: white;	
+	border-style:none;	
+}
+
+.m-centered-10px-label {
+	color: #58595B;
+	font-family: helvetica;
+	font-size: 10px;
+	line-height:90%;
+	text-align: center; 
+}
+.m-chatmessage-mine {
+	background-color:#F0F0F0;
+	color: #58595B;
+	font-family: helvetica;
+	font-size: 14px;
+	border: 1px solid #58595B;
+	padding: 3px;
+}
+.m-chatmessage {
+	background-color:white;
+	color: #58595B;
+	font-family: helvetica;
+	font-size: 14px;
+	border: 1px solid #58595B;
+	padding: 3px;
+}
+
+.v-nativebutton-m-helpWantedButton {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/helpWanted136w136h.png');
+  border-style:none;
+  width:136px;
+  height:136px;
+}
+.v-nativebutton-m-interestedButton {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/interested136w136h.png');
+  border-style:none;
+  width:136px;
+  height:136px;
+}
+.v-nativebutton-m-newChatLabel {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/newIcon32w9h.png');
+  border-style:none;
+  width:32px;
+  height:9px;
+}
+.v-nativebutton-m-rfeButton {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/rfe136w134h.png');
+  border-style:none;
+  width:136px;
+  height:134px;
+}
+/*
+.v-nativebutton-m-rfeButton:hover {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/rfe136w134h.png');
+  border-style:none;
+  width:136px;
+  height:134px;
+ } 
+ */
+.v-nativebutton-m-rfePendingButton {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/rfePending136w134h.png');
+  border-style:none;
+  width:136px;
+  height:134px;
+}
+.v-nativebutton-m-submitButton {
+  background: transparent  no-repeat;
+  background-image: url('#{$imageRepo}/submitButton61w17h.png');
+  border-style:none;
+  width:61px;
+  height:17px;
+}
+.m-whitepanel-middle {
+  background-color: transparent;
+  background-image:url('#{$imageRepo}/panelmiddle968w18h.png');
+  background-repeat: repeat-y;
+}
+.m-actionplan-comment-hidden {
+	background-color: #DCDCDC; /*#F4F4F4;*/
+	border: 1px solid #58595B;
+	padding: 5px;
+}
+.m-ideaDashboardBlackTabs {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/ideaDashboardBlackTabs778w60h.png');
+  border-style:none;
+  width:778px;
+  height:60px;
+}
+.m-ideaDashboardTabStrip {
+  background: transparent no-repeat; 
+  background-image: url('#{$imageRepo}/ideaDashboardEmptyBlackTabs778w60h.png');
+  border-style:none;
+  width:778px;
+  height:60px;
+}
+.m-ideaDashboardEmptyBlackTabs {
+  background: transparent;
+  border-style:none;
+  width:778px;
+  height:60px;
+}
+.m-ideaDashboardPositiveBlackTab, .m-ideaDashboardNegativeBlackTab {
+	color: #bcbec0;
+	font-family: helvetica;
+	font-weight: bold;
+	/*font-variant: small-caps;*/
+	font-size: 13px;
+	padding-top: 25px;
+	text-transform: uppercase;
+	text-align: center;
+}
+.m-ideaDashboardBlackTabsEfficiencyConsumption {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/ideaDashboardBlackTabsEfficiencyConsumption778w60h.png');
+  border-style:none;
+  width:778px;
+  height:60px;	
+}
+.v-nativebutton-m-ideaDashboardMostRecentTab {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/mostRecentWhiteTab201w60h.png');
+  border-style:none;
+  width:201px;
+  height:60px;
+}
+.v-nativebutton-m-ideaDashboardMostRecentTab:focus {
+  outline:0;
+}
+.v-nativebutton-m-ideaDashboardBestStrategyTab, .v-nativebutton-m-ideaDashboardInnovateTab {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/innovateWhiteTab163w60h.png');
+  border-style:none;
+  width:163px;
+  height:60px;
+}
+.v-nativebutton-m-ideaDashboardBestStrategyTab:focus, .v-nativebutton-m-ideaDashboardInnovateTab:focus {
+  outline:0;
+}
+.v-nativebutton-m-ideaDashboardEfficiencyTab, .v-nativebutton-m-ideaDashboardEfficiencyTab {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/efficiencyWhiteTab163w60h.png');
+  border-style:none;
+  width:163px;
+  height:60px;	
+}
+.v-nativebutton-m-ideaDashboardEfficiencyTab:focus, .v-nativebutton-m-ideaDashboardEfficiencyTab:focus {
+  outline:0;
+}
+.v-nativebutton-m-ideaDashboardEmptyInnovateTab {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/emptyWhiteTab163w60h.png');
+  border-style:none;
+  width:163px;
+  height:60px;	
+}
+.v-nativebutton-m-ideaDashboardEmptyInnovateTab:focus {
+  outline:0;
+}
+
+.m-ideaDashboardEmptyInnovateTab .v-nativebutton-caption, .m-ideaDashboardEmptyDefendTab .v-nativebutton-caption {
+  color: #221F20;
+  font-family: helvetica;
+  font-weight: bold;
+  font-size: 18px;
+}
+
+.v-nativebutton-m-ideaDashboardEmptyDefendTab {
+  background: transparent no-repeat; 
+  background-image: url('#{$imageRepo}/emptyWhiteTab177w60h.png');
+  border-style:none;
+  width:177px;
+  height:60px;	
+}
+.v-nativebutton-m-ideaDashboardEmptyDefendTab:focus {
+  outline:0;
+}
+
+.v-nativebutton-m-ideaDashboardWorstStrategyTab, .v-nativebutton-m-ideaDashboardDefendTab {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/defendWhiteTab177w60h.png');
+  border-style:none;
+  width:177px;
+  height:60px;
+}
+.v-nativebutton-m-ideaDashboardWorstStrategyTab:focus, .v-nativebutton-m-ideaDashboardDefendTab:focus {
+  outline:0;
+}
+
+.v-nativebutton-m-ideaDashboardConsumptionTab, .v-nativebutton-m-ideaDashboardConsumptionTab {
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/consumptionWhiteTab177w60h.png');
+  border-style:none;
+  width:177px;
+  height:60px;
+}
+.v-nativebutton-m-ideaDashboardConsumptionTab:focus, .v-nativebutton-m-ideaDashboardConsumptionTab:focus {
+  outline:0;
+}
+
+.v-nativebutton-m-ideaDashboardSuperActiveTab{
+  background: transparent no-repeat;
+  background-image: url('#{$imageRepo}/superActiveWhiteTab219w60h.png');
+  border-style:none;
+  width:219px;
+  height:60px;
+}
+.v-nativebutton-m-ideaDashboardSuperActiveTab:focus{
+  outline:0;
+}
+
+.m-playanidea-heading-text {
+  color: #6C6D6F;
+  font-family: helvetica; /* font-family: 'Special Elite', cursive;*/
+  font-style: italic;
+  font-size: 20px;
+  line-height: 125%;
+  text-align: left;
+}
+.m-playidea-help-text {
+	color: #58595B;
+    font-family: helvetica;
+    font-size: 11px;
+}
+.m-playidea-description-text {
+	color: #58595B;
+    font-family: helvetica;
+    font-size: 18px;
+    /*line-height: 125%; */
+}
+.m-useradmintable .v-table-header-wrap .v-table-header .v-table-header-cell .v-table-caption-container{
+  font-size:10px;
+  line-height:100%;
+}
+div div .m-useradmin-search-combo .v-filterselect-button {
+  position: relative;
+}
+.m-useradmin-edit-form table .v-formlayout-row .v-formlayout-captioncell .v-caption {
+  font-size: inherit;
+  line-height: inherit;
+  height:auto;
+ }
+.m-useradmin-edit-form table .v-formlayout-row .v-formlayout-captioncell{  
+  padding-top:3px;
+  padding-bottom:3px;
+}
+.m-useradmin-edit-form table .v-formlayout-row .v-formlayout-contentcell{  
+  padding-top:3px;
+  padding-bottom:3px;
+}
+.m-yellow {
+	color: black;
+	background-color: yellow;
+}
+.v-Notification.m-yellow-notification {
+  color: black;
+  background-color: yellow;
+  border: 2px solid black;
+  width: 400px;
+}
+.v-Notification.m-green-notification {
+  color: white;
+  background-color: green;
+  border: 2px solid white;
+  width: 400px;
+}
+.v-Notification.m-default-notification {
+  width: 400px;
+}
+
+/* CARDS */
+/* Duplicate in mobile style file */
+/*********/
+.m-orange, .m-expand-color, .m-f26522, #m-orange {
+ /* color: white;*/
+  background-color: #f26522;
+}
+.m-orange-text {
+  color: #EB642D;
+}
+
+.m-red, .m-counter-color, .m-b61861, #m-red {
+  /* color: white;*/
+  background-color: #b61861;
+}
+.m-red-text, div .m-red-text a:link span, div .m-red-text a:visited span {
+  color: #B20062;
+}
+.m-blue, .m-adapt-color, .m-0f75bc, #m-blue {
+  /* color: white;*/
+  background-color: #0f75bc;
+}
+.m-blue-text {
+  color: #2775BD;	
+}
+.m-lime, .m-explore-color, .m-8cc63f, #m-lime {
+  /* color: white;*/
+  background-color: #8cc63f;
+}
+.m-lime-text {
+  color: #90CB41;
+}
+
+//cardstyle
+.m-orange, .m-orange-back, .m-expand-color, .m-f26522 {
+  background-color: #f26522;
+}
+.m-orange-text {
+  color: #EB642D;
+}
+
+//cardstyle
+.m-red, .m-red-back, .m-counter-color, .m-b61861 {
+  background-color: #b61861;
+}
+.m-red-text {
+  color: #B20062;
+}
+
+//cardstyle
+.m-blue, .m-blue-back, .m-adapt-color, .m-0f75bc {
+  background-color: #0f75bc;
+}
+.m-blue-text {
+  color: #2775BD;	
+}
+
+//cardstyle
+.m-lime, .m-lime-back, .m-explore-color, .m-8cc63f {
+  background-color: #8cc63f;
+}
+.m-lime-text {
+  color: #90CB41;
+}
+
+//cardstyle
+.m-purple, .m-purple-back, .m-resource-color, .m-662d91 {
+  background-color: #662d91;
+}
+.m-purple-text {
+  color: #682491;
+}
+
+//cardstyle
+.m-green, .m-green-back, .m-risk-color, .m-00a651{
+  background-color: #00a651;
+}
+.m-green-text {
+  color: #24AB51; /*green*/	
+}
+
+//cardstyle
+.m-darkred, .m-darkred-back, .m-ab0000 {
+  background-color: #AB0000;
+}
+.m-darkred-text {
+  color: #AB0000;	
+}
+
+//cardstyle
+.m-armyblack, .m-armyblack-back, .m-000000 {
+  background-color: #000000;
+}
+.m-armyblack-text {
+  color: #000000;
+}
+
+//cardstyle
+.m-armygold, .m-armygold-back, .m-fcc702 {
+  background-color: #FCC702;
+}
+.m-armygold-text {
+  color: #FCC702;
+}
+
+//cardstyle
+.m-navyblue, .m-navyblue-back, .m-032e57 {
+  background-color: #032E57;
+}
+.m-navyblue-text {
+  color: #032E57;	
+}
+
+//cardstyle
+.m-navygold, .m-navygold-back, .m-fcbb38 {
+  background-color: #fcbb38;
+}
+.m-navygold-text {
+  color: #fcbb38;
+}
+
+//cardstyle
+.m-whitecard, m-whitecard-back {
+  background-color: #EEEEEE;
+}
+.m-whitecard-text {
+  color: #EEEEEE;
+}
+
+.m-white-text {
+  color: white;
+}
+
+.m-black-text {
+  color: black;
+}
+
+//cardstyle
+.m-blackcard, .m-blackcard-back {
+  background-color: #373737;
+}
+.m-blackcard-text {
+  color: #58595B;
+}
+
+.m-lightgray {
+  background-color: LightGray;
+}
+.m-lightgray-text {
+  color: LightGray;
+}
+.m-lightergray {
+  background-color: #e3e3e3;
+}
+.m-lightergray-text {
+  color: #e3e3e3;
+}
+
+/* Google web fonts (see WebFontLoaderApplicationServlet.java)*/
+.m-handwriting-font {
+  font-family: 'Nothing You Could Do', cursive;
+}
+.m-vagabond-font {
+  font-family: 'Varela Round', sans-serif;
+  font-weight: bold;
+}
+.m-typewriter-font {
+  font-family: 'Special Elite', cursive;
+}
+
+.m-centeralign {
+  text-align:center;
+}
+.m-font-bold14 {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.m-font-21-bold {
+  font-size:21px;
+  font-weight:bold;
+  line-height:140%;
+}
+.m-greenbutton .v-button-wrap .v-button-caption {
+	color: #4DA373;
+}
+
+.m-italic {
+  font-style:italic;
+}
+.m-overflow-hidden {
+	overflow: hidden;
+}
+.m-overflow-visible {
+  overflow: visible;
+}
+.m-noleftmargin, .v-textfield-m-noleftmargin, .m-dialog-content tbody tr td input.m-noleftmargin, .m-dialog-content div div input.m-noleftmargin {
+  margin-left: 0px;
+}
+.m-noresize {
+	resize: none;
+}
+.m-nowrap {
+	white-space:nowrap;
+}
+.m-nopadding{
+  padding:0px; 
+}
+.m-opacity-75 {
+  opacity:0.75;
+}
+.m-padding2 {
+  padding: 2px;
+}
+.m-padding15 {
+  padding: 15px;
+} 
+.m-font-bold14 {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.m-font-bold11 {
+  font-size: 11px;
+  font-weight: bold;
+}
+.m-font-12 p,
+.m-font-12 {
+  font-size: 12px;
+}
+
+.m-font-size-11 {
+  font-size: 11px;
+  color: #58595B;
+  line-height: 100%;
+}
+.m-font-size-xx-small {
+  font-size:xx-small;
+}
+.m-font-size-x-small {
+  font-size:x-small;
+}
+.m-font-size-small {
+  font-size:small;
+}
+.m-font-size-medium {
+  font-size:medium;
+}
+.m-font-size-large {
+  font-size:large;
+}
+.m-font-size-x-large {
+  font-size:x-large;
+}
+.m-font-size-x-large-bold {
+  font-size:x-large;
+  font-weight: bold;
+}
+.m-font-size-xx-large {
+  font-size:xx-large;
+}
+.m-font-size-smaller {
+  font-size:smaller;
+}
+.m-font-size-larger {
+  font-size:larger;
+}
+
+/* bingo, re buttons: http://vaadin.com/forum/-/message_boards/message/223863 */
+.m-cloud-size12 .v-nativebutton-caption {
+  font-size: 12px;
+  margin: 5px;
+}
+.m-cloud-size16 .v-nativebutton-caption {
+  font-size: 16px;
+  margin: 5px;
+}
+.m-cloud-size20 .v-nativebutton-caption {
+  font-size: 20px;
+  margin: 5px;
+}
+.m-cloud-size24 .v-nativebutton-caption {
+  font-size: 24px;
+  margin: 5px;
+}
+.m-cloud-size28 .v-nativebutton-caption {
+  font-size: 28px;
+  margin: 5px;
+}
+}

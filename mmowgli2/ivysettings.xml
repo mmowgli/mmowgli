@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright (C) 2010-2014 Modeling Virtual Environments and Simulation
+  (MOVES) Institute at the Naval Postgraduate School (NPS)
+  http://www.MovesInstitute.org and http://www.nps.edu
+ 
+  This file is part of Mmowgli.
+  
+  Mmowgli is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  any later version.
+
+  Mmowgli is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with Mmowgli in the form of a file named COPYING.  If not,
+  see <http://www.gnu.org/licenses/>
+-->
+<ivysettings>
+	<settings defaultResolver="default" />
+	<resolvers>
+		<chain name="default">
+			<!-- Public Maven repository -->
+			<ibiblio name="public" m2compatible="true" />
+
+			<!-- Vaadin Add-on repository -->
+			<ibiblio name="vaadin-addons" usepoms="true" m2compatible="true" root="http://maven.vaadin.com/vaadin-addons" />
+
+			<!-- Vaadin snapshots repository -->
+			<ibiblio name="vaadin-snapshots" usepoms="true" m2compatible="true" root="https://oss.sonatype.org/content/repositories/vaadin-snapshots" />
+
+			<!-- Repository used for Vaadin modified smartsprites library -->
+			<dual name="custom-smartsprites">
+				<filesystem name="smartsprites-ivy">
+					<ivy pattern="${basedir}/ivymodule/[module]-ivy-[revision].xml" />
+				</filesystem>
+				<url name="smartsprites-artifact">
+					<artifact
+						pattern="http://dev.vaadin.com/svn/versions/6.8/build/smartsprites/lib/[artifact](-[revision]).[ext]" />
+				</url>
+			</dual>
+		</chain>
+	</resolvers>
+	<modules>
+		<!-- Vaadin patched SmartSprites -->
+		<module organisation="com.carrotsearch" name="smartsprites" revision="0.2.3-itmill" resolver="custom-smartsprites" />
+	</modules>
+
+
+</ivysettings>

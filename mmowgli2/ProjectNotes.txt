@@ -1,0 +1,179 @@
+30 Jan 2015
+This is a readme for the first version of mmowgli built using Vaadin 6.  Much has changed since then so
+there will be things below that are incorrect.  Hope to update this soon.
+
+Build Requirements:
+Eclipse J2EE Indigo
+Vaadin plugin
+Tomcat 6* local installation
+Java Cryptography Extension (JCE)
+Insert following file (which isn't in SVN) in the source tree / edu.nps.moves.mmowgli.DBEncryptor class:
+
+package edu.nps.moves.mmowgli;
+public class DBEncryptor
+{
+  public static String getSimplePBEPassword()
+  {
+    return "somepasscodeusedtoencrypt";
+  }
+}
+
+First build steps:
+--tbd--
+set Tomcat startup timeout to 120 sec.s to allow lucene indexing to occur.
+
+Previous random notes:
+Use the nodist forms of gwt libs so as to only have one version of gwt-ajaxloader stuff.
+
+Media location:
+---------------
+From a programmer/app-packaging/deployment point of view, including all static application images in the created
+WAR file is most desireable:  all files are contained in one war (jar/zip) file along with application class and css
+files.  The image files are served to the client by the Tomcat application server.
+
+This method works well, but is not performance-optimal.  Most images in the application will be countlessly reloaded
+by the user when switching pages, etc.  It is best if this data were cached on the client end. A web browser can do this, but
+the web browser is never given a chance to do this if the images are kept "within" the app and loaded "internally" by
+Tomcat.
+
+It is a simple matter in vaadin to specify how an image is to be referenced.  It is marked as a FileResource, ClassResource or
+ExternalResource. The first is loaded through the (server) filesystem.  The latter two were just discussed.
+
+There is a configuration parameter "applicationImagePath".  It contains the root path on the application server where the statically-served media
+sits.  By default, it is set to /mmowgliMedia .
+
+The database will have media entries, and those entries will include a path.  The standard for specifying media image paths in
+Mmowgli follows.
+
+1.  Media is marked with a source field enum == WEB, CLASSPATH or FILESYSTEM and a path.
+2.  If WEB:
+	  if the path contains a colon, it is assumed to be a complete URL and is passed straightaway to the browser
+	  Else, the URL is composed of "http://webapplicationhostname:80/" plus a constructed path:
+	  	  if the path begins with a "/", it is appended to the host part, e.g. "http://host:80/path
+	  	  Else if the media is marked as IMAGE, the complete url is  "http://host:80/mmowgliMedia/images/path"
+	  	  Else if the media is marked as AVATAR, the complete url is "http://host:80/mmowgliMedia/images/avatars/path"
+3.  If CLASSPATH:
+      The media path specifies only a file name, and it is loaded through the classloader.  In the current code, the image root package is relative to
+      the application entry point class:
+          IMAGE: the classloader loads <appentrypointpackage>.resources.images.name
+          AVATAR: the classloader loads <appentrypointpackage>.resources.images.avatars.name
+4.  If FILESYSTEM:
+      This is not used in the current game, but if it were, a root directory for relative paths would have to be defined.  Then any name
+      not starting with a slash would be looked for from that directory.  Any name starting with / is assumed to be an absolute path starting
+      from the file system root.
+
+-----
+To build/deploy as a NetBeans project:
+
+1) Download and install the latest NB platform (full install to include servers)
+   from netbeans.org.  Ensure the Tomcat server is installed by selecting
+   "Customize Installation" from the install wizard.
+
+2) Follow guidance from: https://vaadin.com/book/-/page/getting-started.netbeans.html
+    Start from the title: Regular Web Application Project
+
+3) Need to include libs from GWT version 2.3.0, which Vaadin v6.8.12
+   uses, in order to compile a custom vaadin widget wet.  GWT version
+   is discerned from reading the release notes for Vaadin v6.8.12.
+   D/L from: http://google-web-toolkit.googlecode.com/files/gwt-2.3.0.zip
+
+4) It is noticed that the vaadin jar already contains the themes: base and reindeer.
+   They are extracted and placed directly in the web file system in order to permit
+   more efficient theme loading from the server.
+
+5) Follow guidance from NB tutorial on MySql from here:
+   https://netbeans.org/kb/docs/ide/mysql.html
+
+   It's important to set up a local DB from the mmowgli_default.sql dump file. It
+   is also important to use the command line to set up users + passwords for the
+   particular user/password set in the web.xml file customized for local
+   deployment and testing (localhost).
+
+   Make sure local MySQL server is running and that you are connected to your
+   local database under the NetBeans Services window
+
+6) How to compile GWT widgets as a Vaadin Add-on:
+   https://vaadin.com/directory/help/using-vaadin-add-ons/netbeans
+
+   Auto compilation of a widgetset is performed on a clean/re-build.
+
+7) Make sure you have the unlimited strength Java Cryptography Extension (JCE)
+   Jurisdiction Policy Files installed for your JDK version.  Version 7 obtained from:
+   http://www.oracle.com/technetwork/java/javase/downloads/jce-7-download-432124.html
+
+8) Follow guidance in the file ./src/edu/nps/moves/mmowgli/databaseEncryptionPassword.readMe
+   in order to establish a game launch smoothly
+
+9) If you desire to stop tomcat, first undeploy the mmowgli servlet, then
+   "terminate" vice stop the tomcat server as there is some kind of hangup on
+   MAC OS X if not terminated this way
+
+10) The prop: -Dsun.io.serialization.extendedDebugInfo=true set in the Tomcat
+    startup JVM parameters will help T/S serialization issues
+
+11) The context.xml in the WebContent/META-INF folder can be modified to tell
+    Tomcat not to serialize sessions:
+
+    <!-- Turn off session serialization -->
+    <Manager className="org.apache.catalina.session.PersistentManager" distributable="false" saveOnRestart="false">
+        <Store className="org.apache.catalina.session.FileStore"/>
+    </Manager>
+
+    URL: http://tomcat.apache.org/tomcat-7.0-doc/config/manager.html
+
+12) DB Table rows to delete to get rid of a bogus user (Confirm the uId first):
+
+    UserPii_EmailPii
+    UserPii
+    User
+    EmailPii
+    EmailConfirmation
+
+    Also, make sure the GameEvent table does not link a user id to some other DB
+    Table.  If so, find the offending user id and change it to a valid one just
+    to get past any JVM error.
+
+13) To update a database with new tables, or to add columns to existing tables:
+
+    1) Using Sequel Pro, or some other good DB MGMT tool, dump the new table by
+       exporting to a .sql file.
+
+    2) Edit the updateDatabaseSchema.sql by first updating the GAME version date
+
+       Copy and paste the exported CREATE TABLE excerpt below the GAME version
+       update
+
+       For updated tables (added columns), copy and paste any ALTER TABLE lines.
+       NOTE: ALTER TABLES lines can be pulled from the console output as the DB
+       is actually being changed.  Paste any UPDATE table entry lines as well
+       if you have new data for an existing table column.
+
+    3) When ready to update a DB, stop any running MMOWGLI apps., open the DB
+       in DB MGMT tool, copy all new updateDatabaseSchema.sql lines down to just prior to
+       the last update GAME line.
+
+       Select the Query icon in Sequel Pro, paste in the updated info, select
+       all of the line (to prevent having to do single line updates), and RUN
+       SELECTION
+
+       Check your work for any errors
+
+       Redeploy new game WAR file with updated Hibernate code for the DB.
+
+14) When migrating to Tomcat v8.0, follow the suggestions from here:
+    http://stackoverflow.com/questions/14375673/tomcat-7-jsp-compiler-emits-unneeded-jar-warning
+
+15) A cool, one shot way to scp the *tails.zip file to each web node (currently
+    1 - 8): scp -o 'Host web8' -o 'ProxyCommand ssh tdnorbra@test.mmowgli.nps.edu nc %h %p' web7tails.zip tdnorbra@web8:~
+    This assumes you already have an approved id_rsa.pub file on each node
+
+16) Escape single quotes in a SQL line with another 'single' quote, e.g. It''s a fine day
+
+17) Update a GM's hashes in the defaultDatabaseTemplate.sql (copy each row as a SQL INSERT into 4 tables):
+    - copy the User row of that game master and place in the INSERT INTO `User` table.
+      be sure to change the index value to the next one in sequence
+    - copy the UserPii line and place in the corresponding `UserPii` table entry
+      observing the index sequence as above
+    - increment the `UserPii_EmailPii` table with the next sequence
+    - lastly, copy the appropriate EmailPii line into the `EmailPii` table, again,
+      observing the next index in sequence.

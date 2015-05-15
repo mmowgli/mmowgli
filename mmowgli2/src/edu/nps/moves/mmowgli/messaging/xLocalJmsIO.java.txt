@@ -1,0 +1,129 @@
+/*
+  Copyright (C) 2010-2014 Modeling Virtual Environments and Simulation
+  (MOVES) Institute at the Naval Postgraduate School (NPS)
+  http://www.MovesInstitute.org and http://www.nps.edu
+ 
+  This file is part of Mmowgli.
+  
+  Mmowgli is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  any later version.
+
+  Mmowgli is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with Mmowgli in the form of a file named COPYING.  If not,
+  see <http://www.gnu.org/licenses/>
+*/
+
+package edu.nps.moves.mmowgli.messaging;
+
+import static edu.nps.moves.mmowgli.MmowgliConstants.JMS_LOCAL_HANDLE;
+import static edu.nps.moves.mmowgli.MmowgliConstants.JMS_LOCAL_TOPIC;
+
+import java.io.Serializable;
+import java.util.UUID;
+import javax.jms.*;
+import org.apache.activemq.ActiveMQConnectionFactory;
+import edu.nps.moves.mmowgli.messaging.JMSMessageUtil.JMSPacket;
+
+/**
+ * LocalJmsIO.java
+ * Created on Feb 16, 2012
+ *
+ * MOVES Institute
+ * Naval Postgraduate School, Monterey, CA, USA
+ * www.nps.edu
+ *
+ * 
+ * @author Mike Bailey, jmbailey@nps.edu
+ * @version $Id$
+ */
+public class LocalJmsIO extends DefaultInterSessionIO implements Serializable, MessageListener
+{
+  private static final long serialVersionUID = 4644603357353067116L;
+
+  public TopicSession jmsSession;
+  public Connection   jmsTopicConnection;
+  public TopicPublisher jmsInstancePublisher;  /** Writes messages to the JMS server */  
+  public MessageConsumer jmsInstanceConsumer;  /** Reads messages from the JMS server */
+  public static final int LOC_MESSAGE_TTL = 20000;
+  
+  private String appInstanceHandle = "NULL";
+  
+  public LocalJmsIO(String appInstanceHandle)
+  {
+    if(appInstanceHandle!= null)
+      this.appInstanceHandle = appInstanceHandle;
+
+    try {
+      ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(JMS_LOCAL_HANDLE); //ApplicationConstants
+      /*new*/connectionFactory.setAlwaysSessionAsync(false);
+      jmsTopicConnection = connectionFactory.createTopicConnection();
+      jmsTopicConnection.start();
+      /*new -- only one session on this connection*/
+      jmsSession = (TopicSession) jmsTopicConnection.createSession(false,Session.AUTO_ACKNOWLEDGE); 
+      Topic jmsTopic = jmsSession.createTopic(JMS_LOCAL_TOPIC);      
+      jmsInstancePublisher = jmsSession.createPublisher(jmsTopic);
+      //jmsInstancePublisher.setTimeToLive(LOC_MESSAGE_TTL);
+      jmsInstancePublisher.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+      jmsInstanceConsumer = jmsSession.createSubscriber(jmsTopic);
+
+      jmsInstanceConsumer.setMessageListener(this);
+      
+      //SysOut.println("LocalJMSIO: JMS Server connection established for inter-jvm comms, handle = "+JMS_LOCAL_HANDLE+", topic = "+JMS_LOCAL_TOPIC);
+    }
+    catch(Exception e) {
+      // This is fatal
+      throw new RuntimeException("LocalJmsIO: Cannot create a local JMS connection, exception = " + e.getClass().getSimpleName() + " " +
+          e.getLocalizedMessage());  
+    }       
+  }
+
+  /* local JMS messages in here */
+  @Override
+  public void onMessage(Message mess)
+  {
+    try {
+      //JMSMessageUtil.dump("---=-Internal Message received at "+appInstanceHandle+" from local jms: ",mess);
+      JMSPacket pkt = JMSMessageUtil.decode(mess);
+      doSysOut("r"+pkt.type);
+      deliverToReceivers(pkt.type, pkt.text, UUID.fromString(pkt.uuid), false);  // Normally just MmowgliController   
+    }
+    catch(Throwable e) { //JMSException e) {  anything like null ptr goes all the way back to ActiveMQ and is lost or probably logged...don't see it if we don't look
+      JMSMessageUtil.showException("LocalJmsIO: Cannot decode a received JMS message, exception = ", e);
+    }
+  }
+  
+  /* local JMS messages out here */
+  @Override
+  public void send(char messageType, String message)
+  {
+    try {
+      Message jmsMessage = JMSMessageUtil.create(jmsSession, messageType, message, appInstanceHandle);
+      //JMSMessageUtil.dump("-----Internal Message sent from "+appInstanceHandle+" to local jms: ", jmsMessage);
+      jmsInstancePublisher.publish(jmsMessage);
+      doSysOut("p"+messageType);
+    }
+    catch (Throwable e) { //JMSException e) {
+      JMSMessageUtil.showException("LocalJmsIO: Cannot send JMS message, exception = ", e);
+    }
+  }
+
+  @Override
+  public void kill()
+  {
+    super.kill();
+    try {
+      jmsSession.close();
+      jmsTopicConnection.close();
+    }
+    catch(JMSException e) {
+      JMSMessageUtil.showException("LocalJmsIO: Error closing JMS session, exception =",e);
+    }
+  }
+}

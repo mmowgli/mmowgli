@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<!DOCTYPE ivy-module [
+	<!ENTITY vaadin.version "7.4.5">
+]>
+
+<ivy-module version="2.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="http://ant.apache.org/ivy/schemas/ivy.xsd">
+	<info organisation="com.example" module="v7proj" />
+	<configurations>		
+		<conf name="default" />           <!-- The default configuration, which should be deployed to the server -->		
+		<conf name="widgetset-compile" /> <!-- A configuration only needed when compiling the widget set. Should not be deployed to the server -->		
+		<conf name="nodeploy" />          <!-- A configuration used in compilation of server side classes only.Should be deployed to the server -->
+	</configurations>
+	
+	<dependencies defaultconf="default" defaultconfmapping="default->default">
+
+        <dependency org="com.vaadin" name="vaadin-server"          rev="&vaadin.version;" />		<!-- The core server part of Vaadin -->       
+        <dependency org="com.vaadin" name="vaadin-themes"          rev="&vaadin.version;" />		<!-- Vaadin themes -->
+		<dependency org="com.vaadin" name="vaadin-push"            rev="&vaadin.version;" />		<!-- Push support -->       		
+		<dependency org="com.vaadin" name="vaadin-client-compiled" rev="&vaadin.version;" />		<!-- Precompiled DefaultWidgetSet -->
+		<dependency org="com.vaadin" name="vaadin-client"          rev="&vaadin.version;" conf="widgetset-compile->default" />  <!-- Vaadin client side, needed for widget set compilation -->
+		<dependency org="com.vaadin" name="vaadin-client-compiler" rev="&vaadin.version;" conf="widgetset-compile->default" />  <!-- Compiler for custom widget sets. Should not be deployed -->		
+		<dependency org="com.vaadin" name="vaadin-shared"          rev="&vaadin.version;" />		<!-- To get vaadin version -->
+		
+		<dependency org="javax.servlet"    name="javax.servlet-api" rev="3.0.1" conf="nodeploy->default" />		<!-- Servlet 3.0 API -->
+		<dependency org="javax.validation" name="validation-api"    rev="1.1.0.Final"/>
+							
+		<!--<dependency org="com.vaadin.addon" name="jpacontainer" rev="3.1.1" /> -->
+		<dependency org="xerces" name="xercesImpl" rev="2.11.0"/>
+		<dependency org="javax.mail" name="mail" rev="1.4.7"/>
+		<dependency org="javax.transaction" name="jta" rev="1.1"/>
+		<dependency org="mysql" name="mysql-connector-java" rev="5.1.28"/>
+		<dependency org="org.apache.activemq" name="activemq-core" rev="5.7.0"/>
+		<dependency org="org.jasypt" name="jasypt" rev="1.9.1"/>
+        <dependency org="org.jasypt" name="jasypt-hibernate4" rev="1.9.1"/>
+        <dependency org="org.apache.commons" name="commons-lang3" rev="3.1"/>
+        <dependency org="org.vaadin.addons" name="hbncontainer" rev="2.0.1" />
+ 		<dependency org="org.vaadin.addons" name="cssinject" rev="2.0.3" />
+	    <dependency org="org.vaadin.addons" name="animator" rev="2.0.0" />
+	    <dependency org="org.vaadin.addons" name="dom" rev="0.1.0" /> <!-- for animator -->
+ 		<dependency org="org.vaadin.addon" name="confirmdialog" rev="2.1.2" />
+ 	    <!--<dependency org="com.vaadin.tapio" name="googlemaps" rev="0.8.1" /> -->
+ 		<dependency org="org.vaadin.addons" name="restrain" rev="0.1" />
+ 		<dependency org="org.vaadin.addon" name="v-leaflet" rev="0.6.1" />
+        <dependency org="org.apache.lucene" name="lucene-core" rev="3.6.2"/> <!--"4.0.0-BETA"/> -->
+        <!--<dependency org="org.apache.lucene" name="lucene-analyzers-common" rev="4.0.0-BETA"/> -->
+        <dependency org="org.apache.lucene" name="lucene-analyzers" rev="3.6.2"/>
+        <dependency org="org.hibernate" name="hibernate-core" rev="4.3.4.Final"/>
+        <dependency org="org.hibernate" name="hibernate-search" rev="4.5.0.Final"/>
+        <dependency org="org.hibernate" name="hibernate-c3p0" rev="4.3.8.Final"/> 
+        <!-- <dependency org="org.hibernate" name="hibernate-core" rev="4.3.0.Final" /> -->
+		<!-- <dependency org="org.hibernate" name="hibernate-search-orm" rev="4.4.2.Final" /> -->
+		<dependency org="net.bull.javamelody" name="javamelody-core" rev="1.48.0"/>
+		<dependency org="org.glassfish" name="javax.json" rev="1.0.4"/>
+		<!-- for mobile -->
+ 	    <dependency org="com.vaadin.addon" name="vaadin-touchkit-agpl" rev="4.0.0"/>
+        <dependency org="org.vaadin.addon" name="ios7hotfixes" rev="6.0.2" />
+
+        <dependency org="net.sf.saxon" name="Saxon-HE" rev="9.5.1-5"/>
+        <dependency org="org.vaadin" name="viritin" rev="1.27" />
+        <!--<dependency org="org.vaadin.vol" name="openlayers-wrapper" rev="1.3.1" />  won't work with V 7.* -->
+        <dependency org="com.google.gdata" name="core" rev="1.47.1"/>
+        <dependency org="org.bouncycastle" name="bcpkix-jdk15on" rev="1.51"/>
+        <dependency org="org.vaadin.addons" name="popupbutton" rev="2.5.0" />
+        <dependency org="com.google.zxing" name="core" rev="3.2.0"/>
+        <dependency org="com.google.zxing" name="javase" rev="3.2.0"/>
+        <dependency org="org.vaadin.alump.scaleimage" name="scaleimage-addon" rev="0.2.4" />
+	</dependencies>
+</ivy-module>

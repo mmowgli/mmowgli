@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://edu.nps.moves.mmowgli.cardTree"
+	xmlns="http://edu.nps.moves.mmowgli.cardTree">
+  <xs:element name="CardTree">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="GameTitle"/>
+        <xs:element ref="GameAcronym"/>
+        <xs:element ref="GameSecurity"/>
+        <xs:element ref="GameSummary"/>
+        <xs:element ref="CallToAction"/>
+        <xs:element ref="TopLevelCards"/>
+        <xs:element ref="InnovateCards"/>
+        <xs:element ref="DefendCards"/>
+      </xs:sequence>
+      <xs:attribute name="exported" use="required"/>
+      <xs:attribute name="multipleMoves" type="xs:boolean"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GameSummary" type="xs:string"/>
+  <xs:element name="GameSecurity" type="xs:string"/>
+  <xs:element name="GameTitle" type="xs:string"/>
+  <xs:element name="GameAcronym" type="xs:string"/>
+  <xs:element name="CallToAction">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="VideoYouTubeID"/>
+        <xs:element ref="VideoAlternateUrl"/>
+        <xs:element ref="BriefingText"/>
+        <xs:element ref="OrientationSummary"/>
+      </xs:sequence>
+            <xs:attribute name="round" use="required"/>
+            <xs:attribute name="phase" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name = "TopLevelCards">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="InnovateType" maxOccurs="unbounded" >
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Type">
+                <xs:complexType>
+                  <xs:attribute name="title" use="required"/>
+                  <xs:attribute name="round" use="required"/>
+                  <xs:attribute name="prompt" use="required"/>           
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>  
+        </xs:element>             
+        <xs:element name="DefendType" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Type">
+                <xs:complexType>
+                  <xs:attribute name="title" use="required"/>                
+                  <xs:attribute name="round" use="required"/>
+                  <xs:attribute name="prompt" use="required"/>           
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>  
+       </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="InnovateCards">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="BestStrategy"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="BestStrategy">
+    <xs:complexType mixed="true">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="Adapt"/>
+        <xs:element ref="Counter"/>
+        <xs:element ref="Expand"/>
+        <xs:element ref="Explore"/>
+      </xs:choice>
+      <xs:attribute name="author" use="required"/>
+      <xs:attribute name="commonKnowledge" type="xs:boolean"/>
+      <xs:attribute name="date" use="required"/>
+      <xs:attribute name="hidden" type="xs:string"/>
+      <xs:attribute name="id" use="required" type="xs:integer"/>
+      <xs:attribute name="level" use="required" type="xs:integer"/>
+      <xs:attribute name="noChildren" type="xs:boolean"/>
+      <xs:attribute name="superInteresting" type="xs:boolean"/>
+      <xs:attribute name="moveNumber" type="xs:integer"/>
+      <xs:attribute name="color" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DefendCards">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="WorstStrategy"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="WorstStrategy">
+    <xs:complexType mixed="true">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="Adapt"/>
+        <xs:element ref="Counter"/>
+        <xs:element ref="Expand"/>
+        <xs:element ref="Explore"/>
+      </xs:choice>
+      <xs:attribute name="author" use="required"/>
+      <xs:attribute name="date" use="required"/>
+      <xs:attribute name="hidden" type="xs:string"/>
+      <xs:attribute name="id" use="required" type="xs:integer"/>
+      <xs:attribute name="level" use="required" type="xs:integer"/>
+      <xs:attribute name="noChildren" type="xs:boolean"/>
+      <xs:attribute name="superInteresting" type="xs:boolean"/>
+      <xs:attribute name="moveNumber" type="xs:integer"/>
+      <xs:attribute name="color" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Adapt">
+    <xs:complexType mixed="true">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="Adapt"/>
+        <xs:element ref="Counter"/>
+        <xs:element ref="Expand"/>
+        <xs:element ref="Explore"/>
+      </xs:choice>
+      <xs:attribute name="author" use="required"/>
+      <xs:attribute name="date" use="required"/>
+      <xs:attribute name="hidden" type="xs:string"/>
+      <xs:attribute name="id" use="required" type="xs:integer"/>
+      <xs:attribute name="level" use="required" type="xs:integer"/>
+      <xs:attribute name="superInteresting" type="xs:boolean"/>
+      <xs:attribute name="moveNumber" type="xs:integer"/>
+      <xs:attribute name="color" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Counter">
+    <xs:complexType mixed="true">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="Adapt"/>
+        <xs:element ref="Counter"/>
+        <xs:element ref="Expand"/>
+        <xs:element ref="Explore"/>
+      </xs:choice>
+      <xs:attribute name="author" use="required"/>
+      <xs:attribute name="date" use="required"/>
+      <xs:attribute name="hidden" type="xs:string"/>
+      <xs:attribute name="id" use="required" type="xs:integer"/>
+      <xs:attribute name="level" use="required" type="xs:integer"/>
+      <xs:attribute name="superInteresting" type="xs:boolean"/>
+      <xs:attribute name="moveNumber" type="xs:integer"/>
+      <xs:attribute name="color" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Explore">
+    <xs:complexType mixed="true">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="Adapt"/>
+        <xs:element ref="Counter"/>
+        <xs:element ref="Expand"/>
+        <xs:element ref="Explore"/>
+      </xs:choice>
+      <xs:attribute name="author" use="required"/>
+      <xs:attribute name="date" use="required"/>
+      <xs:attribute name="hidden" type="xs:string"/>
+      <xs:attribute name="id" use="required" type="xs:integer"/>
+      <xs:attribute name="level" use="required" type="xs:integer"/>
+      <xs:attribute name="superInteresting" type="xs:boolean"/>
+      <xs:attribute name="moveNumber" type="xs:integer"/>
+      <xs:attribute name="color" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Expand">
+    <xs:complexType mixed="true">
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="Adapt"/>
+        <xs:element ref="Counter"/>
+        <xs:element ref="Expand"/>
+        <xs:element ref="Explore"/>
+      </xs:choice>
+      <xs:attribute name="author" use="required"/>
+      <xs:attribute name="date" use="required"/>
+      <xs:attribute name="hidden" type="xs:string"/>
+      <xs:attribute name="id" use="required" type="xs:integer"/>
+      <xs:attribute name="level" use="required" type="xs:integer"/>
+      <xs:attribute name="superInteresting" type="xs:boolean"/>
+      <xs:attribute name="moveNumber" type="xs:integer"/>
+      <xs:attribute name="color" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="VideoYouTubeID" type="xs:string"/>
+  <xs:element name="VideoAlternateUrl" type="xs:string"/>
+  <xs:element name="BriefingText" type="xs:string"/>
+  <xs:element name="OrientationSummary" type="xs:string"/>
+</xs:schema>
