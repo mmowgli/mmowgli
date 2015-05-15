@@ -1,0 +1,701 @@
+/**
+ * This TouchKit example is themed in standard Vaadin way. 
+ * Note, that themes work bit like in Portlets, the "base theme" 
+ * is added by TouchKit, and there is no need to for @import in 
+ * this theme css.
+ *
+ * For optimal (GWT packaged) theme example, see Vornitologist.
+ */
+
+
+/* QR code popup */
+.v-app .qr-code {
+	background: transparent;
+	text-shadow: none;
+	color: #fff;
+}
+
+.qr-code .v-window-closebox {
+	top: auto;
+	bottom: 14px;
+	right: auto;
+	left: 190px;
+	background: transparent;
+	width: auto;
+	height: auto;
+	padding: .3em 0;
+	white-space: nowrap;
+	border-bottom: 1px solid #FFF;
+	z-index: 100;
+}
+
+.qr-code .v-window-closebox:before {
+	content: "OK, show me the demo anyway";
+}
+
+.qr-code .v-qrcode {
+	-webkit-box-shadow: 0 2px 8px #000;
+	box-shadow: 0 2px 8px #000;
+}
+
+.qr-code .v-spacing {
+	width: 30px;
+}
+
+.qr-code .v-label {
+	font-weight: bold;
+	line-height: 1.4;
+}
+
+
+
+
+.v-app .v-label,
+.v-app .v-csslayout {
+	overflow: visible;
+}
+
+.v-scrollable{
+  -webkit-overflow-scrolling: touch;
+}
+
+.v-touchkit-navbar .v-touchkit-componentgroup-h {
+	white-space: nowrap;
+}
+
+.v-table-body {
+	border: none;
+	overflow: hidden;
+}
+
+.v-touchkit-popover .v-table-body {
+	border-radius: 5px;
+}
+
+
+
+.tablet .mailboxes {
+	border-right: 1px solid rgba(0,0,0,.3);
+}
+
+.tablet .mailboxes .v-touchkit-navview-wrapper,
+.tablet .mailboxes .v-touchkit-navpanel-placeholder {
+	background: #f6f6f7;
+}
+
+.phone .v-touchkit-navview-wrapper .v-table,
+.phone .v-touchkit-navpanel-placeholder {
+	background: #fff;
+}
+
+.mailboxes .v-table-body {
+	border: none;
+}
+
+.mailboxes .v-table .v-touchkit-navbutton {
+	border: none;
+	padding: 0 12px;
+	margin: -5px 0;
+}
+
+.mailboxes .v-table .v-touchkit-navbutton:focus,
+.mailboxes .v-table .v-touchkit-navbutton:active {
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#4d8cb9), to(#3e6fa8));
+	color: #fff;
+	text-shadow: 0 1px 1px #396897;
+}
+
+.mailboxes .v-table-cell-content {
+	padding: 0;
+	vertical-align:middle;
+}
+
+.v-touchkit-navview-toolbar .v-touchkit-navbar-caption {
+	font-size: 13px;
+	}
+
+.v-navbutton::after {
+	top: 0 !important;
+}
+
+.v-table .v-label.new-marker {
+	height: 50px;
+	width: 30px;
+	padding: 0;
+	background: transparent url(graphics/blue-ball.png) no-repeat 50% 100%;
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5) {
+	.v-table .v-label.new-marker {
+		background-image: url(graphics/blue-ball-2x.png);
+		-webkit-background-size: 14px 13px;
+	}
+}
+
+.message-layout .v-label-undef-w {
+	display: inline-block;
+}
+
+.message-layout .details-link {
+	float: right;
+    position: absolute;
+    top: 0px;
+}
+
+.message-layout .details-link .v-button-caption {
+    line-height: 45px;
+    height: 45px;
+}
+
+.message-layout .mark-as-unread-button {
+    position: absolute;
+	right: 15px;
+}
+
+.message-layout .mark-as-unread-button .v-icon {
+	margin-right: 4px;
+	vertical-align: -1px;
+}
+
+.selected-checkbox {
+	margin: 32px 0 0 10px;
+}
+
+.v-table .v-table-focus .v-table-cell-content,
+.v-app .v-table .v-table-cell-content {
+	border: none;
+	border-bottom: 1px solid #d8d8d9;
+}
+
+.v-table-cell-wrapper {
+	border: none;
+	padding-top: 1px;
+}
+
+.message-list .v-table-cell-wrapper {
+	height: 55px; /*90px;*/
+}
+.m-card-list .v-table-cell-wrapper {
+	height: 60px;
+}
+.m-actionplan-list .v-table-cell-wrapper {
+	height: 105px;
+}
+.m-user-list .v-table-cell-wrapper {
+	height: 50px;
+}
+.v-table .v-table-focus .v-table-cell-wrapper {
+	margin: 0;
+}
+
+.v-app .v-table .v-selected {
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#4d8cb9), to(#3e6fa8));
+	outline: none;
+}
+
+.v-table .v-selected,
+.v-table .v-selected .v-label {
+	text-shadow: 0 1px 1px #396897 !important;
+	color: #fff !important;
+}
+
+.v-table .v-table-row,
+.v-table .v-table-row-odd {
+	background: transparent;
+	cursor: default;
+}
+
+.v-table .v-label {
+	padding: 0 20px 0 4px;
+	line-height: 1.2;
+}
+
+.v-table .message-button > .v-csslayout {
+	padding: 3px 0;
+}
+
+.v-table .message-button-from {
+	font-size: 17px;
+	font-weight: bold;
+	line-height: 1.2;
+	margin-bottom: 2px;
+}
+
+.v-table .v-label-light {
+	color: #797b7f;
+	font-size: 13px;
+	line-height: 15px;
+	margin-top: -4px;
+}
+
+.message-button {
+	white-space: normal;
+	position: relative;
+}
+
+.message-button-from,
+.message-button-time {
+	display: inline-block;
+}
+
+.v-table .message-button-time {
+	position: absolute;
+	right: 0;
+	top: 10px;
+	color: #1b699f;
+}
+
+.v-app .from-button {
+	border: 1px solid #87a2bf;
+	-webkit-border-radius: 14px;
+	-moz-border-radius: 14px;
+	border-radius: 14px;
+	background: #dce6ef -webkit-gradient(linear, 0% 0%, 0% 100%, from(#dee8f1), to(#cedae5));
+	line-height: 1;
+	padding: 0 7px 5px;
+	margin-left: 6px;
+	margin-bottom: -2px
+}
+
+.from-button .v-button-caption,
+.from-button .v-nativebutton-caption {
+	color: #222;
+}
+
+.details-link {
+	position: absolute;
+	right: 20px;
+	top: 20px;
+}
+
+.message-view {
+	background: #fff;
+}
+
+.message-view.no-message {
+	background: transparent;
+}
+
+.no-message .message-layout  {
+	height: 100%;
+	background: transparent;
+	-webkit-box-shadow: inset 0 1px 5px rgba(0,0,0,.3);
+}
+
+.no-message .message-layout div {
+	height: 100%;
+	font-size: 20px;
+	font-weight: bold;
+	text-shadow: 0 1px 0 rgba(255,255,255,.4);
+	color: #6a6c6f;
+	text-align: center;
+	position: relative;
+}
+
+.no-message .message-layout .v-label {
+	height: auto;
+	top: 40%;
+}
+
+.message-view .message-layout {
+	font-size: 16px;
+	line-height: 22px;
+	padding: 20px;
+}
+
+.v-app .message-view .message-layout {
+	padding: 16px 20px;
+	}
+
+.v-app .no-message .message-layout {
+	padding: 0;
+	}
+
+.message-view .message-layout hr {
+	height: 1px;
+	overflow: hidden;
+	background: #dcdcdc;
+	border: none;
+	border-bottom: 1px solid #fff;
+	margin: 12px -20px;
+}
+
+.message-layout .light-text,
+.message-layout .light {
+	color: #797b7f;
+}
+
+.message-layout .m-pill-label {
+
+   width: 80px;
+   /*height: 25px;*/
+   padding: 5px;
+   position: relative;
+   -moz-border-radius:    10px;
+   -webkit-border-radius: 10px;
+   border-radius:         10px;
+   text-align: center;
+   /*
+   color: white;
+   background: red;
+   */
+}
+/*
+.message-layout .m-pill-label:before {
+   content:"";
+   position: absolute;
+   right: 100%;
+   top: 26px;
+   width: 0;
+   height: 0;
+   border-top: 13px solid transparent;
+   border-right: 26px solid red;
+   border-bottom: 13px solid transparent;
+}
+*/
+.message-layout .m-card-author {
+	color: #797b7f;
+	font-size: 17px;
+	/*font-weight: bold;*/
+	margin-left: 5px;
+	vertical-align: bottom;	
+}
+.message-layout .m-text-center {
+	text-align: center;
+}
+.m-redborder {
+	border: 1px solid red;		
+}
+.m-blueborder {
+	border: 1px solid blue;	
+}
+.m-greenborder {
+	border: 1px solid green;
+}
+.message-layout .m-actionplan-label {
+	color: black;
+	font-size: 14px;
+	text-align: left;
+	font-weight: bold;
+}
+.message-layout .m-actionplan-text {
+	color: #797b7f;
+	font-size: 14px;
+}
+.message-layout .m-actionplan-hr hr{  /* doesn't help*/
+	margin-bottom: 5px;
+    /*margin-left: -20px;
+    margin-right: -20px;*/
+    margin-top: 5px;
+}
+span.m-actionplan-text-authors, .message-layout .m-actionplan-text-authors {
+	color: #00a3e8;
+	font-weight: bold;
+	font-size: 14px;	
+}
+.message-layout .light b {
+	font-weight: normal;
+}
+
+.message-layout .h2 {
+	color: #222;
+	font-size: 17px;
+	font-weight: bold;
+	padding-bottom: 2px;
+}
+
+.message-details {
+	margin: 0 -20px;
+	padding: 0 20px;
+}
+
+.v-touchkit-fullscreen.new-message {
+	background: #fff;
+}
+
+.new-message .v-textfield,
+.new-message .v-textarea {
+	-webkit-appearance: none;
+	border: none;
+	background: transparent;
+	font-size: 15px;
+}
+
+.new-message .v-textarea {
+	border-top: 1px solid #ddd;
+	padding: 10px 12px;
+	line-height: 20px;
+}
+
+.new-message .v-formlayout-row > td {
+	border-color: #ddd;
+}
+
+.v-table .indent-layout-level1 .v-touchkit-navbutton {
+	padding-left: 35px;
+}
+.v-table .indent-layout-level2 .v-touchkit-navbutton {
+    padding-left: 70px;
+}
+.v-table .indent-layout-level3 .v-touchkit-navbutton {
+    padding-left: 105px;
+}
+.v-table .indent-layout-level4 .v-touchkit-navbutton {
+    padding-left: 140px;
+}
+
+.v-app .v-button.blue,
+.v-app .v-button.red {
+	background-color: #1777EE;
+	border-color: #2762AA;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .3);
+	-moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .3);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, .3);
+}
+
+.v-app .v-button.red {
+	background-color: #c91800;
+	border-color: #9d1706;
+}
+
+.v-app .v-button.blue:active {
+	background-color: #1062c9;
+}
+
+.v-app .v-button.red:active {
+	background-color: #b31500;
+}
+
+.v-app .v-button-reply .v-button-wrap {
+	background-color: #1777EE;
+	color: #fff;
+}
+
+.v-touchkit-navbar .v-button img.v-icon {
+	width: 24px;
+	height: 24px;
+	margin-top: 2px;
+}
+
+.edit-toolbar .v-touchkit-navbar-left {
+	right: 50%;
+	max-width: 100%;
+}
+
+.edit-toolbar .v-touchkit-navbar-right {
+	left: 50%;
+	max-width: 100%;
+}
+
+.edit-toolbar .v-touchkit-navbar-left .v-button,
+.edit-toolbar .v-touchkit-navbar-right .v-button {
+	display: block;
+}
+
+
+@-webkit-keyframes newMessage {
+	0% {
+		opacity: 0;
+		/*-webkit-transform: translateY(-100px);*/
+	}
+	100% {
+		opacity: 1;
+		/*-webkit-transform: translateY(0);*/
+	}
+}
+.message-list .v-table-row-first .v-table-cell-wrapper {
+	-webkit-animation: 500ms ease-out newMessage;
+}
+
+.message-list .v-table-cell-content-new {
+	width: 30px;
+}
+
+
+.message-button .m-messageList-normal {
+  font-weight:normal;
+  color: #797b7f;
+  font-size: 14px;
+}
+.message-button .m-messageList-italics {
+  font-style:italic;
+  color: #797b7f;
+  font-size: 14px;
+}
+.message-button .m-messageList-bold {
+  font-weight:bold;
+  color: #5d5d5d;
+  font-size: 14px;
+}
+  
+.message-button .m-messageList-italic-bold {
+  font-weight:bold;
+  color: #5d5d5d;
+  font-size: 14px;
+  font-style:italic;	
+}
+
+/* TODO these below should be fixed in TouchKit theme */
+
+.v-touchkit-navbar, 
+.v-touchkit-navpanel-placeholder > div, 
+.v-touchkit-popover.v-touchkit-fullscreen .v-touchkit-navpanel-placeholder > div {
+	height: 44px !important;
+}
+
+.v-loading-indicator, .v-loading-indicator-delay, .v-loading-indicator-wait {
+	background-size: 25px 25px;
+}
+
+.v-touchkit-navbar .v-button:active .v-button-wrap:after,
+.v-touchkit-toolbar .v-button:active .v-button-wrap:after {
+	display: none;
+}
+
+.v-touchkit-navbar .v-button-no-decoration:active .v-button-wrap:after,
+.v-touchkit-toolbar .v-button-no-decoration:active .v-button-wrap:after {
+	display: block;
+	top: 50%;
+	left: 50%;
+	background-color: rgba(255,255,255,.5);
+	box-shadow: 0 0 50px 30px #fff;
+	width: 1px;
+	height: 1px;
+	border-radius: 14px;
+}
+
+.v-touchkit-toolbar .v-button-no-decoration:active .v-button-wrap {
+	background: transparent;
+}
+
+.v-app .v-touchkit-popover.v-touchkit-relative .v-touchkit-navbar .v-button-no-decoration {
+	-webkit-box-shadow: none;
+}
+
+
+.v-touchkit-navbutton-back:active {
+	-webkit-border-image: url(graphics/back-button-down.png) 0 6 0 13 stretch stretch;
+}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5) {
+	.v-touchkit-navbutton-back:active {
+		-webkit-border-image: url(graphics/back-button-down-2x.png) 0 6 0 13 stretch stretch;
+	}
+}
+
+
+.v-touchkit-componentgroup-row:first-child {
+	border-radius: 10px 10px 0 0;
+}
+
+
+@-webkit-keyframes slideUp {
+	0% {
+		-webkit-transform: translateY(100%);
+	}
+}
+
+@-webkit-keyframes fadeIn {
+	0% {
+		opacity: 0;
+	}
+}
+
+.v-touchkit-popover {
+	-webkit-animation: 50ms ease-out fadeIn;
+}
+
+
+.v-touchkit-popover.v-touchkit-smallscreen .popupContent {
+	-webkit-animation: 200ms ease-out slideUp;
+}
+
+.v-touchkit-popover.v-touchkit-smallscreen.v-touchkit-fullscreen .popupContent {
+	-webkit-animation: none;
+}
+/* CARDS */
+/*********/
+.m-orange, .m-expand-color, .m-f26522 {
+ /* color: white;*/
+  background-color: #f26522;
+}
+.m-orange-text {
+  color: #EB642D;
+}
+
+.m-red, .m-counter-color, .m-b61861 {
+  /* color: white;*/
+  background-color: #b61861;
+}
+.m-red-text {
+  color: #B20062;
+}
+.m-blue, .m-adapt-color, .m-0f75bc {
+  /* color: white;*/
+  background-color: #0f75bc;
+}
+.m-blue-text {
+  color: #2775BD;	
+}
+.m-lime, .m-explore-color, .m-8cc63f {
+  /* color: white;*/
+  background-color: #8cc63f;
+}
+.m-lime-text {
+  color: #90CB41;
+}
+.m-purple, .m-resource-color, .m-662d91 {
+  /*color: white;*/
+  background-color: #662d91;
+}
+.m-purple-text {
+  color: #682491;
+}
+.m-green, .m-risk-color, .m-00a651{
+  /*color: white;*/
+  background-color: #00a651;
+}
+.m-green-text {
+  color: #24AB51; /*green*/	
+}
+.m-darkred, .m-ab0000 {
+  /*color: white;*/
+  background-color: #AB0000;
+}
+.m-darkred-text {
+  color: #AB0000;	
+}
+.m-armyblack, .m-000000 {
+  /*color: white;*/
+  background-color: #000000;
+}
+.m-armyblack-text {
+  color: #000000;
+}
+.m-armygold, .m-fcc702 {
+  /*color: white;*/
+  background-color: #FCC702;
+}
+.m-armygold-text {
+  color: #FCC702;
+}
+.m-navyblue, .m-032e57 {
+  /*color: white;*/
+  background-color: #032E57;
+}
+.m-navyblue-text {
+  color: #032E57;	
+}
+.m-navygold, .m-fcbb38 {
+  /*color: white;*/
+  background-color: #fcbb38;
+}
+.m-navygold-text {
+  color: #fcbb38;
+}
+.m-whitetext {
+	color: white;
+}
+.m-lemonchiffon4text {
+	color: #8B8970; /*lemonchiffon4;*/
+}

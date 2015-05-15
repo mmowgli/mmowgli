@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="UserList">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="GameTitle"/>
+        <xs:element ref="GameAcronym"/>
+        <xs:element ref="GameSecurity"/>
+        <xs:element ref="GameSummary"/>
+        <xs:element ref="CallToAction"/> 
+        <xs:element ref="BadgeTypes"/>
+        <xs:element ref="AwardTypes"/>
+        <xs:element ref="AffiliationDefaults"/>      
+        <xs:element maxOccurs="unbounded" ref="User"/>
+      </xs:sequence>
+      <xs:attribute name="exported" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="GameTitle" type="xs:string"/>
+  <xs:element name="GameAcronym" type="xs:string"/>
+  <xs:element name="GameSecurity" type="xs:string"/>
+  <xs:element name="GameSummary" type="xs:string"/>
+  
+  <xs:element name="CallToAction">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="VideoYouTubeID"/>
+        <xs:element ref="VideoAlternateUrl"/>
+        <xs:element ref="BriefingText"/>
+        <xs:element ref="OrientationSummary"/>
+      </xs:sequence>
+            <xs:attribute name="round" use="required"/>
+            <xs:attribute name="phase" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="AffiliationDefaults">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="Affiliation"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="BadgeTypes">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="BadgeType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="AwardTypes">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="AwardType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="BadgeType">
+    <xs:complexType>
+      <xs:attribute name="type" type="xs:string"/>
+      <xs:attribute name="name" type="xs:string"/>
+      <xs:attribute name="description" type="xs:string"/>
+      <xs:attribute name="iconUrl" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="AwardType">
+    <xs:complexType>
+      <xs:attribute name="type" type="xs:string"/>
+      <xs:attribute name="name" type="xs:string"/>
+      <xs:attribute name="description" type="xs:string"/>
+      <xs:attribute name="iconUrl" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+    
+  <xs:element name="User">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="Affiliation"/>
+        <xs:element ref="Location"/>
+        <xs:element ref="Expertise"/>
+        <xs:element ref="Scores"/>
+        <xs:element ref="AuthoredPlans"/>
+        <xs:element ref="CardsPlayed"/>
+      </xs:sequence>
+      <xs:attribute name="id" type="xs:integer"/>
+      <xs:attribute name="gameName" type="xs:string"/>         
+      <xs:attribute name="registrationDate" type="xs:dateTime"/>
+      <xs:attribute name="registeredInMove" type="xs:integer"/>
+      <xs:attribute name="okEmail" type="xs:boolean"/>
+      <xs:attribute name="okGameMessages" type="xs:boolean"/>
+      <xs:attribute name="okSurvey" type="xs:boolean"/>
+      <xs:attribute name="isGameAdminstrator" type="xs:boolean"/>
+      <xs:attribute name="isGameMaster" type="xs:boolean"/>
+      <xs:attribute name="isGameDesigner" type="xs:boolean"/>
+      <xs:attribute name="isAccountDisabled" type="xs:boolean"/>
+      <xs:attribute name="iconUrl" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+    
+  <xs:element name="AuthoredPlans">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="ActionPlanID"/>
+      </xs:sequence>
+    <xs:attribute name="count" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Scores">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="MoveScores"/>
+      </xs:sequence>
+      <xs:attribute name="basic" type="xs:integer"/>
+      <xs:attribute name="basicRank" type="xs:integer"/>
+      <xs:attribute name="combined" type="xs:integer"/>
+      <xs:attribute name="combinedRank" type="xs:integer"/>
+      <xs:attribute name="implementation" type="xs:integer"/>
+      <xs:attribute name="implementationRank" type="xs:integer"/>
+         
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CardsPlayed">
+  <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="CardID"/>
+      </xs:sequence>
+    <xs:attribute name="count" type="xs:integer"/>
+  </xs:complexType>
+
+  </xs:element>
+  
+  <xs:element name="ID" type="xs:integer"/>
+  <xs:element name="Affiliation" type="xs:string"/>
+  <xs:element name="Location" type="xs:string"/>
+  <xs:element name="Expertise" type="xs:string"/>
+  
+  <xs:element name="ActionPlanID" type="xs:integer"/>
+  <xs:element name="CardID" type="xs:integer"/>
+
+  
+  <xs:element name="VideoYouTubeID" type="xs:string"/>
+  <xs:element name="VideoAlternateUrl" type="xs:string"/>
+  <xs:element name="BriefingText" type="xs:string"/>
+  <xs:element name="BriefingSummary" type="xs:string"/>
+  <xs:element name="OrientationSummary" type="xs:string"/>
+   
+   <xs:element name="MoveScores">
+     <xs:complexType>
+       <xs:attribute name="move" type="xs:integer"/>
+       <xs:attribute name="basic" type="xs:integer"/>
+       <xs:attribute name="basicRank" type="xs:integer"/>
+       <xs:attribute name="implementation" type="xs:integer"/>
+       <xs:attribute name="implementationRank" type="xs:integer"/>
+     </xs:complexType>
+   </xs:element>
+</xs:schema>

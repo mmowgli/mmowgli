@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+<!--
+  Copyright (C) 2010-2014 Modeling Virtual Environments and Simulation
+  (MOVES) Institute at the Naval Postgraduate School (NPS)
+  http://www.MovesInstitute.org and http://www.nps.edu
+ 
+  This file is part of Mmowgli.
+  
+  Mmowgli is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation, either version 3 of the License, or
+  any later version.
+
+  Mmowgli is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with Mmowgli in the form of a file named COPYING.  If not,
+  see <http://www.gnu.org/licenses/>
+ -->
+<head>
+<meta charset="utf-8">
+<title>Mmowgli Card Tree</title>
+
+<style type="text/css">
+
+path {
+  stroke: #fff;
+  fill-rule: evenodd;
+}
+
+div.tooltip {
+  position: absolute;
+  text-align: center;
+  width: 120px;
+  padding: 8px;
+  font: 10px sans-serif;
+  background: #ddd;
+  border: solid 1px #aaa;
+  border-radius: 8px;
+  pointer-events: none;
+  overflow: auto;
+}
+
+div.tooltip .header {
+  position: relative;
+  overflow: auto;
+  background: #dd0;
+  color: white;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+div.tooltip .footer {
+  background: #aaa;
+  font-weight: bold;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+div.tooltip .body {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+#d3border {
+  width:1000px;
+  height:700px;
+
+  background-image: url('https://web.mmowgli.nps.edu/mmowMedia/images/nauticalBackground.jpg');
+  background-color: #E9E9E9;
+  background-repeat: repeat;
+  background-attachment: scroll;
+  background-position: top center;
+
+  top:0;
+  bottom:0;
+  left:0;
+  right:0;
+
+  margin-top: 5px;
+  margin-left:auto;
+  margin-right:auto;
+  box-shadow: 10px 10px 5px #999999;
+}
+body {
+  background: #ddd;
+}
+#rootbutton {
+  margin-top:10px;
+}
+#banner {
+ width: 100%;
+}
+.textcenter{
+ text-align: center;
+}
+.sliders{
+  width: 150px;
+}
+</style>
+</head>
+
+<body>
+<div id="banner"><div class="textcenter"><img src="https://web.mmowgli.nps.edu/mmowMedia/images/mmowgli_logo_final_no_text.png" height="43" width="185"/></div></div>
+<div id="date" class="textcenter">Created: {{!DATETIME}}</div>
+<div id="gamelink" class="textcenter"><a href="{{!APPURL}}">{{!APPURL}}</a></div>
+
+<div id="rootbutton" class="textcenter"><input type="button" value="Show root" onClick="window.location.reload()"></div>
+<p/>
+<div class="textcenter" style='text-align:center;'>
+  <div style="display:inline-block;margin-right:10px;">
+    <div class="textcenter">Show root cards from this day</div>
+    <div class="textcenter"><input type="range" id="rootSlider" class="sliders" min="0" max="10" onmousemove="rootMove(this.value);" onmousedown="rootMouseDown(this);" onchange="rootRangeChanged(this.value);"/></div>
+    <div id="rootTT" class="textcenter">5</div>
+  </div>
+  <div style='display:inline-block;margin-left:10px;'>
+    <div class="textcenter">Show all cards until this day</div>
+    <div class="textcenter"><input type="range" id="endSlider" class="sliders" min="0" max="10" onmousemove="endMove(this.value);" onmousedown="endMouseDown(this);" onchange="endRangeChanged(this.value);"/></div>
+    <div id="endTT" class="textcenter">5</div>
+  </div>
+</div>
+
+<div id="d3border"></div>
+<!-- <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script> can't load http from https page on mmowgli server-->
+<script src="d3.v3.min.js" charset="utf-8"></script>
+<script>
+
+var width = 1000,
+    height = 700,
+    radius = Math.min(width, height) / 2;
+radius = radius-15; //bug fix
+var x = d3.scale.linear()
+    .range([0, 2 * Math.PI]);
+
+var y = d3.scale.sqrt()
+    .range([0, radius]);
+
+var color = d3.scale.category20c();
+var rootCheck = "Mmowgli Card Tree";
+
+var rootSlider = d3.select("#rootSlider");
+var endSlider = d3.select("#endSlider");
+
+var rootSliderLastValue;
+var endSliderLastValue;
+
+var svg = d3.select("#d3border").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+    .append("g")
+    .attr("transform", "translate(" + width / 2 + "," + (height / 2 + 10) + ")");
+
+var partition = d3.layout.partition()
+    .sort(function comparator(a,b) {
+       return b.typeid-a.typeid;
+     })
+    .value(function(d) {
+       return d.value;
+     });
+
+var arc = d3.svg.arc()
+    .startAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x))); })
+    .endAngle(function(d) { return Math.max(0, Math.min(2 * Math.PI, x(d.x + d.dx))); })
+    .innerRadius(function(d) { return Math.max(0, y(d.y)); })
+    .outerRadius(function(d) { return Math.max(0, y(d.y + d.dy)); });
+
+var jsonRoot = null;
+
+d3.json("allUnhiddenCards.json",renderFunction);
+  function renderFunction(error, root) {
+	/* error = error if any, root = parsed json */
+	jsonRoot = root;
+	setCardDateArrays();
+    var path = svg.selectAll("path") /* 'path' is an svg element */
+      .data(partition.nodes(root))
+      .enter().append("path")
+      .attr("d", arc)
+      .style("fill", doFill)
+      .style("opacity", doOpacity)
+      .style("stroke", doStroke)
+      .on("click", click)
+      .on("mouseover", mouseover)
+      .on("mousemove", mousemove)
+      .on("mouseout", mouseout);
+
+    function click(d) {
+      path.transition()
+        .duration(750)
+        .attrTween("d", arcTween(d));
+    }
+    function doFill(d)
+    {
+    	return (isRoot(d) ? "#d0d0d0":d.color);
+    }
+    function doOpacity(d)
+    {
+    	//return (isRoot(d) ? 0.0:1.0); 
+    	if(isRoot(d))
+    		return 0.0;
+       	var minRoot = rootSlider.property("value");
+    	var maxCard = endSlider.property("value");
+
+    	if(d.rootDay < minRoot)
+    		return 0.0;
+    	if(d.gameDay > maxCard)
+    		return 0.0;
+    	return 1.0;
+    	
+    }
+	function doStroke(d)
+	{
+		return "#ddd";
+	}
+  
+    function mouseover(d) {
+      header.text(d.type);
+
+      if(d.type.substring(0, rootCheck.length) === rootCheck) {
+        header.text(d.type);
+        header.style("background","#444");
+      }
+      else {
+        header.text(d.type+" "+d.id);
+        header.style("background",d.color);
+      }
+      body.text(d.text);
+      footer.text(d.author);
+
+      div.transition()
+        .duration(500)
+        .style("opacity", 1);
+    }
+
+    function mousemove() {
+      div
+        .style("left", (d3.event.pageX +10) + "px")
+        .style("top", (d3.event.pageY  +15) + "px");
+    }
+
+    function mouseout() {
+      div.transition()
+        .duration(500)
+        .style("opacity", 1e-6);
+    }
+  }
+
+function isRoot(d)
+{
+  return d.type.substring(0, rootCheck.length) === rootCheck;
+}
+
+// Insert the single tooltip div (gets moved around)
+var div = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 1e-6);
+
+var header = div.append("div")
+    .attr("class", "header")
+    .text("header");
+
+var body = div.append("div")
+     .attr("class","body")
+     .text("body");
+
+var footer = div.append("div")
+     .attr("class","footer")
+     .text("footer");
+
+d3.select(self.frameElement).style("height", height + "px");
+
+// Interpolate the scales
+function arcTween(d) {
+  var xd = d3.interpolate(x.domain(), [d.x, d.x + d.dx]),
+      yd = d3.interpolate(y.domain(), [d.y, 1]),
+      yr = d3.interpolate(y.range(), [d.y ? 20 : 0, radius]);
+  return function(d, i) {
+    return i
+        ? function(t) { return arc(d); }
+        : function(t) { x.domain(xd(t)); y.domain(yd(t)).range(yr(t)); return arc(d); };
+  };
+}
+
+var gameDays=null;
+var rootDays=null;
+var gameDaysLong=null;
+var rootDaysLong=null;
+function setCardDateArrays()
+{
+	if(gameDays)
+		return;
+	else {
+		gameDays = new Array();
+		rootDays = new Array();
+		gameDaysLong = new Array();
+		rootDaysLong = new Array();
+		jsonRoot.cardGameDays.forEach( function(datum) { gameDays.push(datum); });
+		jsonRoot.rootGameDays.forEach( function(datum) { rootDays.push(datum); });
+		jsonRoot.cardGameDaysLong.forEach( function(datum) { gameDaysLong.push(datum); });
+		jsonRoot.rootGameDaysLong.forEach( function(datum) { rootDaysLong.push(datum); });
+		
+		var calcW = Math.min(450,Math.max(100,8*rootDays.length));   // 8 pixels per day
+		rootSlider.style("width",""+calcW+"px");
+		rootSlider.attr("min",0);
+		rootSlider.attr("max",rootDays.length-1);
+		rootSlider.attr("step",1);
+		rootSlider.attr("value",0);
+		rootSliderLastValue=0;
+		var tt = document.getElementById('rootTT');
+		tt.textContent = rootDays[0];
+		
+		var ndays = gameDays.length;
+		calcW = Math.min(450,Math.max(100,8*ndays));   // 8 pixels per day
+		endSlider.style("width",""+calcW+"px");
+		endSlider.attr("min", 0);
+	    endSlider.attr("max", ndays-1);
+	    endSlider.attr("step",1);
+	    endSlider.attr("value",ndays-1);
+	    endSliderLastValue=ndays-1;
+		tt = document.getElementById('endTT');
+		tt.textContent = gameDays[ndays-1];
+	}
+}
+
+function rootRangeChanged(val)
+{
+	if(rootDaysLong[val] > gameDaysLong[endSlider.property("value")]) {
+		rootSlider.property("value",rootSliderLastValue);
+	}
+	else {
+        svg.selectAll("path").remove();
+	    renderFunction(null,jsonRoot);
+	    rootSliderLastValue = val;
+	}
+}
+
+function endRangeChanged(val)
+{	
+    if(gameDaysLong[val] < rootDaysLong[rootSlider.property("value")]) {
+    	endSlider.property("value",endSliderLastValue);
+    }
+    else {
+      svg.selectAll("path").remove();
+      renderFunction(null,jsonRoot);
+      endSliderLastValue = val;
+    }
+}
+
+function rootMove(val)
+{
+  var tt = document.getElementById('rootTT');
+  tt.textContent = rootDays[val];
+}
+
+function endMove(val)
+{
+  var tt = document.getElementById('endTT');
+  tt.textContent = gameDays[val];
+}
+
+function rootMouseDown(elem) {
+  var tt = document.getElementById('rootTT');
+  tt.textContent = rootDays[elem.value];
+}
+
+function endMouseDown(elem) {
+  var tt = document.getElementById('endTT');
+  tt.textContent = gameDays[elem.value];
+}
+
+function updateWindow() {
+    w = window;
+    d = document;
+    e = d.documentElement;
+    g = d.getElementsByTagName('body')[0];
+    x = w.innerWidth || e.clientWidth || g.clientWidth;
+    y = w.innerHeight|| e.clientHeight|| g.clientHeight;
+    svg.attr("width", x).attr("height", y);
+  }
+window.onresize = updateWindow;
+</script>
+</body>
+</html>

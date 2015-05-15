@@ -1,0 +1,1090 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="MMOWGLI Two Eclipse 2015" default="all" basedir=".">
+    <description>Retrieve game data and build MMOWGLI game reports</description>
+    
+    <!-- <import file="nbproject/build-impl.xml"/> -->
+
+    <property name="stylesheets.dir" location="src/edu/nps/moves/mmowgli/export"/>
+    <property name=    "reports.dir" location="${stylesheets.dir}/reports"/>
+    <property name="mmowgli.url"    value="https://mmowgli.nps.edu"/>
+
+    <!-- properties common to all build files and archives ======================================== -->
+    <property environment="env"/>
+
+    <!-- note that Netbeans default path is built in and will have to be overridden by going to   -->
+    <!-- Tools > Options > Miscellaneous > Ant                                                    -->
+    <!-- and then pointing to C:\apache-ant-1.9.2 (or somesuch directory)                         -->
+
+    <!-- ANT Contrib archive at http://sourceforge.net/project/showfiles.php?group_id=36177       -->
+    <!-- must have ant-contrib.jar in ANT_HOME/lib (or else specify path)                         -->
+    <!-- use local relative path for portability: -->
+    <taskdef resource="net/sf/antcontrib/antcontrib.properties" classpath="${stylesheets.dir}/jar"/>
+
+    <property name="saxon.dir" location="${stylesheets.dir}/jar" description="relative path from stylesheets directory"/>
+    <property name="saxon.jar"           value="saxon9B.jar"/>
+
+    <target name="get.saxon" description="get saxon.jar if not checked out" depends="get.saxon.check"> <!-- unless="saxon.found" -->
+        <echo message="get saxon.jar if not checked out"/>
+        <get src="http://svn.code.sf.net/p/x3d/code/www.web3d.org/x3d/tools/jar/${saxon.jar}"
+            dest="${saxon.dir}/${saxon.jar}" verbose="true" ignoreerrors="false"/>
+    </target>
+    <target name="get.saxon.check">
+        <mkdir dir="${saxon.dir}"/>
+        <condition property="saxon.found" else="false">
+            <available file="${saxon.dir}/${saxon.jar}"/>
+        </condition>
+        <echo message="found ${saxon.dir}/${saxon.jar}: ${saxon.found}"/>
+    </target>
+
+    <!-- Ant macro definitions ===================================================================================== -->
+
+    <!-- excerpted/adapted from "SAXON XSLT Processing with Ant" by James Fuller, http://ablog.apress.com/?p=753 -->
+    <!-- http://www.saxonica.com/documentation9.5/using-xsl/commandline.html -->
+    <macrodef name="saxon9.XML" description="Invoke XSLT transformation on passed inputXML to produce outputFile using passed stylesheet">
+        <attribute name="inputXML"/>
+        <attribute name="outputFile"/>
+        <attribute name="stylesheet"/>
+        <!-- Saxon: parameters provided as keyword=value pairs http://www.saxonica.com/documentation/using-xsl/commandline.xml -->
+        <attribute name="parameter1" default=""/>
+        <attribute name="parameter2" default=""/>
+        <attribute name="compiled"   default="false"/>
+        <attribute name="verbose"    default="true"/>
+        <sequential>
+            <if>
+                <equals arg1="@{verbose}" arg2="true" />
+                <then>
+                    <echo message="saxon9.XML processing @{inputXML} @{parameter1} @{parameter2}"/>
+                    <echo message="        and producing @{outputFile} using @{stylesheet}"/>
+                </then>
+            </if>
+            <if>
+                <equals arg1="@{compiled}" arg2="true" />
+                <then>
+                    <java classname="net.sf.saxon.Transform" classpath="${saxon.dir}/${saxon.jar};." fork="true" failonerror="false">
+                        <!--<arg value="-t"/> timing information -->
+                        <arg value="-warnings:recover"/> <!-- recover after writing a warning message -->
+                        <arg value="-c"/>  <!-- compiled stylesheet -->
+                        <arg value="-o"/>
+                        <arg value="@{outputFile}"/>
+                        <arg value="@{inputXML}"/>
+                        <arg value="@{stylesheet}"/>  <!-- compiled stylesheet -->
+                        <arg value="@{parameter1}"/>
+                        <arg value="@{parameter2}"/>
+                    </java>
+                </then>
+                <else>
+                    <java classname="net.sf.saxon.Transform" classpath="${saxon.dir}/${saxon.jar};." fork="true" failonerror="false">
+                        <!--<arg value="-t"/> timing information -->
+                        <arg value="-warnings:recover"/> <!-- recover after writing a warning message -->
+                        <arg value="-o"/>
+                        <arg value="@{outputFile}"/>
+                        <arg value="@{inputXML}"/>
+                        <arg value="@{stylesheet}"/>
+                        <arg value="@{parameter1}"/>
+                        <arg value="@{parameter2}"/>
+                    </java>
+                </else>
+            </if>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="getGameReportXmlFiles" description="get regularly produced report files for a given game">
+        <attribute name="gameName"/>
+        <attribute name="gameTitle"/>
+        <sequential>
+          <mkdir dir="${reports.dir}/@{gameName}"/>
+          <echo message="expected Game Designer Game.title: @{gameTitle}MmowgliGame"/>
+          <get     dest="${reports.dir}/@{gameName}" verbose="true" ignoreerrors="false">
+               <url url="${mmowgli.url}/@{gameName}/reports/IdeaCardChain_@{gameTitle}MmowgliGame.xml"/>
+               <url url="${mmowgli.url}/@{gameName}/reports/ActionPlanList_@{gameTitle}MmowgliGame.xml"/>
+               <url url="${mmowgli.url}/@{gameName}/reports/GameDesign_@{gameTitle}MmowgliGame.xml"/>
+               <url url="${mmowgli.url}/@{gameName}/reports/PlayerProfiles_@{gameTitle}MmowgliGame.xml"/>
+          </get>
+          <copy todir="${reports.dir}/@{gameName}/images" verbose="true">
+            <fileset dir="${reports.dir}/images">
+                <include name="*.png"/>
+                <include name="*.jpg"/>
+            </fileset>
+          </copy>
+          <!-- appropriate qr image goes to reports/images/ subdirectory, not qr/ subdirectory -->
+          <copy todir="${reports.dir}/@{gameName}/images" verbose="true">
+            <fileset dir="${reports.dir}/images/qr">
+                <include name="mmowgli.nps.edu.@{gameName}.mobile.qr.png"/>
+            </fileset>
+          </copy>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="copyGameReportImages" description="copy all game report images to local directory">
+        <attribute name="gameName"/>
+        <sequential>
+          <mkdir dir="${reports.dir}/@{gameName}/images"/>
+          <echo message="copy game report images"/>
+          <copy todir="${reports.dir}/@{gameName}/images" verbose="true">
+            <fileset dir="${reports.dir}/images">
+                <include name="*.png"/>
+                <include name="*.jpg"/>
+            </fileset>
+          </copy>
+          <echo message="copy mmowgli.nps.edu.@{gameName}.mobile.qr.png"/>
+          <copy todir="${reports.dir}/@{gameName}/images" verbose="true">
+            <fileset dir="${reports.dir}/images/qr">
+                <include name="mmowgli.nps.edu.@{gameName}.mobile.qr.png"/>
+            </fileset>
+          </copy>
+        </sequential>
+    </macrodef>
+
+    <macrodef name="viewGameReportsHtmlPages" description="show all game reports in browser (Netbeans launch only)">
+        <attribute name="gameName"/>
+        <attribute name="gameTitle"/>
+        <sequential>
+            <echo message="expected Game Designer Game.title: @{gameTitle}MmowgliGame"/>
+            <nbbrowse file="${reports.dir}/@{gameName}/ReportsIndex_@{gameTitle}MmowgliGame.html" />
+            <nbbrowse file="${reports.dir}/@{gameName}/IdeaCardChain_@{gameTitle}MmowgliGame.html" />
+            <nbbrowse file="${reports.dir}/@{gameName}/ActionPlanList_@{gameTitle}MmowgliGame.html" />
+            <nbbrowse file="${reports.dir}/@{gameName}/PlayerProfiles_@{gameTitle}MmowgliGame.html" />
+            <nbbrowse file="${reports.dir}/@{gameName}/GameDesign_@{gameTitle}MmowgliGame.html" />
+            <!-- TODO implementation-independent approach if possible.  other Ant approaches have to be customized for each OS -->
+        </sequential>
+    </macrodef>
+
+    <!-- ========== collected targets ======================================================================== -->
+
+    <target name="all" description="get saxon then clean, get, build and view all game reports" depends="get.saxon,all.reports">
+    </target>
+
+    <target name="all.reports" description="clean, get, build and view all game reports">
+        <!-- use antcall to enable property reset -->
+        <antcall target="all.reports.am"/>
+        <antcall target="all.reports.armyscitechfutures"/>
+        <antcall target="all.reports.blackswan"/>
+        <antcall target="all.reports.bii"/>
+        <antcall target="all.reports.cap2con"/>
+        <antcall target="all.reports.darkportal"/>
+        <antcall target="all.reports.dd"/>
+        <!-- TODO <antcall target="all.reports.em2"/>  requires game software update -->
+        <antcall target="all.reports.nsc"/>
+        <antcall target="all.reports.pcc"/>
+        <antcall target="all.reports.uxvdm"/>
+        <echo message="build all.reports complete"/>
+    </target>
+
+    <target name="clean.reports" description="clean (delete) all game reports">
+        <delete dir="${reports.dir}" verbose="true"/>
+        <echo message="clean.reports complete"/>
+    </target>
+
+    <target name="get.reports" depends="get.reports.am,get.reports.armyscitechfutures,get.reports.bii,get.reports.blackswan,get.reports.cap2con,get.reports.darkportal,get.reports.dd,get.reports.nsc,get.reports.pcc,get.reports.uxvdm,get.reports.em2" description="get all game reports from mmowgli.nps.edu server">
+        <echo message="get.reports complete"/>
+    </target>
+
+    <target name="build.reports" description="build all game reports">
+        <!-- use antcall to enable property reset -->
+        <antcall target="build.reports.am"/>
+        <antcall target="build.reports.armyscitechfutures"/>
+        <antcall target="build.reports.bii"/>
+        <antcall target="build.reports.blackswan"/>
+        <antcall target="build.reports.cap2con"/>
+        <antcall target="build.reports.darkportal"/>
+        <antcall target="build.reports.dd"/>
+        <!-- TODO <antcall target="build.reports.em2"/> -->
+        <antcall target="build.reports.pcc"/>
+        <antcall target="build.reports.uxvdm"/>
+        <echo message="build.reports complete"/>
+    </target>
+
+    <target name="view.reports" depends="" description="show all game reports in browser (Netbeans launch only)">
+        <!-- use antcall to enable property reset -->
+        <antcall target="view.reports.am"/>
+        <antcall target="view.reports.armyscitechfutures"/>
+        <antcall target="view.reports.bii"/>
+        <antcall target="view.reports.blackswan"/>
+        <antcall target="view.reports.cap2con"/>
+        <antcall target="view.reports.darkportal"/>
+        <antcall target="view.reports.dd"/>
+        <!-- TODO <antcall target="view.reports.em2"/> -->
+        <antcall target="view.reports.pcc"/>
+        <antcall target="view.reports.uxvdm"/>
+        <echo message="view.reports complete"/>
+    </target>
+
+    <!-- ========== armyscitechfutures ======================================================================== -->
+
+    <target name="all.reports.armyscitechfutures" depends="clean.reports.armyscitechfutures,get.reports.armyscitechfutures,build.reports.armyscitechfutures,view.reports.armyscitechfutures">
+        <echo message="all.reports.armyscitechfutures complete"/>
+    </target>
+
+    <target name="clean.reports.armyscitechfutures">
+        <property name="gameName"  value="armyscitechfutures"/>
+        <delete dir="${reports.dir}/${gameName}" verbose="true"/>
+        <echo message="clean.reports.armyscitechfutures complete"/>
+    </target>
+
+    <target name="get.reports.armyscitechfutures" description="get XML files from armyscitechfutures MMOWGLI game reports if not already available" depends="get.reports.armyscitechfutures.check"> <!--  unless="found.armyscitechfutures" -->
+        <getGameReportXmlFiles gameName="armyscitechfutures" gameTitle="armyscitechfutures"/>
+        <echo message="get.reports.armyscitechfutures complete"/>
+    </target>
+
+    <target name="get.reports.armyscitechfutures.check">
+        <property name="gameName"  value="armyscitechfutures"/>
+        <property name="gameTitle" value="armyscitechfutures"/>
+        <condition property="found.armyscitechfutures" else="false">
+            <available file="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml"/>
+        </condition>
+        <echo message="found ${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml: ${found.armyscitechfutures}"/>
+    </target>
+
+    <target name="build.reports.armyscitechfutures"> <!--  depends="build.reports.armyscitechfutures.IdeaCards,build.reports.armyscitechfutures.ActionPlans,build.reports.armyscitechfutures.GameDesign" -->
+        <property name="gameName"  value="armyscitechfutures"/>
+        <property name="gameTitle" value="armyscitechfutures"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/CardTree.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/ActionPlanList.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/GameDesign.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/ReportsIndex_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/ReportsIndex.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/PlayerProfiles.xsl"
+                     verbose="true"/>
+        <echo message="build.reports.armyscitechfutures complete"/>
+    </target>
+
+    <target name="view.reports.armyscitechfutures" description="view armyscitechfutures idea cards in web browser (via Netbeans only)">
+        <property name="gameName"  value="armyscitechfutures"/>
+        <property name="gameTitle" value="armyscitechfutures"/>
+        <nbbrowse file="${reports.dir}/${gameName}/ReportsIndex_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.html" />
+        <!-- TODO implementation-independent approach if possible.  other Ant approaches have to be customized for each OS -->
+    </target>
+
+    <!-- ========== am ======================================================================== -->
+
+    <target name="all.reports.am" depends="clean.reports.am,get.reports.am,build.reports.am,view.reports.am">
+        <echo message="all.reports.am complete"/>
+    </target>
+
+    <target name="clean.reports.am">
+        <property name="gameName"  value="am"/>
+        <delete dir="${reports.dir}/${gameName}" verbose="true"/>
+        <echo message="clean.reports.am complete"/>
+    </target>
+
+    <target name="get.reports.am" description="get XML files from am MMOWGLI game reports if not already available" depends="get.reports.am.check"> <!--  unless="found.am" -->
+        <getGameReportXmlFiles gameName="am" gameTitle="Am"/>
+        <echo message="get.reports.am complete"/>
+    </target>
+
+    <target name="get.reports.am.check">
+        <property name="gameName"  value="am"/>
+        <property name="gameTitle" value="Am"/>
+        <condition property="found.am" else="false">
+            <available file="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml"/>
+        </condition>
+        <echo message="found ${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml: ${found.am}"/>
+    </target>
+
+    <target name="build.reports.am"> <!--  depends="build.reports.am.IdeaCards,build.reports.am.ActionPlans,build.reports.am.GameDesign" -->
+        <property name="gameName"  value="am"/>
+        <property name="gameTitle" value="Am"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/CardTree.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/ActionPlanList.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/GameDesign.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/ReportsIndex_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/ReportsIndex.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/PlayerProfiles.xsl"
+                     verbose="true"/>
+        <echo message="build.reports.am complete"/>
+    </target>
+
+    <target name="view.reports.am" description="view am idea cards in web browser (via Netbeans only)">
+        <property name="gameName"  value="am"/>
+        <property name="gameTitle" value="Am"/>
+        <nbbrowse file="${reports.dir}/${gameName}/ReportsIndex_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.html" />
+        <!-- TODO implementation-independent approach if possible.  other Ant approaches have to be customized for each OS -->
+    </target>
+
+    <!-- ========== bii ======================================================================== -->
+
+    <target name="all.reports.bii" depends="clean.reports.bii,get.reports.bii,build.reports.bii,view.reports.bii">
+        <echo message="all.reports.bii complete"/>
+    </target>
+
+    <target name="clean.reports.bii">
+        <property name="gameName"  value="bii"/>
+        <delete dir="${reports.dir}/${gameName}" verbose="true"/>
+        <echo message="clean.reports.bii complete"/>
+    </target>
+
+    <target name="get.reports.bii" description="get XML files from bii MMOWGLI game reports if not already available" depends="get.reports.bii.check"> <!--  unless="found.bii" -->
+        <getGameReportXmlFiles gameName="bii" gameTitle="Bii"/>
+        <!-- original method:
+        <property name="gameName"  value="bii"/>
+        <property name="gameTitle" value="Bii"/>
+        <echo message="get XML files from ${gameName} MMOWGLI game reports if not already available"/>
+        <mkdir dir="${reports.dir}/${gameName}"/>
+        <get dest="${reports.dir}/bii" verbose="true" ignoreerrors="false">
+             <url url="${mmowgli.url}/${gameName}/reports/IdeaCardChain_${gameTitle}MmowgliGame.xml"/>
+             <url url="${mmowgli.url}/${gameName}/reports/ActionPlanList_${gameTitle}MmowgliGame.xml"/>
+             <url url="${mmowgli.url}/${gameName}/reports/GameDesign_${gameTitle}MmowgliGame.xml"/>
+        </get>-->
+        <echo message="get.reports.bii complete"/>
+    </target>
+
+    <target name="get.reports.bii.check">
+        <property name="gameName"  value="bii"/>
+        <property name="gameTitle" value="Bii"/>
+        <condition property="found.bii" else="false">
+            <available file="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml"/>
+        </condition>
+        <echo message="found ${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml: ${found.bii}"/>
+    </target>
+
+    <target name="build.reports.bii" depends="build.reports.bii.IdeaCards,build.reports.bii.ActionPlans,build.reports.bii.PlayerProfiles,build.reports.bii.GameDesign,build.reports.bii.ReportsIndex">
+        <echo message="build.reports.bii complete"/>
+    </target>
+
+    <target name="build.reports.bii.IdeaCards">
+        <property name="gameName"  value="bii"/>
+        <property name="gameTitle" value="Bii"/>
+        <!--
+        <xslt basedir="."
+              destdir="${reports.dir}/${gameName}"
+            extension=""
+                style="${stylesheets.dir}/CardTree.xsl"
+                   in="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml"
+                  out="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.html">
+          <classpath location="${saxon.dir}/${saxon.jar}" />
+        </xslt>
+        -->
+        <!-- saxon9.XML is locally defined macro -->
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/CardTree.xsl"
+                     verbose="true"/>
+        <echo message="build.reports.bii.IdeaCards complete"/>
+    </target>
+
+    <target name="build.reports.bii.ActionPlans">
+        <property name="gameName"  value="bii"/>
+        <property name="gameTitle" value="Bii"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/ActionPlanList.xsl"
+                     verbose="true"/>
+        <echo message="build.reports.bii.ActionPlans complete"/>
+    </target>
+
+    <target name="build.reports.bii.GameDesign">
+        <property name="gameName"  value="bii"/>
+        <property name="gameTitle" value="Bii"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/GameDesign.xsl"
+                     verbose="true"/>
+        <echo message="build.reports.bii.GameDesign complete"/>
+    </target>
+
+    <target name="build.reports.bii.PlayerProfiles">
+        <property name="gameName"  value="bii"/>
+        <property name="gameTitle" value="Bii"/>
+        <!-- saxon9.XML is locally defined macro -->
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/PlayerProfiles.xsl"
+                     verbose="true"/>
+        <echo message="build.reports.bii.PlayerProfiles complete"/>
+    </target>
+
+    <target name="build.reports.bii.ReportsIndex">
+        <property name="gameName"  value="bii"/>
+        <property name="gameTitle" value="Bii"/>
+        <!-- saxon9.XML is locally defined macro -->
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/ReportsIndex_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/ReportsIndex.xsl"
+                     verbose="true"/>
+        <echo message="build.reports.bii.ReportsIndex complete"/>
+    </target>
+
+    <target name="view.reports.bii" description="view bii idea cards in web browser (via Netbeans only)">
+        <property name="gameName"  value="bii"/>
+        <property name="gameTitle" value="Bii"/>
+        <nbbrowse file="${reports.dir}/${gameName}/ReportsIndex_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.html" />
+        <!-- TODO implementation-independent approach if possible.  other Ant approaches have to be customized for each OS -->
+    </target>
+
+    <!-- ========== blackswan ======================================================================== -->
+
+    <target name="all.reports.blackswan" depends="clean.reports.blackswan,get.reports.blackswan,build.reports.blackswan,view.reports.blackswan">
+        <echo message="all.reports.blackswan complete"/>
+    </target>
+
+    <target name="clean.reports.blackswan">
+        <property name="gameName"  value="blackswan"/>
+        <delete dir="${reports.dir}/${gameName}" verbose="true"/>
+        <echo message="clean.reports.blackswan complete"/>
+    </target>
+
+    <target name="get.reports.blackswan" description="get XML files from blackswan MMOWGLI game reports if not already available" depends="get.reports.blackswan.check"> <!--  unless="found.blackswan" -->
+        <getGameReportXmlFiles gameName="blackswan" gameTitle="blackswan"/>
+        <echo message="get.reports.blackswan complete"/>
+    </target>
+
+    <target name="get.reports.blackswan.check">
+        <property name="gameName"  value="blackswan"/>
+        <property name="gameTitle" value="blackswan"/>
+        <condition property="found.blackswan" else="false">
+            <available file="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml"/>
+        </condition>
+        <echo message="found ${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml: ${found.blackswan}"/>
+    </target>
+
+    <target name="build.reports.blackswan"> <!--  depends="build.reports.blackswan.IdeaCards,build.reports.blackswan.ActionPlans,build.reports.blackswan.GameDesign" -->
+        <property name="gameName"  value="blackswan"/>
+        <property name="gameTitle" value="blackswan"/>
+        <copyGameReportImages gameName="${gameName}"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/CardTree.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/ActionPlanList.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/GameDesign.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/ReportsIndex_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/ReportsIndex.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/PlayerProfiles.xsl"
+                     verbose="true"/>
+        <echo message="build.reports.blackswan complete"/>
+    </target>
+
+    <target name="view.reports.blackswan" description="view blackswan idea cards in web browser (via Netbeans only)">
+        <property name="gameName"  value="blackswan"/>
+        <property name="gameTitle" value="blackswan"/>
+        <nbbrowse file="${reports.dir}/${gameName}/ReportsIndex_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.html" />
+        <!-- TODO implementation-independent approach if possible.  other Ant approaches have to be customized for each OS -->
+    </target>
+
+    <!-- ========== cap2con ======================================================================== -->
+
+    <target name="all.reports.cap2con" depends="clean.reports.cap2con,get.reports.cap2con,build.reports.cap2con,view.reports.cap2con">
+        <echo message="all.reports.cap2con complete"/>
+    </target>
+
+    <target name="clean.reports.cap2con">
+        <property name="gameName"  value="cap2con"/>
+        <delete dir="${reports.dir}/${gameName}" verbose="true"/>
+        <echo message="clean.reports.cap2con complete"/>
+    </target>
+
+    <target name="get.reports.cap2con" description="get XML files from cap2con MMOWGLI game reports if not already available" depends="get.reports.cap2con.check"> <!--  unless="found.cap2con" -->
+        <getGameReportXmlFiles gameName="cap2con" gameTitle="cap2con"/>
+        <echo message="get.reports.cap2con complete"/>
+    </target>
+
+    <target name="get.reports.cap2con.check">
+        <property name="gameName"  value="cap2con"/>
+        <property name="gameTitle" value="cap2con"/>
+        <condition property="found.cap2con" else="false">
+            <available file="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml"/>
+        </condition>
+        <echo message="found ${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml: ${found.cap2con}"/>
+    </target>
+
+    <target name="build.reports.cap2con"> <!--  depends="build.reports.cap2con.IdeaCards,build.reports.cap2con.ActionPlans,build.reports.cap2con.GameDesign" -->
+        <property name="gameName"  value="cap2con"/>
+        <property name="gameTitle" value="cap2con"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/CardTree.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/ActionPlanList.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/GameDesign.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/ReportsIndex_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/ReportsIndex.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/PlayerProfiles.xsl"
+                     verbose="true"/>
+        <echo message="build.reports.cap2con.IdeaCards complete"/>
+        <echo message="build.reports.cap2con complete"/>
+    </target>
+
+    <target name="view.reports.cap2con" description="view cap2con idea cards in web browser (via Netbeans only)">
+        <property name="gameName"  value="cap2con"/>
+        <property name="gameTitle" value="cap2con"/>
+        <nbbrowse file="${reports.dir}/${gameName}/ReportsIndex_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.html" />
+        <!-- TODO implementation-independent approach if possible.  other Ant approaches have to be customized for each OS -->
+    </target>
+
+    <!-- ========== darkportal ======================================================================== -->
+
+    <target name="all.reports.darkportal" depends="clean.reports.darkportal,get.reports.darkportal,build.reports.darkportal,view.reports.darkportal">
+        <echo message="all.reports.darkportal complete"/>
+    </target>
+
+    <target name="clean.reports.darkportal">
+        <property name="gameName"  value="darkportal"/>
+        <delete dir="${reports.dir}/${gameName}" verbose="true"/>
+        <echo message="clean.reports.darkportal complete"/>
+    </target>
+
+    <target name="get.reports.darkportal" description="get XML files from darkportal MMOWGLI game reports if not already available" depends="get.reports.darkportal.check"> <!--  unless="found.darkportal" -->
+        <getGameReportXmlFiles gameName="darkportal" gameTitle="darkportal"/>
+        <echo message="get.reports.darkportal complete"/>
+    </target>
+
+    <target name="get.reports.darkportal.check">
+        <property name="gameName"  value="darkportal"/>
+        <property name="gameTitle" value="darkportal"/>
+        <condition property="found.darkportal" else="false">
+            <available file="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml"/>
+        </condition>
+        <echo message="found ${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml: ${found.darkportal}"/>
+    </target>
+
+    <target name="build.reports.darkportal"> <!--  depends="build.reports.darkportal.IdeaCards,build.reports.darkportal.ActionPlans,build.reports.darkportal.GameDesign" -->
+        <property name="gameName"  value="darkportal"/>
+        <property name="gameTitle" value="darkportal"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/CardTree.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/ActionPlanList.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/GameDesign.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/ReportsIndex_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/ReportsIndex.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/PlayerProfiles.xsl"
+                     verbose="true"/>
+        <echo message="build.reports.darkportal complete"/>
+    </target>
+
+    <target name="view.reports.darkportal" description="view darkportal idea cards in web browser (via Netbeans only)">
+        <property name="gameName"  value="darkportal"/>
+        <property name="gameTitle" value="darkportal"/>
+        <nbbrowse file="${reports.dir}/${gameName}/ReportsIndex_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.html" />
+        <!-- TODO implementation-independent approach if possible.  other Ant approaches have to be customized for each OS -->
+    </target>
+
+    <!-- ========== dd ======================================================================== -->
+
+    <target name="all.reports.dd" depends="clean.reports.dd,get.reports.dd,build.reports.dd,view.reports.dd">
+        <echo message="all.reports.dd complete"/>
+    </target>
+
+    <target name="clean.reports.dd">
+        <property name="gameName"  value="dd"/>
+        <delete dir="${reports.dir}/${gameName}" verbose="true"/>
+        <echo message="clean.reports.dd complete"/>
+    </target>
+
+    <target name="get.reports.dd" description="get XML files from dd MMOWGLI game reports if not already available" depends="get.reports.dd.check"> <!--  unless="found.dd" -->
+        <getGameReportXmlFiles gameName="dd" gameTitle="dd"/>
+        <echo message="get.reports.dd complete"/>
+    </target>
+
+    <target name="get.reports.dd.check">
+        <property name="gameName"  value="dd"/>
+        <property name="gameTitle"  value="dd"/>
+        <condition property="found.dd" else="false">
+            <available file="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml"/>
+        </condition>
+        <echo message="found ${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml: ${found.dd}"/>
+    </target>
+
+    <target name="build.reports.dd"> <!--  depends="build.reports.dd.IdeaCards,build.reports.dd.ActionPlans,build.reports.dd.GameDesign" -->
+        <property name="gameName"  value="dd"/>
+        <property name="gameTitle"  value="dd"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/CardTree.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/ActionPlanList.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/GameDesign.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/ReportsIndex_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/ReportsIndex.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/PlayerProfiles.xsl"
+                     verbose="true"/>
+        <echo message="build.reports.dd complete"/>
+    </target>
+
+    <target name="view.reports.dd" description="view dd idea cards in web browser (via Netbeans only)">
+        <property name="gameName"  value="dd"/>
+        <property name="gameTitle"  value="dd"/>
+        <nbbrowse file="${reports.dir}/${gameName}/ReportsIndex_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.html" />
+        <!-- TODO implementation-independent approach if possible.  other Ant approaches have to be customized for each OS -->
+    </target>
+
+    <!-- ========== em2 ======================================================================== -->
+
+    <target name="all.reports.em2" depends="clean.reports.em2,get.reports.em2,build.reports.em2,view.reports.em2">
+        <echo message="all.reports.em2 complete"/>
+    </target>
+
+    <target name="clean.reports.em2">
+        <property name="gameName"  value="em2"/>
+        <delete dir="${reports.dir}/${gameName}" verbose="true"/>
+        <echo message="clean.reports.em2 complete"/>
+    </target>
+
+    <target name="get.reports.em2" description="get XML files from em2 MMOWGLI game reports if not already available" depends="get.reports.em2.check"> <!--  unless="found.em2" -->
+        <!-- IdeaCardChain_Em2ElectroMagneticManeuverMmowgli.xml -->
+        <getGameReportXmlFiles gameName="em2" gameTitle="Em2ElectroMagneticManeuver"/>
+        <echo message="get.reports.em2 complete"/>
+    </target>
+
+    <target name="get.reports.em2.check">
+        <property name="gameName"  value="Em2ElectroMagneticManeuver"/> <!-- TODO em2 -->
+        <property name="gameTitle" value="Em2ElectroMagneticManeuver"/>
+        <condition property="found.em2" else="false">
+            <available file="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}Mmowgli.xml"/>
+        </condition>
+        <echo message="found ${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}Mmowgli.xml: ${found.em2}"/>
+    </target>
+
+    <target name="build.reports.em2"> <!--  depends="build.reports.em2.IdeaCards,build.reports.em2.ActionPlans,build.reports.em2.GameDesign" -->
+        <property name="gameName"  value="em2"/>
+        <property name="gameTitle" value="em2"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}Mmowgli.xml"
+                  outputFile="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/CardTree.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}Mmowgli.xml"
+                  outputFile="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/ActionPlanList.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/GameDesign_${gameTitle}Mmowgli.xml"
+                  outputFile="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/GameDesign.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/GameDesign_${gameTitle}Mmowgli.xml"
+                  outputFile="${reports.dir}/${gameName}/ReportsIndex_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/ReportsIndex.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}Mmowgli.xml"
+                  outputFile="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/PlayerProfiles.xsl"
+                     verbose="true"/>
+        <echo message="build.reports.em2 complete"/>
+    </target>
+
+    <target name="view.reports.em2" description="view em2 idea cards in web browser (via Netbeans only)">
+        <property name="gameName"  value="em2"/>
+        <property name="gameTitle" value="em2"/>
+        <nbbrowse file="${reports.dir}/${gameName}/ReportsIndex_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.html" />
+        <!-- TODO implementation-independent approach if possible.  other Ant approaches have to be customized for each OS -->
+    </target>
+
+    <!-- ========== ndu ======================================================================== -->
+
+    <target name="all.reports.ndu" depends="clean.reports.ndu,get.reports.ndu,build.reports.ndu,view.reports.ndu">
+        <echo message="all.reports.ndu complete"/>
+    </target>
+
+    <target name="clean.reports.ndu">
+        <property name="gameName"  value="ndu"/>
+        <delete dir="${reports.dir}/${gameName}" verbose="true"/>
+        <echo message="clean.reports.ndu complete"/>
+    </target>
+
+    <target name="get.reports.ndu" description="get XML files from ndu MMOWGLI game reports if not already available" depends="get.reports.ndu.check"> <!--  unless="found.ndu" -->
+        <getGameReportXmlFiles gameName="ndu" gameTitle="ndu"/>
+        <echo message="get.reports.ndu complete"/>
+    </target>
+
+    <target name="get.reports.ndu.check">
+        <property name="gameName"  value="ndu"/>
+        <property name="gameTitle" value="ndu"/>
+        <condition property="found.ndu" else="false">
+            <available file="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml"/>
+        </condition>
+        <echo message="found ${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml: ${found.ndu}"/>
+    </target>
+
+    <target name="build.reports.ndu"> <!--  depends="build.reports.ndu.IdeaCards,build.reports.ndu.ActionPlans,build.reports.ndu.GameDesign" -->
+        <property name="gameName"  value="ndu"/>
+        <property name="gameTitle" value="ndu"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/CardTree.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/ActionPlanList.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/GameDesign.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/ReportsIndex_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/ReportsIndex.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/PlayerProfiles.xsl"
+                     verbose="true"/>
+        <echo message="build.reports.ndu complete"/>
+    </target>
+
+    <target name="view.reports.ndu" description="view ndu idea cards in web browser (via Netbeans only)">
+        <property name="gameName"  value="ndu"/>
+        <property name="gameTitle" value="ndu"/>
+        <nbbrowse file="${reports.dir}/${gameName}/ReportsIndex_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.html" />
+        <!-- TODO implementation-independent approach if possible.  other Ant approaches have to be customized for each OS -->
+    </target>
+
+    <!-- ========== nsc ======================================================================== -->
+
+    <target name="all.reports.nsc" depends="clean.reports.nsc,get.reports.nsc,build.reports.nsc,view.reports.nsc">
+        <echo message="all.reports.nsc complete"/>
+    </target>
+
+    <target name="clean.reports.nsc">
+        <property name="gameName"  value="nsc"/>
+        <delete dir="${reports.dir}/${gameName}" verbose="true"/>
+        <echo message="clean.reports.nsc complete"/>
+    </target>
+
+    <target name="get.reports.nsc" description="get XML files from nsc MMOWGLI game reports if not already available" depends="get.reports.nsc.check"> <!--  unless="found.nsc" -->
+        <getGameReportXmlFiles gameName="nsc" gameTitle="nsc"/>
+        <echo message="get.reports.nsc complete"/>
+    </target>
+
+    <target name="get.reports.nsc.check">
+        <property name="gameName"  value="nsc"/>
+        <property name="gameTitle" value="nsc"/>
+        <condition property="found.nsc" else="false">
+            <available file="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml"/>
+        </condition>
+        <echo message="found ${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml: ${found.nsc}"/>
+    </target>
+
+    <target name="build.reports.nsc"> <!--  depends="build.reports.nsc.IdeaCards,build.reports.nsc.ActionPlans,build.reports.nsc.GameDesign" -->
+        <property name="gameName"  value="nsc"/>
+        <property name="gameTitle" value="nsc"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/CardTree.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/ActionPlanList.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/GameDesign.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/ReportsIndex_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/ReportsIndex.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/PlayerProfiles.xsl"
+                     verbose="true"/>
+        <echo message="build.reports.nsc complete"/>
+    </target>
+
+    <target name="view.reports.nsc" description="view nsc idea cards in web browser (via Netbeans only)">
+        <property name="gameName"  value="nsc"/>
+        <property name="gameTitle" value="nsc"/>
+        <nbbrowse file="${reports.dir}/${gameName}/ReportsIndex_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.html" />
+        <!-- TODO implementation-independent approach if possible.  other Ant approaches have to be customized for each OS -->
+    </target>
+
+    <!-- ========== pcc ======================================================================== -->
+
+    <target name="all.reports.pcc" depends="clean.reports.pcc,get.reports.pcc,build.reports.pcc,view.reports.pcc">
+        <echo message="all.reports.pcc complete"/>
+    </target>
+
+    <target name="clean.reports.pcc">
+        <property name="gameName"  value="pcc"/>
+        <delete dir="${reports.dir}/${gameName}" verbose="true"/>
+        <echo message="clean.reports.pcc complete"/>
+    </target>
+
+    <target name="get.reports.pcc" description="get XML files from pcc MMOWGLI game reports if not already available" depends="get.reports.pcc.check"> <!--  unless="found.pcc" -->
+        <getGameReportXmlFiles gameName="pcc" gameTitle="pcc"/>
+        <echo message="get.reports.pcc complete"/>
+    </target>
+
+    <target name="get.reports.pcc.check">
+        <property name="gameName"  value="pcc"/>
+        <property name="gameTitle" value="pcc"/>
+        <condition property="found.pcc" else="false">
+            <available file="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml"/>
+        </condition>
+        <echo message="found ${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml: ${found.pcc}"/>
+    </target>
+
+    <target name="build.reports.pcc"> <!--  depends="build.reports.pcc.IdeaCards,build.reports.pcc.ActionPlans,build.reports.pcc.GameDesign" -->
+        <property name="gameName"  value="pcc"/>
+        <property name="gameTitle" value="pcc"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/CardTree.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/ActionPlanList.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/GameDesign.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/ReportsIndex_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/ReportsIndex.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/PlayerProfiles.xsl"
+                     verbose="true"/>
+        <echo message="build.reports.pcc complete"/>
+    </target>
+
+    <target name="view.reports.pcc" description="view pcc idea cards in web browser (via Netbeans only)">
+        <property name="gameName"  value="pcc"/>
+        <property name="gameTitle" value="pcc"/>
+        <nbbrowse file="${reports.dir}/${gameName}/ReportsIndex_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.html" />
+        <!-- TODO implementation-independent approach if possible.  other Ant approaches have to be customized for each OS -->
+    </target>
+
+    <!-- ========== uxvdm ======================================================================== -->
+
+    <target name="all.reports.uxvdm" depends="clean.reports.uxvdm,get.reports.uxvdm,build.reports.uxvdm,view.reports.uxvdm">
+        <echo message="all.reports.uxvdm complete"/>
+    </target>
+
+    <target name="clean.reports.uxvdm">
+        <property name="gameName"  value="uxvdm"/>
+        <delete dir="${reports.dir}/${gameName}" verbose="true"/>
+        <echo message="clean.reports.uxvdm complete"/>
+    </target>
+
+    <target name="get.reports.uxvdm" description="get XML files from uxvdm MMOWGLI game reports if not already available" depends="get.reports.uxvdm.check"> <!--  unless="found.uxvdm" -->
+        <getGameReportXmlFiles gameName="uxvdm" gameTitle="uxvdm"/>
+        <echo message="get.reports.uxvdm complete"/>
+    </target>
+
+    <target name="get.reports.uxvdm.check">
+        <property name="gameName"  value="uxvdm"/>
+        <property name="gameTitle" value="uxvdm"/>
+        <condition property="found.uxvdm" else="false">
+            <available file="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml"/>
+        </condition>
+        <echo message="found ${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml: ${found.uxvdm}"/>
+    </target>
+
+    <target name="build.reports.uxvdm"> <!--  depends="build.reports.uxvdm.IdeaCards,build.reports.uxvdm.ActionPlans,build.reports.uxvdm.GameDesign" -->
+        <property name="gameName"  value="uxvdm"/>
+        <property name="gameTitle" value="uxvdm"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/CardTree.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/ActionPlanList.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/GameDesign.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/ReportsIndex_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/ReportsIndex.xsl"
+                     verbose="true"/>
+        <saxon9.XML inputXML="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.xml"
+                  outputFile="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.html"
+                  stylesheet="${stylesheets.dir}/PlayerProfiles.xsl"
+                     verbose="true"/>
+        <echo message="build.reports.uxvdm complete"/>
+    </target>
+
+    <target name="view.reports.uxvdm" description="view uxvdm idea cards in web browser (via Netbeans only)">
+        <property name="gameName"  value="uxvdm"/>
+        <property name="gameTitle" value="uxvdm"/>
+        <nbbrowse file="${reports.dir}/${gameName}/ReportsIndex_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/IdeaCardChain_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/ActionPlanList_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/PlayerProfiles_${gameTitle}MmowgliGame.html" />
+        <nbbrowse file="${reports.dir}/${gameName}/GameDesign_${gameTitle}MmowgliGame.html" />
+        <!-- TODO implementation-independent approach if possible.  other Ant approaches have to be customized for each OS -->
+    </target>
+
+<!-- You may freely edit this file. See commented blocks below for -->
+<!-- some examples of how to customize the build. -->
+<!-- (If you delete it and reopen the project it will be recreated.) -->
+<!-- By default, only the Clean and Build commands use this build script. -->
+<!-- Commands such as Run, Debug, and Test only use this build script if -->
+<!-- the Compile on Save feature is turned off for the project. -->
+<!-- You can turn off the Compile on Save (or Deploy on Save) setting -->
+<!-- in the project's Project Properties dialog box.-->
+
+    <!--
+
+    There exist several targets which are by default empty and which can be 
+    used for execution of your tasks. These targets are usually executed 
+    before and after some main targets. They are: 
+
+      -pre-init:                 called before initialization of project properties 
+      -post-init:                called after initialization of project properties 
+      -pre-compile:              called before javac compilation 
+      -post-compile:             called after javac compilation 
+      -pre-compile-single:       called before javac compilation of single file
+      -post-compile-single:      called after javac compilation of single file
+      -pre-compile-test:         called before javac compilation of JUnit tests
+      -post-compile-test:        called after javac compilation of JUnit tests
+      -pre-compile-test-single:  called before javac compilation of single JUnit test
+      -post-compile-test-single: called after javac compilation of single JUunit test
+      -pre-dist:                 called before archive building 
+      -post-dist:                called after archive building 
+      -post-clean:               called after cleaning build products 
+      -pre-run-deploy:           called before deploying
+      -post-run-deploy:          called after deploying
+
+    Example of pluging an obfuscator after the compilation could look like 
+
+        <target name="-post-compile">
+            <obfuscate>
+                <fileset dir="${build.classes.dir}"/>
+            </obfuscate>
+        </target>
+
+    For list of available properties check the imported 
+    nbproject/build-impl.xml file. 
+
+
+    Other way how to customize the build is by overriding existing main targets.
+    The target of interest are: 
+
+      init-macrodef-javac:    defines macro for javac compilation
+      init-macrodef-junit:   defines macro for junit execution
+      init-macrodef-debug:    defines macro for class debugging
+      do-dist:                archive building
+      run:                    execution of project 
+      javadoc-build:          javadoc generation 
+
+    Example of overriding the target for project execution could look like 
+
+        <target name="run" depends="<PROJNAME>-impl.jar">
+            <exec dir="bin" executable="launcher.exe">
+                <arg file="${dist.jar}"/>
+            </exec>
+        </target>
+
+    Notice that overridden target depends on jar target and not only on 
+    compile target as regular run target does. Again, for list of available 
+    properties which you can use check the target you are overriding in 
+    nbproject/build-impl.xml file. 
+
+    -->
+</project>
