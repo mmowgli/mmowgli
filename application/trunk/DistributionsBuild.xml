@@ -64,6 +64,7 @@
 	<target name="nato.war"          depends="confirmClean,zipVaadinDir"> <deployOne outFile="nato.war"          webxml="nato_web.xml"         /></target>
 	<target name="ndu.war"           depends="confirmClean,zipVaadinDir"> <deployOne outFile="ndu.war"           webxml="ndu_web.xml"          /></target>
 	<target name="nps.war"           depends="confirmClean,zipVaadinDir"> <deployOne outFile="nps.war"           webxml="nps_web.xml"          /></target>
+	<target name="nsc.war"           depends="confirmClean,zipVaadinDir"> <deployOne outFile="nsc.war"           webxml="nsc_web.xml"          /></target>
 	<target name="pcc.war"           depends="confirmClean,zipVaadinDir"> <deployOne outFile="pcc.war"           webxml="pcc_web.xml"          /></target>
 	<target name="piracyTest.war"    depends="confirmClean,zipVaadinDir"> <deployOne outFile="piracyTest.war"    webxml="test_piracy_web.xml"  /></target>
 	<target name="training.war"      depends="confirmClean,zipVaadinDir"> <deployOne outFile="training.war"      webxml="training_web.xml"     /></target>
@@ -77,6 +78,7 @@
 		nato.war,
 		ndu.war,
 		nps.war,
+		nsc.war,
 		pcc.war,
 		piracyTest.war,
 		training.war"/>

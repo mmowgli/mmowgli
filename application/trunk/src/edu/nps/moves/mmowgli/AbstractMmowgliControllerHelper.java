@@ -580,7 +580,7 @@ public class AbstractMmowgliControllerHelper
           }
         }
 
-        UI.getCurrent().removeWindow(bcastWindow);
+        bcastWindow.close();
       }
     };
     bcancelButt.addClickListener(lis);
@@ -591,14 +591,14 @@ public class AbstractMmowgliControllerHelper
   public void handleSetBlogHeadlineAction(MenuBar menubar)
   {
     final SetBlogHeadlineWindow subWin = new SetBlogHeadlineWindow();
-    UI.getCurrent().addWindow(subWin);
     subWin.center();
+    UI.getCurrent().addWindow(subWin);
     ClickListener canLis = new ClickListener()
     {
       @Override
       public void buttonClick(ClickEvent event)
       {
-        UI.getCurrent().removeWindow(subWin);
+        subWin.close();
       }
     };
     ClickListener okLis = new ClickListener()
@@ -614,7 +614,7 @@ public class AbstractMmowgliControllerHelper
         User me = Mmowgli2UI.getGlobals().getUserTL();
         if(subWin.getNullHeadline()) {
           GameEventLogger.updateBlogHeadlineTL(null, null, null, me.getId());
-          UI.getCurrent().removeWindow(subWin);
+          subWin.close();
           HSess.close();
           return;
         }
@@ -623,7 +623,7 @@ public class AbstractMmowgliControllerHelper
         String tt  = subWin.getToolTipEntry();
         if(txt != null && txt.length()>0 && url != null && url.length()>0) {
           GameEventLogger.updateBlogHeadlineTL(txt,tt,url, me.getId());
-          UI.getCurrent().removeWindow(subWin);
+          subWin.close();
         }
         else
           Notification.show("Error","Text and url fields must be entered",Notification.Type.WARNING_MESSAGE);

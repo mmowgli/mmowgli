@@ -46,6 +46,7 @@ import edu.nps.moves.mmowgli.db.pii.UserPii;
 import edu.nps.moves.mmowgli.hibernate.HSess;
 import edu.nps.moves.mmowgli.hibernate.VHibPii;
 import edu.nps.moves.mmowgli.markers.*;
+import edu.nps.moves.mmowgli.utility.FocusHack;
 /**
  * LoginPopup.java Created on Dec 15, 2010
  * Updated Mar 6, 2014 Vaadin 7
@@ -153,10 +154,11 @@ public class LoginPopup extends MmowgliDialog
 
     pwResetButt.addClickListener(new MyForgotLoginInfoListener());
 
-    userIDTf.focus();
+    userIDTf.focus();  // won't do it
+    FocusHack.focus(userIDTf);  // will do it
   }
 
-  // Used to center the dialog
+	// Used to center the dialog
   public int getUsualWidth()
   {
     return 580; // px

@@ -53,6 +53,7 @@ import edu.nps.moves.mmowgli.hibernate.HSess;
 import edu.nps.moves.mmowgli.hibernate.VHibPii;
 import edu.nps.moves.mmowgli.markers.*;
 import edu.nps.moves.mmowgli.modules.gamemaster.GameEventLogger;
+import edu.nps.moves.mmowgli.utility.FocusHack;
 import edu.nps.moves.mmowgli.utility.MiscellaneousMmowgliTimer.MSysOut;
 
 /**
@@ -204,7 +205,9 @@ public class RegistrationPagePopupFirst extends MmowgliDialog
 
     hl.addComponent(lab = new Label());
     lab.setWidth("15px");
-    userIDTf.focus();
+    
+    userIDTf.focus();  // should do it
+    FocusHack.focus(userIDTf);  // this does
   }
 
   /*

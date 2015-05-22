@@ -564,6 +564,19 @@ text-shadow:; /* off */
                                                       <xsl:text>Call To Action</xsl:text>
                                                   </a>
                                                   <xsl:text>: Player Motivation</xsl:text>
+                                                    <xsl:if test="(count(//CallToAction) > 1)">
+                                                        <xsl:text> (</xsl:text>
+                                                        <xsl:for-each select="//CallToAction">
+                                                            <a href="#CallToActionRound{@round}">
+                                                                <xsl:text>Round </xsl:text>
+                                                                <xsl:value-of select="@round"/>
+                                                            </a>
+                                                            <xsl:if test="(position() != last())">
+                                                                <xsl:text>, </xsl:text>
+                                                            </xsl:if>
+                                                        </xsl:for-each>
+                                                        <xsl:text>)</xsl:text>
+                                                    </xsl:if>
                                                   <br />
                                             </xsl:if>
                                         </li>
