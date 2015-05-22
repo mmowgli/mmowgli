@@ -457,7 +457,9 @@ td.longtext {
                         </td>
                         <td>
                             <a href="{//ApplicationURLs/Game/.}/mobile" target="{//Other/GameAcronym/.}Game" title="Play the game! go mobile online">
-                                <img src="images/mmowgli.nps.edu.{//Other/GameAcronym/.}.mobile.qr.png" height="100"/>
+                            <!--<img src="images/mmowgli.nps.edu.{//Other/GameAcronym/.}.mobile.qr.png" height="100"/>-->
+                                <xsl:comment>QR image for mobile link</xsl:comment>
+                                <img src="{//MobileQRImageUrl/.}" height="100"/>
                             </a>
                             <br />
                             <a href="{//ApplicationURLs/Game/.}/mobile" target="{//Other/GameAcronym/.}Game" title="Play the game! go mobile online">

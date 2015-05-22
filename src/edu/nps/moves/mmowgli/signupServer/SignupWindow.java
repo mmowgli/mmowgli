@@ -198,6 +198,7 @@ public class SignupWindow extends VerticalLayout//Window
       vl.setComponentAlignment(lab, Alignment.MIDDLE_CENTER);
       vl.addComponent(lab=new Label());
       vl.setExpandRatio(lab, 1.0f);
+      emailTF.focus();
     }
 
     @Override

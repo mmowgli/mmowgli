@@ -37,7 +37,9 @@ import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.event.MouseEvents;
 import com.vaadin.server.ExternalResource;
+import com.vaadin.server.Page;
 import com.vaadin.server.Resource;
+import com.vaadin.shared.Position;
 import com.vaadin.ui.*;
 import com.vaadin.ui.AbstractTextField.TextChangeEventMode;
 import com.vaadin.ui.Button.ClickEvent;
@@ -320,7 +322,18 @@ public class Header extends AbsoluteLayout implements MmowgliComponent, WantsGam
     if(mu != null)
       decorateBlogHeadlinesLink(mu);
     addBlogHeadlinesLink("top:147px;left:20px");
-     
+    
+    String headline = blogHeadlinesLink.getCaption();
+    if(headline != null && headline.length()>0) {
+      // Add Window.Notification relaying the same info as the BlogHeadLinesLink
+      Notification note = new Notification("Today's News", "<br/>"+headline, Notification.Type.WARNING_MESSAGE, true);
+      note.setPosition(Position.TOP_CENTER);
+      note.setDelayMsec(5*1000);
+      // Yellow is more an attention getter
+      note.setStyleName("m-blue");
+      note.show(Page.getCurrent());
+    }
+    
     addComponent(callToActionButt, "top:0px;left:333px");
     /* The css has a height, width and even a background, but stupid IE will only properly size the button if an image is
      * used.  Therefore we use an a transparent png of the proper size */

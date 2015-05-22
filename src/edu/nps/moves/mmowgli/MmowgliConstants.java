@@ -220,7 +220,8 @@ public class MmowgliConstants
   
   // parameters for alternate methods:
   public static String WEB_XML_CLUSTERMASTER_NAME_KEY      = "clusterMaster";         // for WebXmlParameterReader
-  public static String WEB_XML_CLUSTERMASTER_LOCK_PATH_KEY = "clusterMasterLockPath"; //SharedFileLockGetter
+  public static String WEB_XML_CLUSTERMASTER_LOCK_PATH_KEY = "clusterMasterLockPath"; // for SharedFileLockGetter
+  public static String WEB_XML_ZOOKEEPER_ADDRESS_KEY       = "zookeeperSocket";       // for ZookeeperLeaderElection
   
 //@formatter:on
 

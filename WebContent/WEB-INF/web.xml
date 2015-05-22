@@ -103,13 +103,13 @@
      <description>Parameter for SharedFileLockGetter</description>
     <param-name>clusterMasterLockPath</param-name>
     <param-value>/tmp/mmowgli/{{DEPLOY}}/</param-value>
-  </context-param> -->
+  </context-param>
   <context-param>
     <description>Parameter for WebXmlParameterReader</description>
     <param-name>clusterMaster</param-name>
     <param-value>GrannySmith.local</param-value>
   </context-param>
-
+  -->
   <context-param>
     <description>Where mmowgli sends emails to be delivered</description>
     <param-name>smtpHost</param-name>
