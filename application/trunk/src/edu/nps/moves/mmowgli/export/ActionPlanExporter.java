@@ -133,12 +133,15 @@ public class ActionPlanExporter extends BaseExporter
       root.setAttribute("exported", dateFmt.format(new Date()));
       HSess.init();
       root.setAttribute("multipleMoves", Boolean.toString(isMultipleMoves(HSess.get())));
-      Game g = (Game) HSess.get().get(Game.class, 1L);
+      Game g = Game.getTL();
+      GameLinks links = GameLinks.getTL();
       String s = g.getTitle();
       addElementWithText(root, "GameTitle", s.replace(' ','_'));  // better file name handling
       addElementWithText(root, "GameAcronym", g.getAcronym());
       addElementWithText(root, "GameSecurity", g.isShowFouo()?"FOUO":"open");
       addElementWithText(root, "GameSummary", metaString);
+      addElementWithText(root, "TroubleLink", links.getTroubleLink());
+      addElementWithText(root, "TroubleEmail", links.getTroubleMailto());
       newAddCall2Action(root, HSess.get(), g);
 
       @SuppressWarnings("unchecked")

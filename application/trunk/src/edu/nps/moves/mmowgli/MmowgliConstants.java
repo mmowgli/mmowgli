@@ -53,17 +53,16 @@ public class MmowgliConstants
   public static String MOBILE_QR_IMAGE_FILETYPE = "png";
   
   // Database version matching this code
-  public static long DATABASE_VERSION = 20150504; // db which matches this code
-  
+  public static long DATABASE_VERSION = 20150529; // db which matches this code
+  /*
   public static long DATABASE_VERSION_BEFORE_EMAILPII_DIGESTS = 20130626;
   public static long DATABASE_VERSION_AFTER_EMAILPII_DIGESTS = 20130627;
-
   public static long DATABASE_VERSION_WITH_MOVE_PATCHED_SCORING = 20130215;
   public static long DATABASE_VERSION_WITH_CONFIGURABLE_LOGIN_BUTTONS = 20130124;
   public static long DATABASE_VERSION_WITH_EMAIL_CONFIRMATION = 20120911;
   public static long DATABASE_VERSION_WITH_HASHED_PASSWORDS = 20120718;
   public static long DATABASE_VERSION_WITH_QUICKUSERS = 20120715;
-
+*/
   public static String DUMMY_DATABASE_ENCRYPTION_PASSWORD = "changeMeNow!";
   public static int HIBERNATE_TRANSACTION_TIMEOUT_IN_SECONDS = 10;
 

@@ -133,6 +133,8 @@ public class BadgeManager implements Runnable
   @Override
   public void run()
   {
+    try{Thread.sleep(5000l);}catch(InterruptedException ex){}    //let AppMaster complete (todo, properly sync)
+    
     if(!firstRunComplete) {   // not used, since run is not reentered
       updateAllBadges();  // does its own hibtlsession
       firstRunComplete = true;

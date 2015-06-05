@@ -760,8 +760,11 @@
                                                         <xsl:value-of select="position()"/>
                                                     </xsl:element>
                                                 </xsl:element>
+                                                <xsl:text disable-output-escaping="yes">&amp;nbsp;</xsl:text>
                                             </td>
                                             <td align="right">
+                                                <!--
+                                            -->
                                                 <xsl:element name="a">
                                                     <xsl:attribute name="href">
                                                         <xsl:value-of select="$imageUrl"/>
@@ -771,29 +774,29 @@
                                                             <xsl:value-of select="$imageUrl"/>
                                                         </xsl:attribute>
                                                         <xsl:choose>
-                                                            <xsl:when test="(@height > 600)">
-                                                                <xsl:attribute name="height">
+                                                            <xsl:when test="(@width > 600)">
+                                                                <xsl:attribute name="width">
                                                                     <xsl:text>600</xsl:text>
                                                                 </xsl:attribute>
-                                                                <!-- width to match -->
-                                                            </xsl:when>
-                                                            <xsl:when test="(string-length(@height) > 0)">
-                                                                <xsl:attribute name="height">
-                                                                    <xsl:value-of select="@height"/>
-                                                                </xsl:attribute>
-                                                                <!-- width to match -->
-                                                            </xsl:when>
-                                                            <xsl:when test="(@width > 800)">
-                                                                <xsl:attribute name="width">
-                                                                    <xsl:text>800</xsl:text>
-                                                                </xsl:attribute>
-                                                                <!-- height to match -->
+                                                                <!-- height to match, computed by browser -->
                                                             </xsl:when>
                                                             <xsl:when test="(string-length(@width) > 0)">
                                                                 <xsl:attribute name="width">
                                                                     <xsl:value-of select="@width"/>
                                                                 </xsl:attribute>
-                                                                <!-- height to match -->
+                                                                <!-- height to match, computed by browser -->
+                                                            </xsl:when>
+                                                            <xsl:when test="(@height > 600)">
+                                                                <xsl:attribute name="height">
+                                                                    <xsl:text>600</xsl:text>
+                                                                </xsl:attribute>
+                                                                <!-- width to match, computed by browser -->
+                                                            </xsl:when>
+                                                            <xsl:when test="(string-length(@height) > 0)">
+                                                                <xsl:attribute name="height">
+                                                                    <xsl:value-of select="@height"/>
+                                                                </xsl:attribute>
+                                                                <!-- width to match, computed by browser -->
                                                             </xsl:when>
                                                         </xsl:choose>
                                                         <!--<img src="{$url}" width="{$width}" height="{$height}"/> -->
@@ -801,7 +804,7 @@
                                                 </xsl:element>
                                                 <br />
                                             </td>
-                                            <td align="left" valign="top">
+                                            <td align="left" valign="middle">
                                                 <!-- TODO get correct name, also update ActionPlanList.xsd and ActionPlanExporter.java -->
                                                 <xsl:if test="Title">
                                                     <p>

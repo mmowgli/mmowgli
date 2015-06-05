@@ -37,7 +37,6 @@ import org.w3c.dom.Element;
 
 import edu.nps.moves.mmowgli.db.*;
 import edu.nps.moves.mmowgli.hibernate.HSess;
-import edu.nps.moves.mmowgli.markers.HibernateSessionThreadLocalConstructor;
 import edu.nps.moves.mmowgli.modules.cards.CardStyler;
 
 /**
@@ -120,11 +119,15 @@ public class CardExporter extends BaseExporter
       HSess.init();      
       root.setAttribute("multipleMoves", Boolean.toString(isMultipleMoves(HSess.get())));      
       Game g = Game.getTL();
+      GameLinks links = GameLinks.getTL();
       String s = g.getTitle();
       addElementWithText(root, "GameTitle", s.replace(' ', '_'));     // for better file-name building
       addElementWithText(root, "GameAcronym", g.getAcronym());
       addElementWithText(root, "GameSecurity", g.isShowFouo()?"FOUO":"open");
       addElementWithText(root, "GameSummary", metaString);
+      addElementWithText(root, "TroubleLink", links.getTroubleLink());
+      addElementWithText(root, "TroubleEmail", links.getTroubleMailto());
+      
       newAddCall2Action(root, HSess.get(), g);
       
       Element topCards = createAppend(root, "TopLevelCardTypes");

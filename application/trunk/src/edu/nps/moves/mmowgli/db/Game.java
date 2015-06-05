@@ -145,6 +145,10 @@ public class Game implements Serializable
     String       gameHandle; // default = mmowgli
     Long         revision = 0L;   // used internally by hibernate for optimistic locking, but not here
     boolean      reportsShowHiddenCards;
+    boolean      requireCACregistration;
+    boolean      enforceCACdataRegistration;
+    boolean      requireCAClogin;
+    boolean      useCAClogin;
     
 //@formatter:on
 /*    
@@ -1033,6 +1037,46 @@ public int getMapZoom()
 
 public void setMapZoom(int mapZoom) {
 	this.mapZoom = mapZoom;
+}
+
+public boolean isRequireCACregistration()
+{
+  return requireCACregistration;
+}
+
+public void setRequireCACregistration(boolean requireCACregistration)
+{
+  this.requireCACregistration = requireCACregistration;
+}
+
+public boolean isEnforceCACdataRegistration()
+{
+  return enforceCACdataRegistration;
+}
+
+public void setEnforceCACdataRegistration(boolean enforceCACdataRegistration)
+{
+  this.enforceCACdataRegistration = enforceCACdataRegistration;
+}
+
+public boolean isRequireCAClogin()
+{
+  return requireCAClogin;
+}
+
+public void setRequireCAClogin(boolean requireCAClogin)
+{
+  this.requireCAClogin = requireCAClogin;
+}
+
+public boolean isUseCAClogin()
+{
+  return useCAClogin;
+}
+
+public void setUseCAClogin(boolean useCAClogin)
+{
+  this.useCAClogin = useCAClogin;
 }
 
 }

@@ -36,6 +36,7 @@ import com.vaadin.server.VaadinSession;
 import com.vaadin.server.WebBrowser;
 import com.vaadin.ui.UI;
 
+import edu.nps.moves.mmowgli.CACManager.CACData;
 import edu.nps.moves.mmowgli.components.AppMenuBar;
 import edu.nps.moves.mmowgli.db.Game;
 import edu.nps.moves.mmowgli.db.User;
@@ -85,6 +86,7 @@ public class MmowgliSessionGlobals implements Serializable, WantsGameUpdates
   private Mmowgli2UI firstUI = null;
   private boolean loggedIn = false;
   private UUID userSessionIdentifier = UUID.randomUUID();
+  private CACData cacData = null;  // CAC information
   
   private boolean gameAdministrator = false;
   private boolean gameMaster = false;
@@ -490,5 +492,15 @@ public class MmowgliSessionGlobals implements Serializable, WantsGameUpdates
       sb.append("-videos");
     }
     return sb.toString();
+  }
+
+  public void setCACInfo(CACData cData)
+  {
+    this.cacData = cData;    
+  }
+  
+  public CACData getCACInfo()
+  {
+    return cacData;
   }
 }

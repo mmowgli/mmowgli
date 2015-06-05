@@ -58,8 +58,10 @@ public class EmailConfirmationServlet extends HttpServlet
   private String uqueryBase = "select * from User where id= ? ; ";
   private String setQueryBase = "update User SET emailConfirmed = 1 where id = ?;";
   private String gameTitleQuery = "select * from Game WHERE id = 1 ;";
+  private String troubleListEmailQuery = "select * from GameLinks WHERE id = 1 ;"; 
   private String GAMETITLE_COL = "title";
   private String ACRONYM_COL = "acronym";
+  private String TROUBLEMAILTO_COL = "troubleMailto";
 
   enum MyResponse
   {
@@ -81,7 +83,8 @@ public class EmailConfirmationServlet extends HttpServlet
 
     String gamename = "";
     String acronym = "";
-
+    String troubleEmail = "";
+    
     connection = dbUrl + dbName + "?user=" + dbUser + "&password=" + dbPassword;
 
     MyResponse myresp = null;
@@ -128,6 +131,15 @@ public class EmailConfirmationServlet extends HttpServlet
             int ret = statement.executeUpdate();
             if (ret == 0) {
               req.getSession().getServletContext().log(error = "Could not update User table with emailConfirmed = true");
+              break;
+            }
+            // Trouble list email
+            statement.close();
+            statement = connect.prepareStatement(troubleListEmailQuery);
+            resultSet.close();
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+              troubleEmail = resultSet.getString(TROUBLEMAILTO_COL);
               break;
             }
             // Now return the game name
@@ -177,10 +189,11 @@ public class EmailConfirmationServlet extends HttpServlet
       }
     }
 
-    doResponse(req, resp, myresp, error, gamename, acronym, PORTALWIKI_URL);
+    doResponse(req, resp, myresp, error, gamename, acronym, PORTALWIKI_URL, troubleEmail);
   }
 
-  private void doResponse(HttpServletRequest req, HttpServletResponse resp, MyResponse myresp, String error, String gamename, String acronym, String portalUrl)
+  private void doResponse(HttpServletRequest req, HttpServletResponse resp, MyResponse myresp,
+                          String error, String gamename, String acronym, String portalUrl, String troubleList)
   {
     StringBuilder sb = new StringBuilder();
     sb.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 ");
@@ -209,7 +222,13 @@ public class EmailConfirmationServlet extends HttpServlet
       sb.append("Problems may always be reported on the<br/>");
       sb.append("<a href='http://mmowgli.nps.edu/trouble'>MMOWGLI Trouble Report</a> ");
       sb.append("page at <a href='http://mmowgli.nps.edu/trouble'>mmowgli.nps.edu/trouble</a>,<br/>");
-      sb.append("or by email to <a href='mailto:mmowgli-trouble@nps.edu'>mmowgli-trouble@nps.edu</a><br/>");
+      //sb.append("or by email to <a href='mailto:mmowgli-trouble@nps.edu'>mmowgli-trouble@nps.edu</a><br/>");
+      sb.append("or by email to <a href='mailto:");
+      sb.append(troubleList);
+      sb.append("'>");
+      sb.append(troubleList);
+      sb.append("</a><br/>");
+
       sb.append("<br/>More information is also available on the <a href='");
       sb.append(portalUrl);
       sb.append("'>MMOWGLI Portal</a>.<br/>");

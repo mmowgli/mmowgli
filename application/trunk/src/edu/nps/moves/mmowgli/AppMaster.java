@@ -139,8 +139,10 @@ public class AppMaster
   
   public static AppMaster instance(VaadinServlet servlet, ServletContext context)
   {
-    if (myInstance == null)
+    if (myInstance == null) {
       myInstance = new AppMaster(servlet,context);
+      myInstance.init2();
+    }
     return myInstance;
   }
 
@@ -164,10 +166,14 @@ public class AppMaster
     trustAllCerts();
 
     mailManager = new MailManager();
-
+  }
+  
+  // called after the instance variable is set up
+  private void init2()
+  {
     // JMS keep-alive monitor
     Long keepAliveInterval = null;
-    String kaIntv = context.getInitParameter(WEB_XML_JMS_KEEPALIVE_KEY);
+    String kaIntv = servletContext.getInitParameter(WEB_XML_JMS_KEEPALIVE_KEY);
     if (kaIntv != null) {
       try {
         keepAliveInterval = Long.parseLong(kaIntv);
@@ -176,12 +182,10 @@ public class AppMaster
         System.err.println("Bad format for long jmsKeepAliveIntervalMS in web.xml");
       }
     }
-
     keepAliveManager = new KeepAliveManager(this, keepAliveInterval); // latter maybe null
     miscTimer = new MiscellaneousMmowgliTimer();
-
-    clusterMasterMaster = buildClusterMaster();
   }
+  
   //@formatter:off
   private ClusterMasterController buildClusterMaster()
   {
@@ -198,7 +202,7 @@ public class AppMaster
         arbiterCls = Class.forName(arbiter);  // for grins
       }
       catch (ClassNotFoundException ex) {
-        MSysOut.println(ERROR_LOGS, "ClusterMasterArbiter class not found, using SingleDeployment");
+        MSysOut.println(ERROR_LOGS, "ClusterMasterArbiter class not found, using SingleDeployment instead");
         return new ClusterMasterController.SingleDeployment();
       }
     }
@@ -210,7 +214,7 @@ public class AppMaster
       return cntl;
     }
     catch (Exception ex) {
-      MSysOut.println(ERROR_LOGS, "Could not instantiate ClusterMasterArbiter, using SingleDeployment");
+      MSysOut.println(ERROR_LOGS, "Could not instantiate ClusterMasterArbiter, using SingleDeployment instead");
       return new ClusterMasterController.SingleDeployment();
     }
   }
@@ -382,8 +386,8 @@ public class AppMaster
   public void init(ServletContext context)
   {
     piiHibernate = VHibPii.instance();
-                                       
     piiHibernate.init(context);
+    
     vaadinHibernate = VHib.instance();
     vaadinHibernate.init(context);
 
@@ -391,7 +395,8 @@ public class AppMaster
     
     mCacheManager = MCacheManager.instance();
     
-    doClusterMasterTasks();
+    clusterMasterMaster = buildClusterMaster();  // can be a race here
+    handleClusterMaster(amIClusterMaster());     // and here
 
     GameEventLogger.logApplicationLaunch();
 
@@ -406,39 +411,81 @@ public class AppMaster
     return initted;
   }
   
-  private void doClusterMasterTasks()
+  private Object clusterMasterSyncher = new Object();  // must sync because the zookeeper listener can jump in
+  
+  private boolean oneTimeTasksDone = false;
+  private boolean changedTasksDone = false;
+  
+  public void handleClusterMaster(boolean itsMe)
   {
-    if(amIClusterMaster()) {
-      handleMoveSwitchScoring();
-      doClusterMasterChangedTasks();
+    synchronized(clusterMasterSyncher) {
+      if(itsMe) {
+        if(!oneTimeTasksDone) {
+          doClusterMasterOneTimeTasks();
+          oneTimeTasksDone = true;
+        }
+        if(!changedTasksDone) {
+          doClusterMasterChangedTasks();
+          changedTasksDone = true;
+        }
+      }
+      else {
+        if(changedTasksDone) {
+          undoClusterMasterChangedTasks();
+          changedTasksDone = false;
+        }
+      }
     }
   }
-  
-  public void doClusterMasterChangedTasks()
+ 
+  private void doClusterMasterOneTimeTasks()
   {
-    if(amIClusterMaster()) {
-      handleBadgeManager();
-      handleAutomaticReportGeneration(); 
-    }
-    else
-      MSysOut.println(REPORT_LOGS,"Report generator NOT launched");
+    handleMoveSwitchScoring();
+  }
+  
+  private void doClusterMasterChangedTasks()
+  {
+    startBadgeManager();
+    startAutomaticReportGeneration();
+  }
+  
+  private void undoClusterMasterChangedTasks()
+  {
+    stopBadgeManager();
+    stopAutomaticReportGeneration();
   }
   
   /**
    * Called after the db has been setup; We need to read game table to see if we
    * should be the badgemanager among clusters.
    */
-  public void handleBadgeManager()
+  public void startBadgeManager()
   {
     badgeManager = new BadgeManager(this);
-    MSysOut.println(BADGEMANAGER_LOGS,"** Badge Manager instantiated on " + AppMaster.instance().getServerName());
+    MSysOut.println(BADGEMANAGER_LOGS,"Badge Manager instantiated on " + AppMaster.instance().getServerName());
     // miscStartup(context);
   }
-
-  public void handleAutomaticReportGeneration()
+  
+  public void stopBadgeManager()
+  {
+    if(badgeManager != null)
+      badgeManager.kill();
+    badgeManager = null;
+    MSysOut.println(BADGEMANAGER_LOGS,"Badge Manager killed on " + AppMaster.instance().getServerName());
+  }
+  
+  public void startAutomaticReportGeneration()
   {
     reportGenerator = new ReportGenerator(this);
-    MSysOut.println(REPORT_LOGS,"Report generator launched");     
+    MSysOut.println(REPORT_LOGS,"Report generator launched on " + AppMaster.instance().getServerName()); 
+  }
+  
+  public void stopAutomaticReportGeneration()
+  {
+    if(reportGenerator != null)
+      reportGenerator.kill();
+    reportGenerator = null;
+    MSysOut.println(REPORT_LOGS,"Report generator killed on " + AppMaster.instance().getServerName());      
   }
   
   /**
