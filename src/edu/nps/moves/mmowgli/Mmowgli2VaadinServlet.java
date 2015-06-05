@@ -22,28 +22,16 @@
 
 package edu.nps.moves.mmowgli;
 
-import static edu.nps.moves.mmowgli.MmowgliConstants.*;
-
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.*;
+import static edu.nps.moves.mmowgli.MmowgliConstants.SYSTEM_LOGS;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 
-import org.bouncycastle.asn1.ASN1ObjectIdentifier;
-import org.bouncycastle.asn1.x500.AttributeTypeAndValue;
-import org.bouncycastle.asn1.x500.RDN;
-import org.bouncycastle.asn1.x500.X500Name;
-import org.bouncycastle.asn1.x500.style.IETFUtils;
-import org.bouncycastle.asn1.x509.Extensions;
-import org.bouncycastle.cert.X509CertificateHolder;
-import org.bouncycastle.openssl.PEMParser;
-
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.server.*;
 
+import edu.nps.moves.mmowgli.CACManager.CACData;
 import edu.nps.moves.mmowgli.utility.MiscellaneousMmowgliTimer.MSysOut;
 
 /**
@@ -136,134 +124,18 @@ public class Mmowgli2VaadinServlet extends VaadinServlet implements SessionInitL
        }
     });
   }
-  /*
-    // CAC Card constants
-  public static final String CAC_CLIENT_DN_HEADER = "SSL_CLIENT_S_DN";   //Request headers: SSL_CLIENT_S_DN = /C=US/O=U.S. Government/OU=DoD/OU=PKI/OU=USN/CN=BAILEY.JOSEPH.M.1254218711
-  public static final String CAC_CLIENT_VERIFY_HEADER = "SSL_CLIENT_VERIFY"; //Request headers: SSL_CLIENT_VERIFY = SUCCESS
-  public static final String VERIFY_SUCCESS = "SUCCESS";
-  public static final String CAC_CERT_HEADER = "SSL_CLIENT_CERT";
-  // http://www.oid-info.com/
-  public static final String OID_COUNTRY_NAME = "2.5.4.6";         //US
-  public static final String OID_ORGANIZATION_NAME = "2.5.4.10";  //U.S. Government
-  public static final String OID_ORGANIZATION_UNIT_NAME = "2.5.4.11"; // Dod and PKI and USN
-  public static final String OID_COMMON_NAME_3 = "2.5.4.3"; //DOD EMAIL CA-31  and BAILEY.JOSEPH.M.1254218711
-  public static final String OID_SUBJECT_ALT_NAME = "2.5.29.17";  //email address
-  public static final String OID_CITIZENSHIP = "1.3.61.5.57.9.4";
 
-   */
-  
-  class CacValues {
-    public String email;
-    public String country;
-    public String firstname;
-    public String lastname;
-  
-  }
-  @SuppressWarnings("rawtypes")
-  private void parseCert(String cert)
-  {
-    cert = cert.replace(' ','\r');
-    cert = cert.replace("BEGIN\rCERTIFICATE","BEGIN CERTIFICATE");
-    cert = cert.replace("END\rCERTIFICATE", "END CERTIFICATE");
-    PEMParser pr = new PEMParser(new StringReader(cert));
-    try {
-      Object o = pr.readObject();
-      pr.close();
-      if(o instanceof X509CertificateHolder) {
-        X509CertificateHolder x509 = (X509CertificateHolder)o;
-        
-        X500Name x500name = x509.getSubject();
-
-        RDN rdns[] = x500name.getRDNs();
-        for(RDN rdn : rdns) {
-           AttributeTypeAndValue[] tandV = rdn.getTypesAndValues();
-           for(AttributeTypeAndValue tv : tandV) {
-             System.out.println(IETFUtils.valueToString(tv.getType()));
-             System.out.println(IETFUtils.valueToString(tv.getValue()));
-           }
-        }
-                
-        System.out.println("X509 version: "+x509.getVersionNumber());
-        System.out.println("X509 Serial num: "+x509.getSerialNumber());
-        System.out.println("X509 Sig algo: "+x509.getSignatureAlgorithm());
-        System.out.println("X509 Issuer: "+x509.getIssuer());
-        System.out.println("X509 Not before: "+x509.getNotBefore());
-        System.out.println("X509 Not after: "+x509.getNotAfter());
-        System.out.println("X509 Subject: "+x509.getSubject());
-        System.out.println("X509 Subect Public Key Info: "+x509.getSubjectPublicKeyInfo());
-        
-        System.out.println("CriticalExtensionOIDs: ");
-        Set set = x509.getCriticalExtensionOIDs();
-        Iterator itr = set.iterator();
-        while(itr.hasNext()) {
-          ASN1ObjectIdentifier oid = (ASN1ObjectIdentifier)itr.next();
-          System.out.println(oid.toString()+" : "+x509.getExtension(oid));
-        }
-          
-        System.out.println("NonCriticalExtensionOIDs: ");
-        set = x509.getNonCriticalExtensionOIDs();
-        itr = set.iterator();
-        while(itr.hasNext()) {
-          ASN1ObjectIdentifier oid = (ASN1ObjectIdentifier)itr.next();
-          System.out.println(oid.toString()+" : "+x509.getExtension(oid));
-        }
-        
-        System.out.println("Other api: getExtensionOIDs");
-        List lis = x509.getExtensionOIDs();
-        itr = lis.iterator();
-        while(itr.hasNext()) {
-          ASN1ObjectIdentifier oid = (ASN1ObjectIdentifier)itr.next();
-          System.out.println(oid.toString()+" : "+x509.getExtension(oid));
-        }
-       
-        System.out.println("From the extensions \"block\"");
-        Extensions exts = x509.getExtensions();
-        ASN1ObjectIdentifier[] ids = exts.getExtensionOIDs();
-        for(ASN1ObjectIdentifier oid : ids) {
-          org.bouncycastle.asn1.x509.Extension ext = exts.getExtension(oid);
-          System.out.println(oid.toString()+": "+ext.getParsedValue());
-        }
-      }
-    }
-    catch(IOException ex) {
-      System.err.println(ex);
-    }
-
-  }
   @Override
   public void sessionInit(SessionInitEvent event) throws ServiceException
   {  
-    VaadinRequest req = event.getRequest();
-    String client;
-    String cert;
-    String val =  req.getHeader(CAC_CLIENT_VERIFY_HEADER);
-    cactest: {
-      if(val != null) {
-        if(val.equals(VERIFY_SUCCESS)) {
-          client = req.getHeader(CAC_CLIENT_DN_HEADER);
-          if(client != null) {
-            cert = req.getHeader(CAC_CERT_HEADER);
-            if(cert != null) {
-              parseCert(cert);
-            }
-            break cactest;
-          }
-        }
-      }
-    // here if we failed CAC
-      // todo, check if game is configured as 1)requiring CAC, 2)allowing CAC, or not using CAC
-    }
-    
-    
-   Enumeration<String> en = event.getRequest().getHeaderNames();
-    while(en.hasMoreElements()) {
-      String hdr = en.nextElement();
-      String valu = event.getRequest().getHeader(hdr);
-      System.out.println("Request header "+hdr+" = "+valu);
-    }
-
-    new MmowgliSessionGlobals(event,this);   // Initialize global object across all users windows, gets stored in VaadinSession object referenced in event
+    MmowgliSessionGlobals globs = new MmowgliSessionGlobals(event,this);   // Initialize global object across all users windows, gets stored in VaadinSession object referenced in event
     event.getSession().addUIProvider(new Mmowgli2UIProvider());
+    
+    // Support CAC card
+    VaadinRequest req = event.getRequest();
+    CACData cData = CACManager.findCAC(req);
+    req.setAttribute(CACData.class.getName(),cData);
+    globs.setCACInfo(cData);
     
     MSysOut.println(SYSTEM_LOGS,"JMETERdebug: Session created, id = "+event.getSession().hashCode());
     if(appMaster != null)  {// might be with error on startup

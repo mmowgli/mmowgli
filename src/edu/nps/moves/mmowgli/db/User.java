@@ -157,6 +157,7 @@ public class User implements Serializable
   Float mapCenterLongitude;
   Integer  mapZoom;
   List<String> activeMapLayers;
+  String cacId;
   
   public User(String userName)
   {
@@ -1175,4 +1176,13 @@ public class User implements Serializable
     activeMapLayers = layers;
   }
 
+  public String getCacId()
+  {
+    return cacId;
+  }
+
+  public void setCacId(String cacId)
+  {
+    this.cacId = cacId;
+  }
 }

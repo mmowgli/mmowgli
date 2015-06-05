@@ -27,6 +27,8 @@ import java.util.Collection;
 import com.vaadin.server.*;
 import com.vaadin.ui.UI;
 
+import edu.nps.moves.mmowgli.CACManager.CACData;
+
 /**
  * Mmowgli2UIProvider.java Created on Apr 28, 2014
  * 
@@ -44,6 +46,13 @@ public class Mmowgli2UIProvider extends DefaultUIProvider
   {
     VaadinService serv = event.getService();
     VaadinSession vsess;
+    
+    CACData data = (CACData)event.getRequest().getAttribute(CACData.class.getName());  // put in place by Mmowgli2VaadinServlet.sessionInit()
+    if(data != null) // why null sometimes?
+      if(!CACManager.canProceed(data)) { 
+        return Mmowgli2CACError.class;
+      }
+    
     try {
       vsess = serv.findVaadinSession(event.getRequest());
     }

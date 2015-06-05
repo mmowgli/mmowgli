@@ -41,6 +41,8 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 
+import edu.nps.moves.mmowgli.CACManager;
+import edu.nps.moves.mmowgli.CACManager.CACData;
 import edu.nps.moves.mmowgli.Mmowgli2UI;
 import edu.nps.moves.mmowgli.components.AvatarPanel;
 import edu.nps.moves.mmowgli.components.HtmlLabel;
@@ -76,7 +78,7 @@ public class RegistrationPagePopupFirst extends MmowgliDialog
   private NativeButton continueButt;
   
   private Long localUserId = null;  // what gets returned
-
+  
   @HibernateSessionThreadLocalConstructor
   public RegistrationPagePopupFirst(ClickListener listener)
   {
@@ -205,6 +207,29 @@ public class RegistrationPagePopupFirst extends MmowgliDialog
 
     hl.addComponent(lab = new Label());
     lab.setWidth("15px");
+    
+    
+    // if this is a cac-based registration, initialize the tf's with the cac card.
+    // then, if the cac values are require to be used, mark the tf's as read-only
+    CACData cData = Mmowgli2UI.getGlobals().getCACInfo();
+    if(CACManager.isCacPresent(cData)) {
+      Game g = Game.getTL();
+      boolean force = g.isEnforceCACdataRegistration();
+    
+      String s;
+      if((s = CACManager.getFirstName(cData))!=null) {
+        firstNameTf.setValue(s);
+        firstNameTf.setReadOnly(force);
+      }
+      if((s = CACManager.getLastName(cData))!=null) {
+        lastNameTf.setValue(s);
+        lastNameTf.setReadOnly(force);
+      }
+      if((s = CACManager.getEmail(cData))!=null) {
+        emailTf.setValue(s);
+        emailTf.setReadOnly(force);
+      }
+    }
     
     userIDTf.focus();  // should do it
     FocusHack.focus(userIDTf);  // this does

@@ -100,7 +100,7 @@ public class JmsIO2 extends DefaultInterSessionIO implements JMSMessageListener
     String jmsTopic = JMS_INTERNODE_TOPIC;
 
     if (jmsUrl == null || jmsTopic == null) {
-      MSysOut.println(JMS_LOGS,"JmsIO2: No JMS server URL = "+jmsUrl + " jmsTopic = " + jmsTopic + ". Not performing any between-tomcat-servers event messaging");
+      MSysOut.println(SYSTEM_LOGS,"JmsIO2: No JMS server URL = "+jmsUrl + " jmsTopic = " + jmsTopic + ". Not performing any between-tomcat-servers event messaging");
     }
     else { // appropriate constants found, set up JMS
       try {

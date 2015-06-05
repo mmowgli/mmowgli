@@ -151,6 +151,7 @@ class GlobalEditPanel extends VerticalLayout implements MmowgliComponent
   MapGameDesignPanel mapPan;
   ReportsGameDesignPanel reportsPan;
   ScoringGameDesignPanel scorePan;
+  CACcardGameDesignPanel cacPan;
 
   @HibernateSessionThreadLocalConstructor
   public GlobalEditPanel(GameDesignGlobals globs)
@@ -169,6 +170,7 @@ class GlobalEditPanel extends VerticalLayout implements MmowgliComponent
     tabPanels.add(mapPan = new MapGameDesignPanel(globs));
     tabPanels.add(reportsPan = new ReportsGameDesignPanel(globs));
     tabPanels.add(scorePan = new ScoringGameDesignPanel(globs));
+    tabPanels.add(cacPan = new CACcardGameDesignPanel(globs));
   }
 
   @Override
@@ -187,6 +189,7 @@ class GlobalEditPanel extends VerticalLayout implements MmowgliComponent
     tabSh.addTab(mapPan, "Map");
     tabSh.addTab(reportsPan, "Reports");
     tabSh.addTab(scorePan, "Scoring");
+    tabSh.addTab(cacPan, "CAC card");
 
     addComponent(tabSh);
 
@@ -200,6 +203,7 @@ class GlobalEditPanel extends VerticalLayout implements MmowgliComponent
     mapPan.initGui();
     reportsPan.initGui();
     scorePan.initGui();
+    cacPan.initGui();
   }
 }
 

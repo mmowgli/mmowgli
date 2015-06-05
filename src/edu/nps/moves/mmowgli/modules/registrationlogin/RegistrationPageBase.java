@@ -28,6 +28,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.vaadin.server.*;
+import com.vaadin.shared.Position;
 import com.vaadin.shared.ui.BorderStyle;
 import com.vaadin.ui.*;
 import com.vaadin.ui.Button.ClickEvent;
@@ -36,6 +37,7 @@ import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
 
 import edu.nps.moves.mmowgli.*;
+import edu.nps.moves.mmowgli.CACManager.CACData;
 import edu.nps.moves.mmowgli.components.HtmlLabel;
 import edu.nps.moves.mmowgli.components.MmowgliComponent;
 import edu.nps.moves.mmowgli.components.VideoWithRightTextPanel;
@@ -90,6 +92,22 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
     this(false);
   }
 
+  @Override
+  public void detach()
+  {
+    super.detach();
+
+    killQuickLoginThread();
+  }
+  
+  private void killQuickLoginThread()
+  {
+    synchronized(quickThreadSync) {
+      if(quickThread != null)
+        quickThread.kill();
+    }    
+  }
+  
   // This is used for the GameBuilder to test out how the page looks.
   public RegistrationPageBase(boolean mockupOnly)
   {
@@ -256,6 +274,8 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
 
       bottomHLayout.addComponent(rightButtVL);
       numButts++;
+     
+      checkQuickCACLoginTL();
     }
 
     // Guest signup button
@@ -321,7 +341,38 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
 
     //checkUserLimits();  done from app entry point
   }
-
+  
+  private void checkQuickCACLoginTL()
+  {
+    // When we've gotten here, we've put up the standard register/login page. If a cac card has been entered, they may want to use
+    // it for quick login. BUT, we can't blindly log them in. They may be trying to used someone else's card, or not use a card at all, etc.
+    // If appropriate, start a timer for 3 secs before
+    CACData cData = Mmowgli2UI.getGlobals().getCACInfo();
+    if (CACManager.canQuickLoginTL(cData)) {
+      List<User> lis = CACManager.getUserWithCACTL(cData);
+      if (lis == null || lis.size() == 0)
+        return;
+      if(lis.size() == 1) {
+        // start the 3 second wait
+        quickThread = new QuickLoginDelay(lis.get(0));        
+        quickThread.start();
+        doCACNotif("CAC login in three seconds","<span style='font-size:small'>Click any button to override</span>");
+      }
+      else {
+        doCACNotif("","Multiple player accounts with same CAC");
+      }
+    }
+  }
+  
+  private void doCACNotif(String title, String text)
+  {
+    Notification notif = new Notification(title,text,Notification.Type.HUMANIZED_MESSAGE);
+    notif.setPosition(Position.BOTTOM_CENTER);
+    notif.setHtmlContentAllowed(true);
+    notif.setDelayMsec(2000);
+    notif.show(Page.getCurrent());    
+  }
+  
   private void openPopup(Window popup, int estimatedWidth)
   {
     currentPopup = popup;
@@ -365,6 +416,8 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
   @HibernateConditionallyClosed
   public void buttonClick(ClickEvent event)
   {
+    killQuickLoginThread();  // if running
+    
     if(lockedOut)
       return;
 
@@ -384,9 +437,14 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
     Object key = HSess.checkInit();
     if (event.getButton() == imNewButt) {
       MSysOut.println(NEWUSER_CREATION_LOGS,"\"I'm new to Mmowgli\" clicked");
-
-      RegistrationPageAgreementCombo comboPg = new RegistrationPageAgreementCombo(this);
-      openPopup(comboPg, comboPg.getUsualWidth());
+      if(!CACManager.canRegisterTL(Mmowgli2UI.getGlobals().getCACInfo())) {
+        Notification notif = new Notification("Can't Register","CAC card required",Notification.Type.ERROR_MESSAGE);
+        notif.show(Page.getCurrent());
+      }
+      else {
+        RegistrationPageAgreementCombo comboPg = new RegistrationPageAgreementCombo(this);
+        openPopup(comboPg, comboPg.getUsualWidth());
+      }
       HSess.checkClose(key);
       return;
     }
@@ -490,8 +548,14 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
     }
 
     if (event.getButton() == imRegisteredButt) {
-      LoginPopup lp = new LoginPopup(this);
-      openPopup(lp,lp.getUsualWidth());
+      if(!CACManager.canLoginTL(Mmowgli2UI.getGlobals().getCACInfo())) {
+        Notification notif = new Notification("Can't Login","CAC card required",Notification.Type.ERROR_MESSAGE);
+        notif.show(Page.getCurrent());
+      }
+      else {
+        LoginPopup lp = new LoginPopup(this);
+        openPopup(lp,lp.getUsualWidth());
+      }
       HSess.checkClose(key);
       return;
     }
@@ -698,8 +762,10 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
     
     MmowgliSessionGlobals globs = Mmowgli2UI.getGlobals();
     globs.setLoggedIn(true);
-
+    
     if (_u_ != null) {
+      Object cacId = CACManager.getCacId(globs.getCACInfo());
+      _u_.setCacId(cacId == null? null :cacId.toString());
       if (!_u_.isWelcomeEmailSent()) {
         MailManager mmgr = AppMaster.instance().getMailManager();
         mmgr.onNewUserSignupTL(_u_);
@@ -819,5 +885,50 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
       pushPingLab.setValue("&nbsp;");
     else
       pushPingLab.setValue("");   
+  }
+  
+  private QuickLoginDelay quickThread;
+  private Object quickThreadSync = new Object();
+  class QuickLoginDelay extends Thread
+  {
+    private User user;
+    private boolean killed = false;
+    
+    public QuickLoginDelay(User u)
+    {
+      user = u;
+    }
+    public void kill()
+    {
+      killed = true;
+    }
+
+    @Override
+    public void run()
+    {
+      try {
+        Thread.sleep(3000l);
+        if (!killed) {
+          UI.getCurrent().access(new Runnable()
+          {
+            @Override
+            public void run()
+            {
+              Object sessKey = HSess.checkInit();
+              user = User.getTL(user.getId());
+              wereInReallyTL(user);
+              HSess.checkClose(sessKey);
+              UI.getCurrent().push();
+            }
+          });
+        }
+      }
+      catch (InterruptedException ex) {}
+      finally {
+        synchronized(quickThreadSync) {
+          quickThread = null;
+        }
+      }
+    }
   }
 }

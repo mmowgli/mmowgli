@@ -119,11 +119,15 @@ public class UserExporter extends BaseExporter
       
       HSess.init();      
       Game g = Game.getTL();
+      GameLinks links = GameLinks.getTL();
       String s = g.getTitle();
       addElementWithText(root, "GameTitle", s.replace(' ','_'));  // better file name handling
       addElementWithText(root, "GameAcronym", g.getAcronym());
       addElementWithText(root, "GameSecurity", g.isShowFouo()?"FOUO":"open");
       addElementWithText(root, "GameSummary", metaString);
+      addElementWithText(root, "TroubleLink", links.getTroubleLink());
+      addElementWithText(root, "TroubleEmail", links.getTroubleMailto());      
+            
       newAddCall2Action(root, HSess.get(), g);
       doBadgeTypes(root,HSess.get());
       doAwardTypes(root,HSess.get());
