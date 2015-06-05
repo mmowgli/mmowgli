@@ -94,27 +94,11 @@
     <param-value>/tmp/mmowgliLucene/localhost</param-value>
   </context-param>
   <context-param>
-    <description>class which selects cluster manager node</description>
-    <param-name>clusterMasterArbiter</param-name>
-    <param-value>SingleDeployment</param-value> <!-- alternatives: SingleDeployment,SharedFileLockGetter, WebXmlParameterReader -->
-  </context-param>
-  <!--   
-  <context-param>
-     <description>Parameter for SharedFileLockGetter</description>
-    <param-name>clusterMasterLockPath</param-name>
-    <param-value>/tmp/mmowgli/{{DEPLOY}}/</param-value>
-  </context-param>
-  <context-param>
-    <description>Parameter for WebXmlParameterReader</description>
-    <param-name>clusterMaster</param-name>
-    <param-value>GrannySmith.local</param-value>
-  </context-param>
-  -->
-  <context-param>
     <description>Where mmowgli sends emails to be delivered</description>
     <param-name>smtpHost</param-name>
     <param-value>mule.nps.edu</param-value>
   </context-param>
+  <!--
   <context-param>
     <description>JMS URL</description>
     <param-name>jmsUrl</param-name>
@@ -130,6 +114,7 @@
     <param-name>jmsKeepAliveIntervalMS</param-name>
     <param-value>300000</param-value>
   </context-param>
+  -->
   <context-param>
     <description>Token specifying insertion of deployment string</description>
     <param-name>deploymentToken</param-name>
