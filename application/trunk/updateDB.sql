@@ -1,5 +1,13 @@
 # This is a list of SQL commands which may be useful to update old game databases. This file is not intended to be run in its entirety.
 # Remember to also update the MmowgliConstants field DATABASE_VERSION
+
+UPDATE `Game` SET `version` = '20150529' WHERE `id` = '1';
+ALTER TABLE `Game` ADD `requireCACregistration` BIT(1)  NOT NULL  DEFAULT b'0'  AFTER `reportsShowHiddenCards`;
+ALTER TABLE `Game` ADD `enforceCACdataRegistration` BIT(1)  NOT NULL  DEFAULT b'0'  AFTER `requireCACregistration`;
+ALTER TABLE `Game` ADD `requireCAClogin` BIT(1)  NOT NULL  DEFAULT b'0'  AFTER `enforceCACdataRegistration`;
+ALTER TABLE `Game` ADD `useCAClogin` BIT(1)  NOT NULL  DEFAULT b'0'  AFTER `requireCAClogin`;
+ALTER TABLE `User` ADD `cacId` VARCHAR(255)  NULL  DEFAULT NULL  AFTER `mapZoom`;
+
 UPDATE `Game` SET `version` = '20150504' WHERE `id` = '1';
 ALTER TABLE `Media` ADD `width` BIGINT(20)  NULL  AFTER `alternateUrl`;
 ALTER TABLE `Media` ADD `height` BIGINT(20)  NULL  DEFAULT NULL  AFTER `width`;

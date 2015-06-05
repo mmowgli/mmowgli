@@ -41,7 +41,7 @@
   <context-param>
     <description>The db within the mysql server</description>
     <param-name>dbName</param-name>
-    <param-value>mmowgli_dev</param-value>
+    <param-value>mmowgli_bootstrap</param-value>
   </context-param>
   <context-param>
     <description>IP location of mmowgli mysql server</description>
