@@ -124,7 +124,7 @@ public class MmowgliLinkInserter
     Matcher m = userLinkPattern.matcher(s);
     int start = 0;
 
-    while (m.find(start)) {
+    while (start < s.length() && m.find(start)) {
       if(sb == null)
         sb = new StringBuilder(s);
       User u = null;
