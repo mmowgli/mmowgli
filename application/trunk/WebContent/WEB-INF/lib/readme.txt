@@ -1,0 +1,1 @@
+Library jars not managed by Ivy can be put here
