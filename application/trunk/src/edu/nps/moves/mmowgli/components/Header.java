@@ -337,7 +337,8 @@ public class Header extends AbsoluteLayout implements MmowgliComponent, WantsGam
     addComponent(callToActionButt, "top:0px;left:333px");
     /* The css has a height, width and even a background, but stupid IE will only properly size the button if an image is
      * used.  Therefore we use an a transparent png of the proper size */
-    callToActionButt.setIcon(new ExternalResource("https://web.mmowgli.nps.edu/mmowMedia/images/empty353w135h.png"));
+    MediaLocator medLoc = Mmowgli2UI.getGlobals().getMediaLocator();
+    callToActionButt.setIcon(medLoc.getEmpty353w135h());
     
     Move move = g.getCurrentMove();  
     if (g.isShowHeaderBranding()) {

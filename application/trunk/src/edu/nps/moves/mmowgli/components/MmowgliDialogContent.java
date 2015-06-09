@@ -29,6 +29,9 @@ import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.*;
 import com.vaadin.ui.Button.ClickListener;
 
+import edu.nps.moves.mmowgli.Mmowgli2UI;
+import edu.nps.moves.mmowgli.utility.MediaLocator;
+
 /**
  * MmowgliDialogContent.java
  * Created on Aug 29, 2011
@@ -93,8 +96,9 @@ public class MmowgliDialogContent extends HorizontalLayout implements MmowgliCom
     rightEdge = new Label();
     rightEdge.addStyleName("m-mmowglidialog2-rightedge");
     
-    corner = new Embedded(null,new ExternalResource("https://web.mmowgli.nps.edu/mmowMedia/images/dialog2Corner28w36h.png"));
-    
+    MediaLocator medLoc = Mmowgli2UI.getGlobals().getMediaLocator();
+    corner = medLoc.getDialog2CornerResource();
+
     leftEdge = new Label();
     leftEdge.addStyleName("m-mmowglidialog2-leftedge");
   }
