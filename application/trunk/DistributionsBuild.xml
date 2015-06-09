@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project>
 <project name="Mmowgli" default="allWars" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
 
 	<macrodef name="deployOne">
@@ -20,11 +21,7 @@
 	</target>
 
 	<target name="fetchlibs" description="put ivy dependencies in place">
-		<!-- the next 2 lines are for the YoutubeService class, which refers to some classes in guava 13 instead of the
-		     repackaged guava managed by Vaadin -->
 		<delete dir="build/ivylibs/" includes="**/*"/>
-		<copy file="/Users/mike/.ivy2/cache/com.google.guava/guava/jars/guava-13.0.1.jar" todir="build/ivylibs"/> <!-- one oddball -->
-		
 		<ivy:retrieve conf="default, widgetset-compile" pattern="build/ivylibs/[artifact](-[classifier]).[ext]"/>
 		<delete file="build/ivylibs/servlet-api.jar"/>  <!-- not wanted in deploy -->
 		<delete file="build/ivylibs/javax.servlet.jar"/> <!-- not wanted in deploy -->
