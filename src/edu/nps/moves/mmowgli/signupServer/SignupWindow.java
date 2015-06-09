@@ -85,7 +85,6 @@ public class SignupWindow extends VerticalLayout//Window
   String thanksHdr2 = "'>";
   String thanksHdr3 = "</a> game.";
   
-  //String bannerUrl = "https://web.mmowgli.nps.edu/mmowMedia/images/mmowgli_logo_final.png";
   String bannerWidthPx = "400px";
   String bannerHeightPx = "114px";
   

@@ -32,11 +32,13 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 
+import edu.nps.moves.mmowgli.Mmowgli2UI;
 import edu.nps.moves.mmowgli.components.HtmlLabel;
 import edu.nps.moves.mmowgli.db.Game;
 import edu.nps.moves.mmowgli.db.MovePhase;
 import edu.nps.moves.mmowgli.hibernate.HSess;
 import edu.nps.moves.mmowgli.markers.*;
+import edu.nps.moves.mmowgli.utility.MediaLocator;
 
 /**
  * EntryPermissionsDialog.java Created on May 15, 2013
@@ -155,17 +157,19 @@ public class EntryPermissionsDialog extends Window
       hl.addComponent(sp = new Label());
       sp.setWidth("1px");
       hl.setExpandRatio(sp, 0.5f);
+      
+      MediaLocator medLoc = Mmowgli2UI.getGlobals().getMediaLocator();
 
-      hl.addComponent(tellMeMoreImg = new Embedded(null, new ExternalResource("https://web.mmowgli.nps.edu/mmowMedia/images/tellMeMore130w15h.png")));
+      hl.addComponent(tellMeMoreImg = medLoc.getTellMeMore130w15h());
       hl.addComponent(sp = new Label());
       sp.setWidth("10px");
-      hl.addComponent(imNewImg = new Embedded(null, new ExternalResource("https://web.mmowgli.nps.edu/mmowMedia/images/imNewButton202w22h.png")));
+      hl.addComponent(imNewImg = medLoc.getImNewButton202w22h());
       hl.addComponent(sp = new Label());
       sp.setWidth("10px");
-      hl.addComponent(imRegisteredImg = new Embedded(null, new ExternalResource("https://web.mmowgli.nps.edu/mmowMedia/images/imRegisteredButton133w24h.png")));
+      hl.addComponent(imRegisteredImg = medLoc.getImRegisteredButton133w24h());
       hl.addComponent(sp = new Label());
       sp.setWidth("10px");
-      hl.addComponent(guestImg = new Embedded(null, new ExternalResource("https://web.mmowgli.nps.edu/mmowMedia/images/guestLogin97w24h.png")));
+      hl.addComponent(guestImg = medLoc.getGuestLogin97w24h());
 
       hl.addComponent(sp = new Label());
       sp.setWidth("1px");
@@ -267,8 +271,10 @@ public class EntryPermissionsDialog extends Window
       sp.setWidth("1px");
       hl.setExpandRatio(sp, 0.5f);
       
+      MediaLocator medLoc = Mmowgli2UI.getGlobals().getMediaLocator();
+
       Embedded emb;
-      hl.addComponent(emb = new Embedded(null, new ExternalResource("https://web.mmowgli.nps.edu/mmowMedia/images/tellMeMore130w15h.png")));
+      hl.addComponent(emb = medLoc.getTellMeMore130w15h());
       hl.setComponentAlignment(emb, Alignment.MIDDLE_RIGHT);
 
       hl.addComponent(sp = new Label());
@@ -317,8 +323,9 @@ public class EntryPermissionsDialog extends Window
       sp.setWidth("1px");
       hl.setExpandRatio(sp, 0.5f);
       
+      MediaLocator medLoc = Mmowgli2UI.getGlobals().getMediaLocator();
       Embedded emb;
-      hl.addComponent(emb = new Embedded(null, new ExternalResource("https://web.mmowgli.nps.edu/mmowMedia/images/imNewButton202w22h.png")));
+      hl.addComponent(emb = medLoc.getImNewButton202w22h());
       hl.setComponentAlignment(emb, Alignment.MIDDLE_RIGHT);
       
       hl.addComponent(sp = new Label());
@@ -373,8 +380,9 @@ public class EntryPermissionsDialog extends Window
       sp.setWidth("1px");
       hl.setExpandRatio(sp, 0.5f);
 
+      MediaLocator medLoc = Mmowgli2UI.getGlobals().getMediaLocator();
       Embedded emb;
-      hl.addComponent(emb = new Embedded(null, new ExternalResource("https://web.mmowgli.nps.edu/mmowMedia/images/imRegisteredButton133w24h.png")));
+      hl.addComponent(emb = medLoc.getImRegisteredButton133w24h());
       hl.setComponentAlignment(emb, Alignment.MIDDLE_RIGHT);
 
       hl.addComponent(sp = new Label());
@@ -415,8 +423,9 @@ public class EntryPermissionsDialog extends Window
       sp.setWidth("5px");
       hl.setExpandRatio(sp, 0.5f);
 
+      MediaLocator medLoc = Mmowgli2UI.getGlobals().getMediaLocator();
       Embedded emb;
-      hl.addComponent(emb = new Embedded(null, new ExternalResource("https://web.mmowgli.nps.edu/mmowMedia/images/guestLogin97w24h.png")));
+      hl.addComponent(emb = medLoc.getGuestLogin97w24h());
       hl.setComponentAlignment(emb, Alignment.MIDDLE_RIGHT);
 
       hl.addComponent(sp = new Label());

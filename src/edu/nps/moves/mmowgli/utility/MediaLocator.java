@@ -773,4 +773,49 @@ public class MediaLocator implements Serializable
     return new Media(url,"","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY).getUrl();   // not vetted 
   }
   */
+
+  public Embedded getDialog2CornerResource()
+  {
+    Embedded emb = new Embedded(null,locate(new Media("dialog2Corner28w36h.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY)));
+    emb.setWidth("28px");
+    emb.setHeight("36px");
+    return emb;
+  }
+
+  public Resource getEmpty353w135h() //
+  {
+    return locate(new Media("empty353w135h.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
+  }
+
+  public Embedded getTellMeMore130w15h()
+  {
+    Embedded emb = new Embedded(null,locate(new Media("tellMeMore130w15h.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY)));
+    emb.setWidth("130px");
+    emb.setHeight("15px");
+    return emb;
+  }
+
+  public Embedded getImNewButton202w22h()
+  {
+    Embedded emb = new Embedded(null,locate(new Media("imNewButton202w22h.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY)));
+    emb.setWidth("202px");
+    emb.setHeight("22px");
+    return emb;
+  }
+
+  public Embedded getImRegisteredButton133w24h()
+  {
+    Embedded emb = new Embedded(null,locate(new Media("imRegisteredButton133w24h.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY)));
+    emb.setWidth("133px");
+    emb.setHeight("24px");
+    return emb;
+  }
+
+  public Embedded getGuestLogin97w24h()
+  {
+    Embedded emb = new Embedded(null,locate(new Media("guestLogin97w24h.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY)));
+    emb.setWidth("97px");
+    emb.setHeight("24px");
+    return emb;
+  }
 }
