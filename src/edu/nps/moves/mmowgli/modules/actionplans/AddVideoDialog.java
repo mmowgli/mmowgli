@@ -22,24 +22,42 @@
 
 package edu.nps.moves.mmowgli.modules.actionplans;
 
-import static edu.nps.moves.mmowgli.MmowgliConstants.PORTALTARGETWINDOWNAME;
+import static edu.nps.moves.mmowgli.MmowgliConstants.*;
 
-import java.net.URL;
+import java.io.IOException;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.google.gdata.client.youtube.YouTubeService;
-import com.google.gdata.data.youtube.VideoEntry;
-import com.google.gdata.data.youtube.YouTubeMediaGroup;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestInitializer;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.youtube.YouTube;
+import com.google.api.services.youtube.model.SearchListResponse;
+import com.google.api.services.youtube.model.SearchResult;
+import com.google.api.services.youtube.model.SearchResultSnippet;
 import com.vaadin.server.ExternalResource;
-import com.vaadin.ui.*;
+import com.vaadin.ui.AbsoluteLayout;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Flash;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 
 import edu.nps.moves.mmowgli.components.HtmlLabel;
 import edu.nps.moves.mmowgli.db.Media;
 import edu.nps.moves.mmowgli.db.Media.MediaType;
 import edu.nps.moves.mmowgli.db.Media.Source;
+import edu.nps.moves.mmowgli.utility.MiscellaneousMmowgliTimer.MSysOut;
 
 /**
  * AddImageDialog.java
@@ -217,20 +235,39 @@ public class AddVideoDialog extends Window
     
   }
   
+  private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+  private  static final JsonFactory JSON_FACTORY = new JacksonFactory();
+
   private void fillDefaults(Media med, String id)
   {
-    String feed = "https://gdata.youtube.com/feeds/api/videos/"+id;
+    String GoogleApiKey = "AIzaSyB4dtlGkENKg3SsTk0jEv5Ci9Lh0KRlYao";
     try {
+      YouTube youtube = new YouTube.Builder(HTTP_TRANSPORT, JSON_FACTORY, new HttpRequestInitializer() {
+        public void initialize(HttpRequest request) throws IOException{}
+      }).setApplicationName("mmowgli").build();
 
-      YouTubeService svc = new YouTubeService("mmowgli");
-      VideoEntry videoEntry = svc.getEntry(new URL(feed), VideoEntry.class);
-      media.setTitle(videoEntry.getTitle().getPlainText());
-      YouTubeMediaGroup mediaGroup = videoEntry.getMediaGroup();
-      media.setCaption( mediaGroup.getDescription().getPlainTextContent());
-      media.setDescription(media.getCaption());
+      YouTube.Search.List search = youtube.search().list("id,snippet"); // apparently magic syntax
+      search.setKey(GoogleApiKey);
+      search.setQ(id);
+      search.setType("video");
+      search.setFields("items(snippet/title,snippet/description)");
+      search.setMaxResults(5L); // should be 1
+      SearchListResponse searchResponse = search.execute();
+      List<SearchResult> searchResultList = searchResponse.getItems();
+      if (searchResultList != null) {
+        for (SearchResult searchResult : searchResultList) {
+          SearchResultSnippet snippet = searchResult.getSnippet();
+          if (snippet != null) {
+            String s = snippet.getTitle();
+            media.setTitle(s==null?"":s);
+            s = snippet.getDescription();
+            media.setDescription(s==null?"":s);
+          }
+        }
+      }
     }
-    catch (Exception ex) {
-      //silently fail
+    catch (IOException ioEx) {
+      MSysOut.println(SYSTEM_LOGS, "AddVideoDialog/error retrieving video metadata: " + ioEx.getLocalizedMessage());
     }
   }
   
