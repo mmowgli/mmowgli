@@ -576,6 +576,7 @@ public class ActionPlanPageCommentPanel2 extends Panel implements MmowgliCompone
                                       Notification.Type.WARNING_MESSAGE,true);
           notif.setDelayMsec(-1); // must click
           notif.show(Page.getCurrent());
+          HSess.close();
           return;  // leave edit panel open
         }
         if (len > 0) {
