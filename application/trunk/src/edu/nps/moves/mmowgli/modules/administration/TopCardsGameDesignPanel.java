@@ -199,14 +199,14 @@ public class TopCardsGameDesignPanel extends AbstractGameBuilderPanel implements
         @Override
         public void windowClose(CloseEvent e)
         {
-          HSess.init();
+          Object sessKey = HSess.checkInit();
           if(cls == CardClass.POSITIVEIDEA) {
             fillSelectCommonTL(positiveTypeSelect, CardType.getDefinedPositiveTypesTL());            
           }
           else if(cls == CardClass.NEGATIVEIDEA) {
             fillSelectCommonTL(negativeTypeSelect, CardType.getDefinedNegativeTypesTL());            
           }
-          HSess.close();
+          HSess.checkClose(sessKey);
          }        
       });
       UI.getCurrent().addWindow(win);

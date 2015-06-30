@@ -21,7 +21,7 @@
   see <http://www.gnu.org/licenses/>
 -->
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
-  <display-name>Mmowgli2 V7 Test</display-name>
+  <display-name>my_mmowgli Deployment</display-name>
   <context-param>
     <description>Vaadin production mode</description>
     <!-- in debug mode, you get: debug window, display of dbg info in dbg win and server console, on-the-fly sass compilation -->
@@ -41,7 +41,7 @@
   <context-param>
     <description>The db within the mysql server</description>
     <param-name>dbName</param-name>
-    <param-value>mmowgli_bootstrap</param-value>
+    <param-value>mmowgli_dev</param-value>
   </context-param>
   <context-param>
     <description>IP location of mmowgli mysql server</description>

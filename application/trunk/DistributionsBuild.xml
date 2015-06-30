@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project>
 <project name="Mmowgli" default="allWars" basedir="." xmlns:ivy="antlib:org.apache.ivy.ant">
-
 	<macrodef name="deployOne">
 		<attribute name="outfile"/>
 		<attribute name="webxml"/>
@@ -64,6 +63,7 @@
 	<target name="nsc.war"           depends="confirmClean,zipVaadinDir"> <deployOne outFile="nsc.war"           webxml="nsc_web.xml"          /></target>
 	<target name="pcc.war"           depends="confirmClean,zipVaadinDir"> <deployOne outFile="pcc.war"           webxml="pcc_web.xml"          /></target>
 	<target name="piracyTest.war"    depends="confirmClean,zipVaadinDir"> <deployOne outFile="piracyTest.war"    webxml="test_piracy_web.xml"  /></target>
+	<target name="riptide.war"       depends="confirmClean,zipVaadinDir"> <deployOne outFile="riptide.war"       webxml="riptide_web.xml"      /></target>
 	<target name="training.war"      depends="confirmClean,zipVaadinDir"> <deployOne outFile="training.war"      webxml="training_web.xml"     /></target>
 
 	<target name="allWars" depends=	
@@ -78,6 +78,41 @@
 		nsc.war,
 		pcc.war,
 		piracyTest.war,
+		riptide.war,
 		training.war"/>
-
+	
+	<macrodef name="customizeOne">
+		<attribute name="filename"/>
+		<attribute name="propfile"/>
+		<sequential>
+			<echo message="@{filename} being de-tokenized"/>
+			<replace
+				file="@{filename}"
+				replacefilterfile="@{propfile}">
+			</replace>
+			<!-- do it twice to support nested tokens -->
+			<replace
+				file="@{filename}"
+				replacefilterfile="@{propfile}">
+			</replace>
+		</sequential>
+	</macrodef>
+	
+	<target name="customize_stylesheets_from_configuration.properties">
+		<customizeOne filename="WebContent/VAADIN/themes/mmowgli2/mmowgliScssParams.scss" propfile="configuration.properties"/>
+	</target>
+	
+	<target name="customize_web.xml_from_configuration.properties">
+	  <customizeOne filename="WebContent/WEB-INF/web.xml" propfile="configuration.properties"/>
+	</target>
+	
+	<target name="customize_clusterWeb.xml_from_configuration.properties">
+	  <customizeOne filename="WebContent/WEB-INF/clusterWeb.xml" propfile="configuration.properties"/>
+	</target>
+	
+	<target name="customize_all_from_configuration.properties" depends=
+		"customize_stylesheets_from_configuration.properties,
+	     customize_web.xml_from_configuration.properties,
+		 customize_clusterWeb.xml_from_configuration.properties">
+	</target>
 </project>
