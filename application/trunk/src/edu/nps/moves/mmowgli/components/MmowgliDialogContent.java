@@ -25,7 +25,6 @@ package edu.nps.moves.mmowgli.components;
 import org.vaadin.cssinject.CSSInject;
 
 import com.vaadin.event.ShortcutAction.KeyCode;
-import com.vaadin.server.ExternalResource;
 import com.vaadin.ui.*;
 import com.vaadin.ui.Button.ClickListener;
 

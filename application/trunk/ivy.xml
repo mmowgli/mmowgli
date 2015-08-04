@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE ivy-module [
-	<!ENTITY vaadin.version "7.5.0">
+	<!ENTITY vaadin.version "7.5.2">
 ]>
 
 <ivy-module version="2.0"
@@ -67,7 +67,7 @@
         <dependency org="com.google.zxing" name="javase" rev="3.2.0"/>
         <dependency org="org.vaadin.alump.scaleimage" name="scaleimage-addon" rev="0.2.4" />
         <dependency org="org.apache.curator" name="curator-recipes" rev="2.7.1" /> 
-    	<dependency org="org.slf4j" name="slf4j-simple" rev="1.7.12" />       
-    	<dependency org="com.google.apis" name="google-api-services-youtube" rev="v3-rev139-1.20.0" />    
+    	<dependency org="org.slf4j" name="slf4j-simple" rev="1.7.12" />
+    	<dependency org="com.google.apis" name="google-api-services-youtube" rev="v3-rev139-1.20.0" />        
 	</dependencies>
 </ivy-module>
