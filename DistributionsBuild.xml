@@ -54,6 +54,7 @@
 	</target>
 	<target name="bii.war"           depends="confirmClean,zipVaadinDir"> <deployOne outFile="bii.war"           webxml="bii_web.xml"          /></target>
 	<target name="blackswan.war"     depends="confirmClean,zipVaadinDir"> <deployOne outFile="blackswan.war"     webxml="blackswan_web.xml"    /></target>
+	<target name="cac.war"           depends="confirmClean,zipVaadinDir"> <deployOne outFile="cac.war"           webxml="cac_web.xml"          /></target>
 	<target name="darkportal.war"    depends="confirmClean,zipVaadinDir"> <deployOne outFile="darkportal.war"    webxml="darkportal_web.xml"   /></target>
 	<target name="dd.war"            depends="confirmClean,zipVaadinDir"> <deployOne outFile="dd.war"            webxml="dd_web.xml"           /></target>
 	<target name="insiderthreat.war" depends="confirmClean,zipVaadinDir"> <deployOne outFile="insiderthreat.war" webxml="insiderthreat_web.xml"/></target>
@@ -69,6 +70,7 @@
 	<target name="allWars" depends=	
 	   "bii.war,
 		blackswan.war,
+		cac.war,
 	    darkportal.war,
 		dd.war,
 		insiderthreat.war,
