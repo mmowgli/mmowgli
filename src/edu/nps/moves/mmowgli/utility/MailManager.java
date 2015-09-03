@@ -446,7 +446,12 @@ public class MailManager
       MSysOut.println(ERROR_LOGS,"MailManager.sendGameMasterRegisteredEmailTL() exception: "+t.getLocalizedMessage());;
     }
   }
-
+  
+  public void sendMailTL(String address, String subject, String content)
+  {
+    mailer.send(address,buildMmowgliReturnAddressTL(),"Test SMS", content);
+  }
+  
   public String buildMmowgliReturnAddressTL()
   {
     Game g = Game.getTL();

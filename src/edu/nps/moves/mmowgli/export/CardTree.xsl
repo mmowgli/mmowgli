@@ -738,7 +738,7 @@
                                     <xsl:text>to previous top-level seed card </xsl:text>
                                     <xsl:value-of select="$previousCardId"/>
                                 </xsl:attribute>
-                                <img align="right" src="images/triangleUp15w15h.png" width="15" height="15" border="0"/>
+                                <img align="right" src="https://web.mmowgli.nps.edu/mmowMedia/images/triangleUp15w15h.png" width="15" height="15" border="0"/>
                             </a>
                             <br />
                         </xsl:if>
@@ -753,7 +753,7 @@
                                     <xsl:text>to next top-level seed card </xsl:text>
                                     <xsl:value-of select="$nextCardId"/>
                                 </xsl:attribute>
-                                <img align="right" src="images/triangleDown15w15h.png" width="15" height="15" border="0"/>
+                                <img align="right" src="https://web.mmowgli.nps.edu/mmowMedia/images/triangleDown15w15h.png" width="15" height="15" border="0"/>
                             </a>
                         </xsl:if>
                     </td>
@@ -1113,8 +1113,9 @@
                     <xsl:value-of disable-output-escaping="yes" select="$gameLabel"/>
                     <xsl:text> MMOWGLI game</xsl:text>
                 </xsl:element>
-
-                <style type="text/css">
+<!--  when mangling the code to display properly in a browser window, the linefeed her screw us up.
+Jam the code altogether (see below), but keep this commented section for readablity.
+       <style type="text/css">
 table {
     border-collapse:collapse;
 }
@@ -1167,7 +1168,11 @@ a:hover   {color:lightgrey;}  /* mouse over link */
 a:active  {color:lightgrey;}  /* selected link */
 text-shadow:; /* off */
 }
-                </style>
+        </style>
+-->
+		<style type="text/css">
+table {    border-collapse:collapse;}table.banner{    padding:5px 20px;}td.cardCell {    align:center;    width:60px;}td.cardCellSmall {    align:center;    width:60px;    font:35%;    color:white;}td.longtext {    /* white-space: nowrap; */    overflow: hidden;}.toplevelcard {    background-color:azure;}.commonknowledgecard {    background-color:#F2F2FF;}.innovateStrategy {    background-color:#00ab4f;}.defendStrategy {    background-color:#FFD700; /* #6d3695; */}.expand {    background-color:#f39025; /* #f37025; */}.counter {    background-color:#ee1111; /* #bf1961 */}.adapt {    background-color:#047cc2;}.explore {    background-color:#9933cc; /* #97c93c */}.lightgreylink {a:link    {color:lightgrey;}  /* unvisited link */a:visited {color:lightgrey;}  /* visited link */a:hover   {color:lightgrey;}  /* mouse over link */a:active  {color:lightgrey;}  /* selected link */text-shadow:; /* off */}
+		</style>
             </head>
             <body>
                 <a name="index"></a>

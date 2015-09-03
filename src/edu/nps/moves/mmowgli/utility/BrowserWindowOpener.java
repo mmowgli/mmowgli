@@ -23,6 +23,7 @@
 package edu.nps.moves.mmowgli.utility;
 
 import com.vaadin.ui.JavaScript;
+import org.apache.commons.net.util.Base64;
 
 /**
  * BrowserWindowOpener.java
@@ -74,8 +75,7 @@ public class BrowserWindowOpener
   }
   
   public static void openWithInnerHTML(String htmlStr, String title, String windowName)
-  {
-    
+  {  
     StringBuilder javascript = new StringBuilder();
     htmlStr=openCommon(htmlStr,windowName,javascript);
      
@@ -91,6 +91,56 @@ public class BrowserWindowOpener
     
     //System.out.println(javascript.toString());
     JavaScript.getCurrent().execute(javascript.toString());  // this does work...tested on small content
+  }
+  
+  public static void openHtmlReport(String htmlStr, String title, String windowName)
+  {
+  	 StringBuilder javascript = new StringBuilder();
+
+     javascript.append("var ");
+     javascript.append(winVar);
+     javascript.append("=window.open('', '");
+     javascript.append(windowName);
+     javascript.append("');\n");
+     
+     htmlStr = htmlStr.replace("\n", "&#xA;");  // This was hard to find!, won't work in style elements 
+     htmlStr = htmlStr.replace("'", "&apos;");
+     javascript.append(winVar);
+     javascript.append(".document.title='");
+     javascript.append(title);
+     javascript.append("';\n");
+     
+     javascript.append(winVar);
+     javascript.append(".location.href=\"data:text/html;base64,\"+");
+     javascript.append("btoa('");
+     javascript.append(htmlStr);
+     javascript.append("');"); 
+     
+     //System.out.println(javascript.toString());
+     JavaScript.getCurrent().execute(javascript.toString());  	
+  }
+  
+  public static void openXmlReport(String xmlStr, String title, String windowName)
+  {
+    StringBuilder javascript = new StringBuilder();
+
+  	javascript.append("var ");
+    javascript.append(winVar);
+    javascript.append("=window.open('', '");
+    javascript.append(windowName);
+    javascript.append("');\n");  
+    javascript.append(winVar);
+    javascript.append(".document.title='");
+    javascript.append(title);
+    javascript.append("';\n");
+    
+    javascript.append(winVar);
+    javascript.append(".location.href=\"data:text/xml;base64,");
+    javascript.append(new String(Base64.encodeBase64(xmlStr.getBytes(),false))); 
+    javascript.append("\";\n");
+
+    //System.out.println(javascript.toString());
+    JavaScript.getCurrent().execute(javascript.toString());  	
   }
   
   private static String openCommon(String s, String windowName, StringBuilder javascript)

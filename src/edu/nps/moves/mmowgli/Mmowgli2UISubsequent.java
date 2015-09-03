@@ -56,6 +56,7 @@ import com.vaadin.shared.ui.ui.Transport;
            "http://ol3js.org/en/master/build/ol.js",
            //"http://maps.google.com/maps/api/js?v=3&output=embed"})  // last one for openstrmap plus google layers
            //"https://maps.google.com/maps/api/js?v=3&key=AIzaSyBeWoPydbJRnvH0D8DnCCeLDP1VVPURKh0&sensor=false&output=embed"})
+           "../../VAADIN/instrument/mmowgli1.js"
          })
 @Theme("mmowgli2")
 @Widgetset("edu.nps.moves.mmowgli.widgetset.Mmowgli2Widgetset")

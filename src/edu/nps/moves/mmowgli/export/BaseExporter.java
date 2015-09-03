@@ -178,13 +178,12 @@ public abstract class BaseExporter implements Runnable
   @Override
   public void run()
   {
-    HSess.init();
     try {
       Document doc = buildXmlDocument();
       
       if(getStyleSheetName() != null) {
         String fn;
-        showFile("File",doc, fn=buildFileName(getFileNamePrefix()), getStyleSheetName(), getCdataSections(), showXml); //"CardTree","CardTree.xsl",CDATA_ELEMENTS);
+        showFile("File",doc, fn=buildFileName(getFileNamePrefix()), getStyleSheetName(), getCdataSections(), showXml);
         showEndNotification(fn); //"CardTree");
       }
       Mmowgli2UI.getAppUI().access(new Runnable(){public void run(){Mmowgli2UI.getAppUI().push();}});
@@ -471,8 +470,8 @@ public abstract class BaseExporter implements Runnable
     StringWriter sw = new StringWriter();  // where resultant xml gets put
     StreamResult result = new StreamResult(sw);
     DOMSource source = new DOMSource(doc);
-    trans.transform(source, result); // puts the doc into the result, which is a
-                                     // writer
+    trans.transform(source, result); // puts the doc into the result, which is a writer
+
     return sw;
   }
     
@@ -508,21 +507,16 @@ public abstract class BaseExporter implements Runnable
       // Do the transformation
       htmlSW = doc2Html(doc, xmlSW, styleSheetNameInThisPackage);  
     
-//    if (showXml) {
-//      // Build a source for browser display of xml
-//      BrowserWindowOpener.openWithInnerHTML(xmlSW.toString(),"ActionPlans XML", "blank"); 
-//    }
     if(!showXml)
       xmlSW = null;
     
     if(xmlSW == null && htmlSW == null)
       ;
     else
-      showExport(xmlSW,htmlSW);
-//    //todo this needs a push since we're off-thread and this is a new way of opening a window
-//    MSysOut.println("todo this needs a push since we're off-thread and this is a new way of opening a window");
+      showExport(handl, xmlSW, htmlSW);
   }
-  private void showExport(final StringWriter xmlSW, final StringWriter htmlSW)
+  
+  private void showExport(final String handle, final StringWriter xmlSW, final StringWriter htmlSW)
   {
     // Build a source for browser display of xml
     Mmowgli2UI.getAppUI().access(new Runnable()
@@ -530,9 +524,9 @@ public abstract class BaseExporter implements Runnable
       public void run()
       {
         if(htmlSW != null)
-          BrowserWindowOpener.openWithHTML(htmlSW.toString(), "ActionPlans", "_blank"); 
+          BrowserWindowOpener.openHtmlReport(htmlSW.toString(), handle, "_blank"); 
         if(xmlSW != null)
-          BrowserWindowOpener.openWithInnerHTML(xmlSW.toString(),"ActionPlans XML", "_blank");
+          BrowserWindowOpener.openXmlReport(xmlSW.toString(),handle+" XML", "_blank");
         
         Mmowgli2UI.getAppUI().access(new Runnable(){public void run(){Mmowgli2UI.getAppUI().push();}});
       }

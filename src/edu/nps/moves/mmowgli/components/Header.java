@@ -126,6 +126,7 @@ public class Header extends AbsoluteLayout implements MmowgliComponent, WantsGam
     buttonChars = 11+3+9+10;  // num chars of above
     
     signOutButt     = makeSmallButt("Sign Out",    SIGNOUTCLICK,     signout_tt);
+    signOutButt.setId(SIGNOUT_BUTTON);
     
     if(game.isActionPlansEnabled())
       takeActionButt   = makeTakeActionButt();

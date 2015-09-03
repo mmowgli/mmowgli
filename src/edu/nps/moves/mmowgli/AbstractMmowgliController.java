@@ -210,12 +210,12 @@ public abstract class AbstractMmowgliController implements MmowgliController, MM
         Component cmp = ui.getFrameContent();
         if(cmp != null && cmp instanceof CardChainPage) {
           Object cId = ((CardChainPage)cmp).getCardId();
-          new CardExporter().exportSingleCardTreeToBrowser("Card "+cId.toString()+" chain", cId);
+          new CardExporter().exportSingleCardTreeToBrowserTL("Card "+cId.toString()+" chain", cId);
           break;
         }
         //else fall through
       case MENUGAMEADMINEXPORTCARDS:
-        new CardExporter().exportToBrowser("Export Card Tree");
+        new CardExporter().exportCardTreeToBrowserTL("Export Card Tree");
         break;
         
       case MENUGAMEMASTEROPENREPORTSPAGE:

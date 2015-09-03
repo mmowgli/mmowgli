@@ -276,7 +276,7 @@ public class CardTypeManager
     else if(cid == getDescendantOrdinal(4).getId())
       return EXPLORE_CARD_SUBMIT;
     else {
-      System.err.println("bogus card type pased to CardTypeManager.getCardSubmitDebugId()");
+      System.err.println("Bogus card type passed to CardTypeManager.getCardSubmitDebugId(), id = "+cid);
       return GOOD_IDEA_CARD_SUBMIT;
     }
   }
@@ -297,7 +297,7 @@ public class CardTypeManager
     else if(cid == getDescendantOrdinal(4).getId()) //getExploreType().getId())
       return EXPLORE_CARD_TEXTBOX;
     else {
-      System.err.println("bogus card type pased to CardTypeManager.getCardContentDebugId()");
+      System.err.println("Bogus card type passed to CardTypeManager.getCardContentDebugId(), id = "+cid);
       return GOOD_IDEA_CARD_TEXTBOX;
     }
   }
@@ -318,7 +318,7 @@ public class CardTypeManager
     else if(cid == getDescendantOrdinal(4).getId()) //getExploreType().getId())
       return EXPLORE_CARD_OPEN_TEXT;
     else {
-      System.err.println("bogus card type pased to CardTypeManager.getCardCreateClickDebugId()");
+      System.err.println("Bogus card type passed to CardTypeManager.getCardCreateClickDebugId(), id = "+cid);
       return GOOD_IDEA_CARD_OPEN_TEXT;
     }
   }
