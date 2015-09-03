@@ -22,7 +22,10 @@
 
 package edu.nps.moves.mmowgli.utility;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -30,7 +33,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import edu.nps.moves.mmowgli.AppMaster;
+import edu.nps.moves.mmowgli.Mmowgli2UI;
 import edu.nps.moves.mmowgli.MmowgliConstants;
+import edu.nps.moves.mmowgli.MmowgliSessionGlobals;
 
 public class MiscellaneousMmowgliTimer
 {
@@ -145,7 +150,7 @@ public class MiscellaneousMmowgliTimer
               sb.append(MmowgliConstants.logTokens.get(logLevel));
               sb.append(' ');
             }
-            sb.append(msTimeStamp());
+            sb.append(vaadinCookie());//msTimeStamp());
             sb.append(s);
             sb.append(' ');
             sb.append(Thread.currentThread().hashCode());
@@ -158,14 +163,22 @@ public class MiscellaneousMmowgliTimer
       }
     }
     
+    private static String vaadinCookie()
+    {
+      MmowgliSessionGlobals globs = Mmowgli2UI.getGlobals();
+      if(globs != null)
+        return globs.getVaadinCookie()+" ";
+      else
+        return "null-cookie ";
+    }
+/*    
     private static String msTimeStamp()
     {
       Long t = System.currentTimeMillis();
       t&=0xFFFFFF;
       return ""+t+" ";
     }
-    
-    
+*/    
     // immediate write
     public static void immPrint(Integer logLevel, String... sa)
     {
@@ -189,7 +202,7 @@ public class MiscellaneousMmowgliTimer
     private static void SysoutVarargs(String...sa)
     {
       for(String s : sa) {
-        System.out.print(msTimeStamp());
+        System.out.print(vaadinCookie()+" ");//msTimeStamp());
         System.out.println(s);
       }
     }

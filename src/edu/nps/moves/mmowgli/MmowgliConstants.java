@@ -102,6 +102,7 @@ public class MmowgliConstants
   public static final String TWEETBUTTON_WIDTH = "56px";
   public static final String TWEETBUTTON_HEIGHT = "20px";
   
+  public static final String VAADINSESSIONCOOKIENAME = "JSESSIONID";
   // CAC Card constants
   public static final String CAC_CLIENT_DN_HEADER = "SSL_CLIENT_S_DN";   //Request headers: SSL_CLIENT_S_DN = /C=US/O=U.S. Government/OU=DoD/OU=PKI/OU=USN/CN=BAILEY.JOSEPH.M.1254218711
   public static final String CAC_CLIENT_VERIFY_HEADER = "SSL_CLIENT_VERIFY"; //Request headers: SSL_CLIENT_VERIFY = SUCCESS

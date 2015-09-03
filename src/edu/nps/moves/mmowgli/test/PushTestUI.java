@@ -5,6 +5,7 @@ import com.vaadin.annotations.Push;
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.communication.PushMode;
+import com.vaadin.shared.ui.ui.Transport;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
@@ -21,7 +22,7 @@ import edu.nps.moves.mmowgli.utility.Instrumentation;
   "../../VAADIN/instrument/mmowgli1.js"
 })
 @Theme("mmowgli2")
-@Push(PushMode.MANUAL)
+@Push(value=PushMode.MANUAL,transport=Transport.LONG_POLLING)
 public class PushTestUI extends UI implements Runnable, ClickListener
 {
   Label freqLab,lab;

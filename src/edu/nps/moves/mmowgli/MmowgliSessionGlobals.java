@@ -22,12 +22,16 @@
 
 package edu.nps.moves.mmowgli;
 
-import static edu.nps.moves.mmowgli.MmowgliConstants.DEBUG_LOGS;
-import static edu.nps.moves.mmowgli.MmowgliConstants.SYSTEM_LOGS;
+import static edu.nps.moves.mmowgli.MmowgliConstants.*;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.UUID;
+
+import javax.servlet.http.Cookie;
 
 import org.hibernate.Session;
 
@@ -62,6 +66,8 @@ public class MmowgliSessionGlobals implements Serializable, WantsGameUpdates
 {
   private static final long serialVersionUID = -2942884991365648347L;
 
+  public Cookie sessionCookie = null;
+  
   public boolean initted = false;
   public boolean stopping = false;
   public boolean loggingOut = false;
@@ -106,12 +112,28 @@ public class MmowgliSessionGlobals implements Serializable, WantsGameUpdates
     
     scoreManager = new ScoreManager2();
     loginTimeStamp = new SimpleDateFormat("EEE d MMM yyyy HH:mm:ss").format(new Date()).toString();
+    
+    sessionCookie = getCookie(event.getRequest().getCookies());
   }
   
   public void init(WebBrowser webBr)
   {
     deriveBrowserBooleans(webBr);
     MSysOut.println(SYSTEM_LOGS,"Login from "+browserIDString());
+  }
+  
+  private Cookie getCookie(Cookie[] arr)
+  {
+    if(arr != null)
+      for(Cookie c : arr)
+        if(VAADINSESSIONCOOKIENAME.equals(c.getName()))
+          return c;
+    return null;
+  }
+  
+  public String getVaadinCookie()
+  {
+    return (sessionCookie==null?"null":sessionCookie.getValue());
   }
   
   private void deriveBrowserBooleans(WebBrowser webBr)
