@@ -1,0 +1,233 @@
+<html>
+<head>
+<script type="text/javascript">
+window.onload = function () {
+   
+    // DMcG
+    var perfData = window.performance.timing;
+    var stringFormat = JSON.stringify(perfData);
+    var mcgredoDiv = document.getElementById("dmcg");
+    if(mcgredoDiv)
+    {
+        showPagePerformanceData(perfData);
+        showResourcePerformanceData();
+    }
+};
+
+/**
+ * On a per-resource basis, prints out stats for each resource on the page.
+ * This more or less replicates the firebug stats.
+ * 
+ * @returns {undefined}
+ */
+function showResourcePerformanceData()
+{
+   var resources = window.performance.getEntriesByType("resource"); 
+   var numberOfResources = resources.length;
+   
+   // Create a table that we'll insert rows into
+    var table = document.createElement("Table");
+    var caption = table.createCaption();
+    caption.innerHTML="Performance Results by Resource, see https://developer.chrome.com/devtools/docs/network";
+    table.style.borderStyle = "solid";
+    
+    // The header row at the top
+    var headerRow = table.insertRow(0);
+    headerRow.insertCell(0).innerHTML = "<b>Name</b>";
+    headerRow.insertCell(1).innerHTML = "<b>Redirect</b>";
+    headerRow.insertCell(2).innerHTML = "<b>App Cache</b>";
+    headerRow.insertCell(3).innerHTML = "<b>DNS</b>";
+    headerRow.insertCell(4).innerHTML = "<b>TCP</b>";
+    headerRow.insertCell(5).innerHTML = "<b>Request</b>";
+    headerRow.insertCell(6).innerHTML = "<b>Response</b>";
+    headerRow.insertCell(7).innerHTML = "<b>Duration</b>";
+    headerRow.insertCell(8).innerHTML = "<b>Total Time</b>"
+    
+    
+    // Row for each resource on the page
+   for(var idx = 0; idx < numberOfResources; idx++)
+   {
+       var entry = resources[idx];
+       var row = table.insertRow(idx + 1);
+       
+       // Alternate white and grey row bg colors to make it easier to read
+       if(idx % 2 === 0)
+       {
+           row.style.backgroundColor = '#cccccc';
+       }
+       else
+       {
+           row.style.backgroundColor = '#ffffff';
+       }
+       
+       // Insert a cell for each stat
+       var name = row.insertCell(0);
+       var redirect = row.insertCell(1);
+       var appCache = row.insertCell(2);
+       var dns = row.insertCell(3);
+       var tcp = row.insertCell(4);
+       var request = row.insertCell(5);
+       var response = row.insertCell(6);
+       var duration = row.insertCell(7);
+       var totalTime = row.insertCell(8);
+        
+        // See https://developer.chrome.com/devtools/docs/network for details
+        name.innerHTML = entry.name;
+        redirect.innerHTML = entry.redirectEnd - entry.redirectStart;
+        appCache.innerHTML = entry.domainLookupStart - entry.fetchStart;
+        dns.innerHTML = entry.domainLookupEnd - entry.domainLookupStart;
+        tcp.innerHTML = entry.connectEnd - entry.connectStart;
+        request.innerHTML = entry.responseStart - entry.requestStart;
+        response.innerHTML = entry.responseEnd - entry.responseStart;
+        duration.innerHTML = entry.responseEnd - entry.requestStart;
+        totalTime.innerHTML = entry.responseEnd - entry.startTime;
+   }
+   
+   // Slap the table into the doc
+    var mcgredoDiv = document.getElementById("dmcg");
+    if(mcgredoDiv)
+    {
+        mcgredoDiv.appendChild(table);
+    }
+}
+
+/**
+ * Performance for the page as a whole
+ * @param {type} str
+ * @returns {undefined}
+ */
+function showPagePerformanceData(timingData)
+{
+    // Short description, timingData property start time, timingData property end time, long desc.
+    var metrics = [
+                    ['TCP Connect', 'connectStart', 'connectEnd', 'Time to establish TCP socket'],
+                    ['DNS Lookup', 'domainLookupStart', 'domainLookupEnd', 'Time to do DNS lookup'],
+                    ['Response Time', 'requestStart', 'responseEnd', 'Time from requestStart to responseEnd']
+                  ];
+                  
+    // Create a table that we'll insert rows into
+    var table = document.createElement("Table");
+    var caption = table.createCaption();
+    caption.innerHTML="Performance Results, see https://developer.mozilla.org/en-US/docs/Web/API/Navigation_timing_API";
+    table.style.borderStyle = "solid";
+    
+    // Iterate through the metrics (start/stop) as listed above
+    var metricLength = metrics.length;
+    for(var idx = 0; idx < metricLength; idx++)
+    {
+        var row = table.insertRow(idx);
+        var shortDescription = row.insertCell(0);
+        var metric = row.insertCell(1);
+        var longDescription = row.insertCell(2);
+        shortDescription.innerHTML = metrics[idx][0];
+        
+        // Obscure javascript ahoy: uses the timingData object as a hash table,
+        // with the key as the attribute. effectively this is timingData["connectStart"],
+        // timingData["connectEnd"], etc, which is the same as timingData.connectStart,
+        // timingData.connectEnd, etc.
+        var duration = timingData[metrics[idx][2]] - timingData[metrics[idx][1]];
+        metric.innerHTML = duration;
+        
+        longDescription.innerHTML = metrics[idx][3];
+    }
+   
+    
+    var mcgredoDiv = document.getElementById("dmcg");
+    if(mcgredoDiv)
+    {
+        mcgredoDiv.appendChild(table);
+    }
+    
+    
+};
+
+</script>
+
+
+<!--
+00:00:19.278	0.085	336	(2994)	GET	(Cache)	text/html	https://mmowgli.nps.edu/riptide/ 
+-->
+<script src="https://platform.twitter.com/widgets.js"></script>
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Nothing+You+Could+Do" />
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Varela+Round" />
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Special+Elite" />
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:700&subset=latin,latin-ext"/>
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Gentium+Book+Basic&subset=latin,latin-ext"/>
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" />
+<script src="./vaadinPush.debug.js?v=7.5.4"></script>
+<script src="./vaadinBootstrap.js?v=7.5.4"></script>
+<link rel="stylesheet" type="text/css" href="./themes/mmowgli2/styles.css?v=7.5.4" />
+<link rel="stylesheet" type="text/css" href="./widgetsets/edu.nps.moves.mmowgli.widgetset.Mmowgli2Widgetset/edu.nps.moves.mmowgli.widgetset.Mmowgli2Widgetset.nocache.js?1440538970873" />
+
+
+<link rel="stylesheet" type="text/css" href="./widgetsets/edu.nps.moves.mmowgli.widgetset.Mmowgli2Widgetset/popupbutton/popupbutton.css" />
+<link rel="stylesheet" type="text/css" href="./widgetsets/edu.nps.moves.mmowgli.widgetset.Mmowgli2Widgetset/scaleimage/styles.css" />
+<script src="./widgetsets/edu.nps.moves.mmowgli.widgetset.Mmowgli2Widgetset/7BEE53B765F73B2F81A314F1A5C702FE.cache.js" ></script>
+<script src="./widgetsets/edu.nps.moves.mmowgli.widgetset.Mmowgli2Widgetset/deferredjs/7BEE53B765F73B2F81A314F1A5C702FE/9.cache.js" ></script>
+<script src="./widgetsets/edu.nps.moves.mmowgli.widgetset.Mmowgli2Widgetset/deferredjs/0CB37882EF33168B156B1FB892749168/2.cache.js" ></script>
+<!--
+00:00:20.151	0.081	743	226	GET	200	application/xml	https://mmowgli.nps.edu/riptide/PUSH?v-uiId=0&v-csrfToken=6d53ba39-4684-4c3d-aa5e-aa6820bd7c9a&X-Atmosphere-tracking-id=0&X-Atmosphere-Framework=2.2.6.vaadin4-jquery&X-Atmosphere-Transport=long-polling&X-Atmosphere-TrackMessageSize=true&Content-Type=application%2Fjson%3B%20charset%3DUTF-8&X-atmo-protocol=true&_=1440538971559
+-->
+
+<!--
+00:00:20.237	0.028	778	228	GET	200	text/plain	https://mmowgli.nps.edu/riptide/PUSH?v-uiId=0&v-csrfToken=6d53ba39-4684-4c3d-aa5e-aa6820bd7c9a&X-Atmosphere-tracking-id=479429b9-2796-4333-bd5d-90124ba541ba&X-Atmosphere-Framework=2.2.6.vaadin4-jquery&X-Atmosphere-Transport=long-polling&X-Atmosphere-TrackMessageSize=true&Content-Type=application%2Fjson%3B%20charset%3DUTF-8&X-atmo-protocol=true&_=1440538971645
+-->
+
+<script src="./widgetsets/edu.nps.moves.mmowgli.widgetset.Mmowgli2Widgetset/deferredjs/7BEE53B765F73B2F81A314F1A5C702FE/2.cache.js"></script>
+
+</head>
+<body>
+<!--
+00:00:20.361	0.239	360	(294779)	GET	(Cache)	application/x-shockwave-flash	https://s.ytimg.com/yts/swfbin/player-vfleiGW5X/watch_as3.swf
+-->
+<iframe width="420" height="315" src="https://www.youtube.com/v/fAfRuU78X34"></iframe>
+
+<img src="https://web.mmowgli.nps.edu/mmowMedia/images/nauticalBackground.jpg" alt="./art/fail.jpg"/>
+<img src="https://web.mmowgli.nps.edu/mmowMedia/images/callToActionBackgroundNoVideo988w446h.png" alt="./art/fail.jpg"/>
+<img src="https://web.mmowgli.nps.edu/mmowMedia/images/tellMeMore130w15h.png" alt="./art/fail.jpg"/>
+<img src="https://web.mmowgli.nps.edu/mmowMedia/images/imNewButton202w22h.png" alt="./art/fail.jpg"/>
+<img src="https://web.mmowgli.nps.edu/mmowMedia/images/imRegisteredButton133w24h.png" alt="./art/fail.jpg"/>
+<img src="https://web.mmowgli.nps.edu/mmowMedia/images/lightboxDialogHeaderBckgrnd.png" alt="./art/fail.jpg"/>
+<img src="./themes/reindeer/window/img/header-bg.png" alt="./art/fail.jpg"/>
+<img src="./themes/reindeer/textfield/img/bg.png" alt="./art/fail.jpg"/>
+<img src="./themes/reindeer/window/img/footer-bg.png" alt="./art/fail.jpg"/>
+<img src="./themes/reindeer/window/img/resize.png" alt="./art/fail.jpg"/>
+<img src="https://web.mmowgli.nps.edu/mmowMedia/images/lightboxDialogContentBckgrnd.png" alt="./art/fail.jpg"/>
+<img src="https://web.mmowgli.nps.edu/mmowMedia/images/lightboxDialogContentBckgrnd.png" alt="./art/fail.jpg"/>
+<img src="https://web.mmowgli.nps.edu/mmowMedia/images/lightboxDialogHeaderBckgrnd.png" alt="./art/fail.jpg"/>
+<img src="https://web.mmowgli.nps.edu/mmowMedia/images/cancelButt89w38h.png" alt="./art/fail.jpg"/>
+<img src="https://web.mmowgli.nps.edu/mmowMedia/images/continue.png"/>
+<img src="https://web.mmowgli.nps.edu/mmowMedia/images/lightboxDialogFooterBckgrnd.png" alt="./art/fail.jpg"/>
+<img src="./themes/base/common/img/loading-indicator.gif" alt="./art/fail.jpg"/>
+<img src="https://web.mmowgli.nps.edu/mmowMedia/images/lightboxDialogContentBckgrnd.png" alt="./art/fail.jpg"/>
+<img src="https://web.mmowgli.nps.edu/mmowMedia/images/lightboxDialogHeaderBckgrnd.png" alt="./art/fail.jpg"/>
+<img src="https://web.mmowgli.nps.edu/mmowMedia/images/scoretext200w50h.png" alt="./art/fail.jpg"/>
+<img src="https://web.mmowgli.nps.edu/mmowMedia/images/mmowgliBanner350w130h.png" alt="./art/fail.jpg"/>
+<img src="https://web.mmowgli.nps.edu/mmowMedia/images/avatars/bulb.jpg" alt="./art/fail.jpg"/>
+<img src="https://web.mmowgli.nps.edu/mmowMedia/images/headerDivider1w48h.png" alt="./art/fail.jpg"/>
+<img src="https://web.mmowgli.nps.edu/mmowMedia/images/footer.png" alt="./art/fail.jpg"/>
+<img src="https://web.mmowgli.nps.edu/mmowMedia/images/callToActionBang290w31h.png" alt="./art/fail.jpg"/>
+<img src="https://web.mmowgli.nps.edu/mmowMedia/images/hiddentext.png" alt="./art/fail.jpg"/>
+<img src="https://web.mmowgli.nps.edu/mmowMedia/images/howToPlay181w103h.png" alt="./art/fail.jpg"/>
+<img src="https://web.mmowgli.nps.edu/mmowMedia/images/goToIdeaDashboard205w158h.png" alt="./art/fail.jpg"/>
+<img src="https://web.mmowgli.nps.edu/mmowMedia/images/goToIdeaDashboard205w158h.png" alt="./art/fail.jpg"/>
+<img src="https://web.mmowgli.nps.edu/mmowMedia/images/cardSummaryStarGray.png" alt="./art/fail.jpg"/>
+<img src="https://web.mmowgli.nps.edu/mmowMedia/images/innovatePurpleHeader.png" alt="./art/fail.jpg"/>
+<img src="https://web.mmowgli.nps.edu/mmowMedia/images/defendGreenHeader.png" alt="./art/fail.jpg"/>
+<img src="https://web.mmowgli.nps.edu/mmowMedia/images/innovatePurpleSummary.png" alt="./art/fail.jpg"/>
+<img src="https://web.mmowgli.nps.edu/mmowMedia/images/defendGreenSummaryMultiple.png" alt="./art/fail.jpg"/>
+<img src="https://web.mmowgli.nps.edu/mmowMedia/images/innovatePurpleSummaryMultiple.png" alt="./art/fail.jpg"/>
+<img src="https://web.mmowgli.nps.edu/mmowMedia/images/defendGreenSummary.png" alt="./art/fail.jpg"/>
+<img src="./themes/base/common/img/loading-indicator-delay.gif" alt="./art/fail.jpg"/>
+<img src="./art/resourceTiming.png" alt="./art/fail.jpg"/>
+
+
+
+
+
+<image src="https://i.ytimg.com/vi/fAfRuU78X34/sddefault.jpg" id="img1" style="visibility:hidden;"/>
+<div id="textTarget">
+</div>
+<div id="dmcg"></div>
+</body>
+</html>
