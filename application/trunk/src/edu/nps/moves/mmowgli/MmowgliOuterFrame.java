@@ -36,6 +36,7 @@ import edu.nps.moves.mmowgli.components.Header;
 import edu.nps.moves.mmowgli.db.Game;
 import edu.nps.moves.mmowgli.db.User;
 import edu.nps.moves.mmowgli.messaging.*;
+import edu.nps.moves.mmowgli.utility.Instrumentation;
 import edu.nps.moves.mmowgli.utility.MiscellaneousMmowgliTimer.MSysOut;
 
 /**
@@ -73,6 +74,7 @@ public class MmowgliOuterFrame extends VerticalLayout implements WantsMoveUpdate
     addComponent(mContentFr = new MmowgliContentFrame());
     addComponent(footer=new Footer());
     footer.initGui();
+    Instrumentation.addInstrumentation(this);
   }
   
   public void pingPush()

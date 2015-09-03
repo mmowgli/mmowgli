@@ -350,7 +350,8 @@ public class MmowgliConstants
   public static String ACTIONPLAN_TAB_THEPLAN_WORK = "action_plan_tab_theplan_work";
   public static String ACTIONPLAN_TAB_THEPLAN_CHANGE = "action_plan_tab_theplan_change";
   public static String LOGIN_CONTINUE_BUTTON = "login_continue_button";
-
+  public static String SIGNOUT_BUTTON = "signout_button";
+  
   public static final String HEADER_W               = "992px";
   public static final String HEADER_H               = "188px";
   public static final String HEADER_AVATAR_W        = "50px";

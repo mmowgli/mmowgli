@@ -1326,14 +1326,17 @@
                 </xsl:element>
 
      <style type="text/css">
+dt { font-weight:bold; } table.banner   { border:0; background-color:#ffffff; padding-left:15px; padding-right:15px; padding-top:1px; padding-bottom:1px; }table.contents { border:0; background-color:#eeffff; padding-left:15px; padding-right:15px; padding-top:1px; padding-bottom:1px; }table.media    { border:0; background-color:#eeeeee; padding-left:15px; padding-right:15px; padding-top:1px; padding-bottom:1px; }table.chatLog  { border:0; background-color:#eeeeee; padding-left: 5px; padding-right: 5px; padding-top:1px; padding-bottom:1px; }table.textLog  { border:0; background-color:#eeeeee; padding-left: 5px; padding-right: 5px; padding-top:1px; padding-bottom:1px; }
 
-dt { font-weight:bold; } <!-- font-style:italic; -->
+<!-- current expanded
+dt { font-weight:bold; } 
 table.banner   { border:0; background-color:#ffffff; padding-left:15px; padding-right:15px; padding-top:1px; padding-bottom:1px; }
 table.contents { border:0; background-color:#eeffff; padding-left:15px; padding-right:15px; padding-top:1px; padding-bottom:1px; }
 table.media    { border:0; background-color:#eeeeee; padding-left:15px; padding-right:15px; padding-top:1px; padding-bottom:1px; }
 table.chatLog  { border:0; background-color:#eeeeee; padding-left: 5px; padding-right: 5px; padding-top:1px; padding-bottom:1px; }
 table.textLog  { border:0; background-color:#eeeeee; padding-left: 5px; padding-right: 5px; padding-top:1px; padding-bottom:1px; }
-<!--
+-->
+<!-- old
 span.element {color: navy}
 span.attribute {color: green}
 span.value {color: teal}

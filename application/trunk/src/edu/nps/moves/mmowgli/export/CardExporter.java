@@ -37,6 +37,9 @@ import org.w3c.dom.Element;
 
 import edu.nps.moves.mmowgli.db.*;
 import edu.nps.moves.mmowgli.hibernate.HSess;
+import edu.nps.moves.mmowgli.markers.HibernateConditionallyClosed;
+import edu.nps.moves.mmowgli.markers.HibernateConditionallyOpened;
+import edu.nps.moves.mmowgli.markers.HibernateRead;
 import edu.nps.moves.mmowgli.modules.cards.CardStyler;
 
 /**
@@ -63,12 +66,15 @@ public class CardExporter extends BaseExporter
   
   private static Map<String,String> parameters = null;
  
+  @HibernateConditionallyOpened
+  @HibernateRead
+  @HibernateConditionallyClosed
   public CardExporter()
   {
   	parameters = new HashMap<>();
-  	HSess.init();
+  	Object sessKey = HSess.checkInit();
   	parameters.put(SHOW_HIDDEN_KEY,Boolean.toString(Game.getTL().isReportsShowHiddenCards()));
-  	HSess.close();
+  	HSess.checkClose(sessKey);
   }
   
   @Override
@@ -83,18 +89,24 @@ public class CardExporter extends BaseExporter
     parameters = map;    
   }
   
-  public void exportSingleCardTreeToBrowser(String title, Object cId)
+  public void exportCardTreeToBrowserTL(String title)
+  {
+  	showXml = false;
+  	exportToBrowser(title);
+  }
+  
+  public void exportSingleCardTreeToBrowserTL(String title, Object cId)
   {
     parameters.put(CARD_TREE_ROOT_KEY,cId.toString());
     showXml = false;
     
-    exportToBrowser(title); //_export();    
+    exportToBrowser(title);    
   }
   
   @Override
   public Document buildXmlDocument() throws Throwable
   {
-    Document doc;;
+    Document doc;
     try {
       DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
       DocumentBuilder parser = factory.newDocumentBuilder();

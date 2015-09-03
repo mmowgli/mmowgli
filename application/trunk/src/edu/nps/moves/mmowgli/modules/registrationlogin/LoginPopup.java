@@ -22,9 +22,7 @@
 
 package edu.nps.moves.mmowgli.modules.registrationlogin;
 
-import static edu.nps.moves.mmowgli.MmowgliConstants.LOGIN_CONTINUE_BUTTON;
-import static edu.nps.moves.mmowgli.MmowgliConstants.USER_NAME_TEXTBOX;
-import static edu.nps.moves.mmowgli.MmowgliConstants.USER_PASSWORD_TEXTBOX;
+import static edu.nps.moves.mmowgli.MmowgliConstants.*;
 
 import java.util.List;
 
@@ -47,6 +45,7 @@ import edu.nps.moves.mmowgli.hibernate.HSess;
 import edu.nps.moves.mmowgli.hibernate.VHibPii;
 import edu.nps.moves.mmowgli.markers.*;
 import edu.nps.moves.mmowgli.utility.FocusHack;
+import edu.nps.moves.mmowgli.utility.MiscellaneousMmowgliTimer.MSysOut;
 /**
  * LoginPopup.java Created on Dec 15, 2010
  * Updated Mar 6, 2014 Vaadin 7
@@ -173,6 +172,8 @@ public class LoginPopup extends MmowgliDialog
     @Override
     public void buttonClick(ClickEvent event)
     {
+      MSysOut.println(DEBUG_LOGS,"LoginPopup continue handler entered");
+
       HSess.init();
       
       String uname = userIDTf.getValue().toString();
@@ -278,7 +279,9 @@ public class LoginPopup extends MmowgliDialog
   {
     @Override
     public void buttonClick(ClickEvent event)
-    {      
+    {
+      MSysOut.println(DEBUG_LOGS,"LoginPopup forgot-login-info handler entered");
+
       String uname = userIDTf.getValue().toString();
 
       UI ui = Mmowgli2UI.getGlobals().getFirstUI();

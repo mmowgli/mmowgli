@@ -46,6 +46,7 @@ import edu.nps.moves.mmowgli.hibernate.HSess;
 import edu.nps.moves.mmowgli.hibernate.VHibPii;
 import edu.nps.moves.mmowgli.markers.*;
 import edu.nps.moves.mmowgli.modules.gamemaster.GameEventLogger;
+import edu.nps.moves.mmowgli.utility.Instrumentation;
 import edu.nps.moves.mmowgli.utility.MailManager;
 import edu.nps.moves.mmowgli.utility.MiscellaneousMmowgliTimer.MSysOut;
 
@@ -114,20 +115,22 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
     this.mockupOnly = mockupOnly;
     initGui();
   }
-
+  
   @Override
   public void initGui()
   {
     setWidth("988px");  // same width as included panel
     setHeight(BIGGESTWINDOW_HEIGHT_S);  // try to handle making the popup miss the video
 
+    Instrumentation.addInstrumentation(this);
+    
     Game game = Game.getTL();
     MovePhase phase = game.getCurrentMove().getCurrentMovePhase();
 
     HorizontalLayout outerLayout = new HorizontalLayout();
     outerLayout.setSpacing(true);
     addComponent(outerLayout);
-    outerLayout.setWidth("988px");
+    outerLayout.setWidth("988px");   setExpandRatio(outerLayout,1);
     Label spacer;
 
     outerLayout.addComponent(baseVLayout = new VerticalLayout());
@@ -416,6 +419,8 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
   @HibernateConditionallyClosed
   public void buttonClick(ClickEvent event)
   {
+    MSysOut.println(DEBUG_LOGS,"RegistrationPageBase multi-button handler entered");
+
     killQuickLoginThread();  // if running
     
     if(lockedOut)
@@ -643,10 +648,13 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
   private void wereInTL(User _usr)
   {
     Game g = Game.getTL();
-    if(!g.isEmailConfirmation()) {
+    if(!g.isEmailConfirmation()/* && !g.isSMSConfirmation()*/) {
       _usr.setEmailConfirmed(true); // confirmation didn't happen, but they want to login
       wereInReallyTL(_usr);  // will do update
     }
+  /*  else if(g.isSMSConfirmation()) {  // if both are selected, only sms is done
+      
+    } */
     else {
       List<String>sLis = VHibPii.getUserPiiEmails(_usr.getId());
       String email = sLis.get(0);
@@ -689,6 +697,8 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
         @Override
         public void buttonClick(ClickEvent event)
         {
+          MSysOut.println(DEBUG_LOGS,"\"Am I confirmed?\" button handler entered");
+          
           HSess.init();
           User u = User.getTL(userId);
           MSysOut.println(NEWUSER_CREATION_LOGS,"\"Am I confirmed?\" clicked, user "+u.getUserName());
@@ -721,6 +731,8 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
         @Override
         public void buttonClick(ClickEvent event)
         {
+          MSysOut.println(DEBUG_LOGS,"\"Quit -- I'll come back later\" button handler entered");
+
           HSess.init();
           Mmowgli2UI.getAppUI().quitAndGoTo(GameLinks.getTL().getThanksForInterestLink());
           HSess.close();
@@ -736,6 +748,8 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
         @HibernateClosed
         public void buttonClick(ClickEvent event)  // no need for HSess
         {
+          MSysOut.println(DEBUG_LOGS,"\"Send trouble report\" button handler entered");
+
           HSess.init();
           Mmowgli2UI.getAppUI().quitAndGoTo(GameLinks.getTL().getTroubleLink());
           HSess.close();
