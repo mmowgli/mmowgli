@@ -128,6 +128,7 @@ public class Footer extends AbsoluteLayout implements MmowgliComponent, WantsGam
       HorizontalLayout hl = new HorizontalLayout();
       Label lab=null;
       hl.addComponent(lab=new HtmlLabel("Build "+MMOWGLI_BUILD_ID)); lab.addStyleName("m-footer-servername");  //small text
+      lab.setDescription(Mmowgli2UI.getGlobals().getVaadinCookie());
       hl.addComponent(lab=new HtmlLabel("&nbsp;&nbsp;Vaadin "+VAADIN_BUILD_VERSION));lab.addStyleName("m-footer-servername");  //small text
       hl.addComponent(lab=new HtmlLabel("&nbsp;&nbsp;"+AppMaster.instance().getServerName()));lab.addStyleName("m-footer-servername");  //small text
       hl.setSizeUndefined();
