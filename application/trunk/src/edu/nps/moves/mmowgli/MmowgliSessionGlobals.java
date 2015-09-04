@@ -36,6 +36,8 @@ import javax.servlet.http.Cookie;
 import org.hibernate.Session;
 
 import com.vaadin.server.SessionInitEvent;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinService;
 import com.vaadin.server.VaadinSession;
 import com.vaadin.server.WebBrowser;
 import com.vaadin.ui.UI;
@@ -131,8 +133,13 @@ public class MmowgliSessionGlobals implements Serializable, WantsGameUpdates
     return null;
   }
   
-  public String getVaadinCookie()
+  public String getVaadinSessionCookie()
   {
+    if(sessionCookie == null)  { // try once
+      VaadinRequest req = VaadinService.getCurrentRequest();
+      if(req != null)
+        sessionCookie = getCookie(req.getCookies());
+    }
     return (sessionCookie==null?"null":sessionCookie.getValue());
   }
   
