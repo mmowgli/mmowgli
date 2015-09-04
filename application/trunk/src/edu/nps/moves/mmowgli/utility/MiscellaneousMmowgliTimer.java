@@ -167,7 +167,7 @@ public class MiscellaneousMmowgliTimer
     {
       MmowgliSessionGlobals globs = Mmowgli2UI.getGlobals();
       if(globs != null)
-        return globs.getVaadinCookie()+" ";
+        return globs.getVaadinSessionCookie()+" ";
       else
         return "null-cookie ";
     }
