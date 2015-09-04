@@ -93,8 +93,11 @@ public class DB
   private static <T> T getCommon(Class<T> cls, Object id, Long revision, Session sess)
   {
     T  obj = getRetry(cls, id, revision, sess);
+  /* test (2 things: 1. might this cache an old version if update in progress? 2. if user, does pii get, which
+   * hits synchronized decryption code...very slow
     if(obj != null)
        MCacheManager.instance().putObject(obj);
+  */
     return obj;    
   }
   
