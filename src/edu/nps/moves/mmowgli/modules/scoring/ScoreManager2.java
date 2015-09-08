@@ -29,9 +29,9 @@ import org.hibernate.Session;
 
 import edu.nps.moves.mmowgli.Mmowgli2UI;
 import edu.nps.moves.mmowgli.db.*;
+import edu.nps.moves.mmowgli.hibernate.HSess;
 import edu.nps.moves.mmowgli.modules.cards.CardMarkingManager;
 import edu.nps.moves.mmowgli.utility.MiscellaneousMmowgliTimer.MSysOut;
-
 import static edu.nps.moves.mmowgli.MmowgliConstants.*;
 /**
  * ScoreManager2.java
@@ -170,7 +170,7 @@ public class ScoreManager2
     User writer = comment.getFromUser();
     writer = User.mergeTL(writer);
     incrementInnovationScoreTL(writer, userActionPlanCommentPoints);
-    User.updateTL(writer);
+    User.updateTL(writer); HSess.closeAndReopen();
 
     // Authors need a bump
     Set<User> authors = plan.getAuthors();
@@ -178,6 +178,8 @@ public class ScoreManager2
       setActionPlanCommentScoreTL(author, plan);
       User.updateTL(author); /**/
     }
+    if(!authors.isEmpty())
+      HSess.closeAndReopen();
   }
 
   // F
@@ -229,6 +231,8 @@ public class ScoreManager2
       setActionPlanThumbScoreTL(author,ap,actionPlanThumbFactor * (float)ap.getSumThumbs());
       User.updateTL(author); /**/
     }
+    if(!authors.isEmpty())
+      HSess.closeAndReopen();
   }
  
    /* Begin non-card / non-actionplan scoring event(s) */
@@ -391,8 +395,10 @@ public class ScoreManager2
     if(authorPoints != 0.0f) {
       User u = incrementBasicScoreTL(newCard.getAuthor(),authorPoints);
       User.updateTL(u);
+      HSess.closeAndReopen();
     }
   }
+  
   private User incrementBasicScoreTL(User u, float f)
   {
     User author = User.getTL(u.getId()); //DBGet.getUserFresh(u.getId());
@@ -430,6 +436,7 @@ public class ScoreManager2
   {
     User usr = incrementBasicScoreTL(aId,points);
     User.updateTL(usr); /**/
+    HSess.closeAndReopen();
   }
   
   private void removeCardSuperInterestingPointsTL(Card c)

@@ -352,7 +352,7 @@ public class LeafletMap extends VerticalLayout implements MmowgliComponent, View
         lis.add(lay.getHandle());     
     }
     User.updateTL(me);
-    HSess.checkClose(key);
+    HSess.closeAndCheckReopen(key);
   }
 
   @SuppressWarnings("serial")
