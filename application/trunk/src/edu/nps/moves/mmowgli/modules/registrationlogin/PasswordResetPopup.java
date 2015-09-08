@@ -241,7 +241,7 @@ public class PasswordResetPopup extends Window implements Button.ClickListener
         User us = itr.next();
 
         us.setEmailConfirmed(true);
-        User.updateTL(us);
+        User.updateTL(us); HSess.closeAndReopen();
       }
     }
     

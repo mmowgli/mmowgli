@@ -257,7 +257,7 @@ public class BadgeManager implements Runnable
     Set<Badge> bSet = u.getBadges();
     Badge bdg = Badge.getTL(badgeID);
     bSet.add(bdg);
-    User.updateTL(u);
+    User.updateTL(u); HSess.closeAndReopen();
   }
 
   /* Give the user Badge #5 if they've played a card which somebody else thinks is a favorite */
@@ -367,7 +367,7 @@ public class BadgeManager implements Runnable
         Badge third = (Badge)sess.get(Badge.class, BADGE_THREE_ID);
         author.getBadges().add(third);
         // User update here
-        User.updateTL(author);
+        User.updateTL(author); HSess.closeAndReopen();
         ret = true;
       }
     }

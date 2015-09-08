@@ -895,7 +895,7 @@ public class UserAdminPanel extends VerticalLayout implements MmowgliComponent, 
 
       VHibPii.newUserPiiEmail((Long)uid,newEmail);
 
-      User.updateTL(user);
+      User.updateTL(user); HSess.closeAndReopen();
       VHibPii.update(upii);
       
       // if the user name has been changed, a few more things need to happen

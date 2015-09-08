@@ -32,6 +32,7 @@ import edu.nps.moves.mmowgli.AppMaster;
 import edu.nps.moves.mmowgli.MmowgliConstants;
 import edu.nps.moves.mmowgli.db.*;
 import edu.nps.moves.mmowgli.db.Pages.PagesData;
+import edu.nps.moves.mmowgli.hibernate.HSess;
 import edu.nps.moves.mmowgli.hibernate.VHibPii;
 import edu.nps.moves.mmowgli.utility.MiscellaneousMmowgliTimer.MSysOut;
 
@@ -93,7 +94,7 @@ public class MailManager
       }
 
       author.setFirstChildEmailSent(true);
-      User.updateTL(author);
+      User.updateTL(author); HSess.closeAndReopen();
 
       String to = sLis.get(0); // elis.get(0).getAddress();
       String from = buildMmowgliReturnAddressTL(); // "mmowgli<mmowgli@nps.navy.mil>";
@@ -205,7 +206,7 @@ public class MailManager
       Message msg = new Message(sb.toString().trim(), uFrom, uTo);
       Message.saveTL(msg);
       uTo.getGameMessages().add(msg);
-      User.updateTL(uTo);
+      User.updateTL(uTo); HSess.closeAndReopen();
     }
   }
 

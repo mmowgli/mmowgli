@@ -264,7 +264,7 @@ public class RegistrationPagePopupFirst extends MmowgliDialog
       u.setRegisterDate(new Date());
       VHibPii.setUserPiiEmail(u.getId(), email);
 
-      User.updateTL(u);  //update 1
+      User.updateTL(u);   HSess.closeAndReopen();//update 1
       return u;
     }
     catch(Exception ex) {

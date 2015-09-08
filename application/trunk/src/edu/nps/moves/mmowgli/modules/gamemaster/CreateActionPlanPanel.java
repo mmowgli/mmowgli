@@ -495,7 +495,7 @@ public class CreateActionPlanPanel extends Panel implements MmowgliComponent
         ap.addInvitee(u); //ap.getInvitees().add(u);
         // dont: ActionPlan.update(ap); // ap may be new, not saved
       }
-      User.updateTL(u);
+      User.updateTL(u); HSess.closeAndReopen();
 
       AppMaster.instance().getMailManager().actionPlanInviteTL(ap, u);
     }

@@ -1095,7 +1095,7 @@ public class ActionPlanPage2 extends AbsoluteLayout implements MmowgliComponent,
 
         // Author scores are affected, as is the rater
         globs.getScoreManager().actionPlanWasRatedTL(me, ap, count);
-        User.updateTL(me);
+        User.updateTL(me); HSess.closeAndReopen();
 
         GameEventLogger.logActionPlanUpdateTL(ap, "thumbs changed", me.getId()); // me.getUserName());
       }
@@ -1263,7 +1263,7 @@ public class ActionPlanPage2 extends AbsoluteLayout implements MmowgliComponent,
       needUpdate = true;
     }
     if (needUpdate)
-      User.updateTL(u);
+      {User.updateTL(u); HSess.closeAndReopen();}
 
     if (!CreateActionPlanPanel.usrContainsByIds(ap.getInvitees(), u)) {
       ap.addInvitee(u);
