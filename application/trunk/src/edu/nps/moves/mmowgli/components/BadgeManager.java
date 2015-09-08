@@ -191,9 +191,8 @@ public class BadgeManager implements Runnable
       lastLeaderboardCheck = now;
       MSysOut.println(BADGEMANAGER_LOGS,"leaderboard badge check started: "+now);
       
-      Session sess = HSess.get();
       // Got to have at least 100 reg. users non-gm
-      Long num =  (Long)sess.createCriteria(User.class)
+      Long num =  (Long)HSess.get().createCriteria(User.class)
       .add(Restrictions.eq("gameMaster", false))
       .add(Restrictions.eq("administrator", false))
       .setProjection(Projections.rowCount()).uniqueResult();
@@ -205,7 +204,7 @@ public class BadgeManager implements Runnable
 
       // Query database for list of users, limit result set to 50, sort by basic score, exclude GM's
 
-      List<User> lis = (List<User>)sess.createCriteria(User.class)
+      List<User> lis = (List<User>)HSess.get().createCriteria(User.class)
       .add(Restrictions.eq("gameMaster", false))
       .add(Restrictions.eq("administrator", false))
       .setMaxResults(leadGroupLen)
@@ -216,7 +215,7 @@ public class BadgeManager implements Runnable
 
       // do the same for innovation score
 
-      lis = (List<User>)sess.createCriteria(User.class)
+      lis = (List<User>)HSess.get().createCriteria(User.class)
       .add(Restrictions.eq("gameMaster", false))
       .add(Restrictions.eq("administrator", false))
       .setMaxResults(leadGroupLen)
@@ -234,6 +233,7 @@ public class BadgeManager implements Runnable
   {
     boolean ret = false;
     for(User u: lis) {
+      u = User.getTL(u.getId()); // maybe new sess in addBadgeTL
       if(!hasBadge(u,BADGE_SEVEN_ID)) {
         addBadgeTL(u,BADGE_SEVEN_ID);
         ret = true;
@@ -310,24 +310,24 @@ public class BadgeManager implements Runnable
 
   private boolean checkBadgeOneTL(User author)
   {
-    Session sess = HSess.get();
-    
-    Long numInnos =  (Long)sess.createCriteria(Card.class)
+    Long numInnos =  (Long)HSess.get().createCriteria(Card.class)
     .add(Restrictions.eq("author", author))
-    .add(Restrictions.eq("cardType", CardTypeManager.getPositiveIdeaCardType(sess)))
+    .add(Restrictions.eq("cardType", CardTypeManager.getPositiveIdeaCardType(HSess.get())))
     .setProjection(Projections.rowCount()).uniqueResult();
     if(numInnos <= 0) {
       return false;
     }
-    Long numDefs =  (Long)sess.createCriteria(Card.class)
+    Long numDefs =  (Long)HSess.get().createCriteria(Card.class)
     .add(Restrictions.eq("author", author))
-    .add(Restrictions.eq("cardType", CardTypeManager.getNegativeIdeaCardType(sess)))
+    .add(Restrictions.eq("cardType", CardTypeManager.getNegativeIdeaCardType(HSess.get())))
     .setProjection(Projections.rowCount()).uniqueResult();
     if(numDefs <= 0) {
       return false;
     }
     // Got one of each
+    author = User.getTL(author.getId());  // maybe new session
     if(!hasBadge(author,BADGE_ONE_ID)) {
+      author = User.getTL(author.getId());  // maybe new session      
       addBadgeTL(author,BADGE_ONE_ID);
       return true;
     }
@@ -425,22 +425,20 @@ public class BadgeManager implements Runnable
 
     checkBadgeThreeTL(); // get checked every time
     
-    Session sess = HSess.get();
-    
-    List<User> uLis = (List<User>)sess.createCriteria(User.class).list();
+    List<User> uLis = (List<User>)HSess.get().createCriteria(User.class).list();
     for(User u: uLis) {
       checkBadgeOneTL (u); // one of each root card type
-      checkBadgeTwoTL (u); // one of everytype
-      checkBadgeFiveTL(u); // user fav list
+      checkBadgeTwoTL (User.getTL(u.getId())); // one of everytype
+      checkBadgeFiveTL(User.getTL(u.getId())); // user fav list
     }
 
-    List<Card> cLis = (List<Card>)sess.createCriteria(Card.class).list();
+    List<Card> cLis = (List<Card>)HSess.get().createCriteria(Card.class).list();
     for(Card c: cLis)
-      checkBadgeFourTL(c); // marked superinteresting
+      checkBadgeFourTL(Card.getTL(c.getId())); // marked superinteresting
 
-    List<ActionPlan> apLis = (List<ActionPlan>)sess.createCriteria(ActionPlan.class).list();
+    List<ActionPlan> apLis = (List<ActionPlan>)HSess.get().createCriteria(ActionPlan.class).list();
     for(ActionPlan ap: apLis)
-      checkBadgeSixTL(ap); // ap author
+      checkBadgeSixTL(ActionPlan.getTL(ap.getId())); // ap author
 
     // todo: badge 8, logged in each day
 
