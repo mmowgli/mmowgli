@@ -59,14 +59,14 @@ public class MmowgliOuterFrame extends VerticalLayout implements WantsMoveUpdate
   private AppMenuBar menubar;
   private Component fouoButton;
   
-  public MmowgliOuterFrame()
+  public MmowgliOuterFrame(User me)
   {
     setSizeUndefined();
     setWidth("1040px");
     addStyleName("m-mmowgliouterframe");
    // addStyleName("m-redborder");   this is a good debugging border
-    
-    User me = Mmowgli2UI.getGlobals().getUserTL();
+    if(me == null)
+      me = Mmowgli2UI.getGlobals().getUserTL();
 
     addMenuBarAndFouoRowTL(me);
     addComponent(header=new Header());
