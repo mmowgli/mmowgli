@@ -121,8 +121,8 @@ public class ActionPlanChaptersGameDesignPanel extends AbstractGameBuilderPanel 
       String newtxt = event.getProperty().getValue().toString();
 
       HSess.init();
-      Session sess = HSess.get();
-      editMove = (Move) sess.merge(editMove);
+
+      editMove = (Move) HSess.get().merge(editMove);
       List<MovePhase> phases = editMove.getMovePhases();
       try {
         for (MovePhase ph : phases) {
