@@ -37,9 +37,7 @@ import edu.nps.moves.mmowgli.cache.MCacheUserHelper.QuickUser;
 import edu.nps.moves.mmowgli.db.ActionPlan;
 import edu.nps.moves.mmowgli.db.User;
 import edu.nps.moves.mmowgli.hibernate.HSess;
-import edu.nps.moves.mmowgli.markers.HibernateClosed;
-import edu.nps.moves.mmowgli.markers.HibernateOpened;
-import edu.nps.moves.mmowgli.markers.MmowgliCodeEntry;
+import edu.nps.moves.mmowgli.markers.*;
 import edu.nps.moves.mmowgli.modules.actionplans.ActionPlanTable;
 import edu.nps.moves.mmowgli.modules.actionplans.AddAuthorDialog;
 import edu.nps.moves.mmowgli.modules.gamemaster.CreateActionPlanPanel.CreateActionPlanLayout;
@@ -152,14 +150,15 @@ public class AddAuthorEventHandler
         ActionPlan ap = ActionPlan.getTL(apID);
 
         if (o instanceof Set<?>)
-          inviteMultipleUsersTL(ap, (Set<?>) o);
+          inviteMultipleUsersTL(ap, (Set<?>) o);  //  @HibernateUserUpdate
         else
-          inviteSingleUserTL(ap, (QuickUser) o);
+          inviteSingleUserTL(ap, (QuickUser) o);  //  @HibernateUserUpdate
         HSess.close();
       }
     });
   }
 
+  @HibernateUserRead
   private static void inviteMultipleUsersTL(ActionPlan ap, Set<?> users)
   {
     for (Object qu : users) {
@@ -184,6 +183,7 @@ public class AddAuthorEventHandler
     ActionPlan.updateTL(ap);
   }
 
+  @HibernateUserRead
   private static void inviteSingleUserTL(ActionPlan ap, QuickUser qu)
   {
     inviteSingleUserTL(ap, User.getTL(((QuickUser)qu).id));
