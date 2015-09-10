@@ -45,6 +45,8 @@ import edu.nps.moves.mmowgli.db.Game;
 import edu.nps.moves.mmowgli.db.User;
 import edu.nps.moves.mmowgli.hibernate.HSess;
 import edu.nps.moves.mmowgli.markers.HibernateSessionThreadLocalConstructor;
+import edu.nps.moves.mmowgli.markers.HibernateUpdate;
+import edu.nps.moves.mmowgli.markers.HibernateUserUpdate;
 import edu.nps.moves.mmowgli.modules.maps.LeafletLayers.MLTileLayer;
 import edu.nps.moves.mmowgli.modules.maps.LeafletLayers.MLWmsLayer;
 import edu.nps.moves.mmowgli.modules.maps.LeafletLayers.MLayer;
@@ -341,6 +343,8 @@ public class LeafletMap extends VerticalLayout implements MmowgliComponent, View
     }
   }
   
+  @HibernateUpdate
+  @HibernateUserUpdate
   private void updateDBActiveList()
   {
     Object key = HSess.checkInit();
@@ -359,6 +363,8 @@ public class LeafletMap extends VerticalLayout implements MmowgliComponent, View
   class MyDefaultLocationListener implements ClickListener
   {
     @Override
+    @HibernateUpdate
+    @HibernateUserUpdate
     public void buttonClick(ClickEvent event)
     {
       HSess.init();
@@ -379,6 +385,8 @@ public class LeafletMap extends VerticalLayout implements MmowgliComponent, View
   class MyMoveEndListener implements LeafletMoveEndListener
   {
     @Override
+    @HibernateUpdate
+    @HibernateUserUpdate
     public void onMoveEnd(LeafletMoveEndEvent event)
     {
       if(imAGuest)
