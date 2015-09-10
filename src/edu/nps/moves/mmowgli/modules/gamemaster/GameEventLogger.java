@@ -40,6 +40,7 @@ import edu.nps.moves.mmowgli.db.Message;
 import edu.nps.moves.mmowgli.db.MessageUrl;
 import edu.nps.moves.mmowgli.db.User;
 import edu.nps.moves.mmowgli.hibernate.HSess;
+import edu.nps.moves.mmowgli.markers.HibernateUserRead;
 import edu.nps.moves.mmowgli.utility.MmowgliMailer;
 import edu.nps.moves.mmowgli.utility.MmowgliMailer.QPacket;
 
@@ -153,6 +154,7 @@ public class GameEventLogger
     GameEvent.saveTL(ev);
   }
   
+  @HibernateUserRead
   public static void logHelpWantedTL(ActionPlan ap)
   {
     Serializable uid = Mmowgli2UI.getGlobals().getUserID();
