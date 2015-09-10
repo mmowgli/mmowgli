@@ -55,9 +55,7 @@ import com.vaadin.ui.themes.Reindeer;
 
 import edu.nps.moves.mmowgli.*;
 import edu.nps.moves.mmowgli.cache.MCacheUserHelper.QuickUser;
-import edu.nps.moves.mmowgli.components.HtmlLabel;
-import edu.nps.moves.mmowgli.components.MmowgliComponent;
-import edu.nps.moves.mmowgli.components.ToggleLinkButton;
+import edu.nps.moves.mmowgli.components.*;
 import edu.nps.moves.mmowgli.db.*;
 import edu.nps.moves.mmowgli.hibernate.HSess;
 import edu.nps.moves.mmowgli.markers.*;
@@ -905,7 +903,7 @@ public class ActionPlanPage2 extends AbsoluteLayout implements MmowgliComponent,
       if (event.getButton() == zeroButt) {
         HSess.init();
         pan.setNumUserThumbs(0);
-        pan.updateDbTL(0);
+        pan.updateDbTL(0); //  @HibernateUserUpdate
         HSess.close();
       }
       else
@@ -1078,11 +1076,13 @@ public class ActionPlanPage2 extends AbsoluteLayout implements MmowgliComponent,
               break;
             }
           setNumUserThumbs(count);
-          updateDbTL(count);
+          updateDbTL(count); //  @HibernateUserUpdate
           HSess.close();
         }
       }
-
+      
+      @HibernateUpdate
+      @HibernateUserUpdate
       public void updateDbTL(int count)
       {
         ActionPlan ap = ActionPlan.getTL(apId);
@@ -1095,7 +1095,7 @@ public class ActionPlanPage2 extends AbsoluteLayout implements MmowgliComponent,
 
         // Author scores are affected, as is the rater
         globs.getScoreManager().actionPlanWasRatedTL(me, ap, count);
-        User.updateTL(me); HSess.closeAndReopen();
+        User.updateTL(me);
 
         GameEventLogger.logActionPlanUpdateTL(ap, "thumbs changed", me.getId()); // me.getUserName());
       }
@@ -1191,9 +1191,9 @@ public class ActionPlanPage2 extends AbsoluteLayout implements MmowgliComponent,
               ActionPlan ap = ActionPlan.getTL(apId);
 
               if (o instanceof Set<?>)
-                handleMultipleUsersTL(ap, (Set<?>) o);
+                handleMultipleUsersTL(ap, (Set<?>) o); //  @HibernateUserUpdate
               else
-                handleSingleUserTL(ap, o);
+                handleSingleUserTL(ap, o); //  @HibernateUserUpdate
               HSess.close();
             }
             /*
@@ -1214,6 +1214,7 @@ public class ActionPlanPage2 extends AbsoluteLayout implements MmowgliComponent,
   } // class
 
   @SuppressWarnings("unchecked")
+  @HibernateUserRead
   private void handleMultipleUsersTL(ActionPlan ap, Set<?> set)
   {
     if (set.size() > 0) {
@@ -1221,7 +1222,7 @@ public class ActionPlanPage2 extends AbsoluteLayout implements MmowgliComponent,
       if (o instanceof User) {
         Iterator<User> itr = (Iterator<User>) set.iterator();
         while (itr.hasNext()) {
-          handleUserTL(ap, itr.next());
+          handleUserTL(ap, itr.next());   //@HibernateUserUpdate
         }
       }
       else if (o instanceof QuickUser) {
@@ -1236,6 +1237,7 @@ public class ActionPlanPage2 extends AbsoluteLayout implements MmowgliComponent,
     // app.globs().scoreManager().actionPlanUpdated(apId); // check for scoring changes //todo put this in one place, like ActionPlan.update()
   }
 
+  @HibernateUserRead
   private void handleSingleUserTL(ActionPlan ap, Object o)
   {
     if (o instanceof User) {
@@ -1243,12 +1245,14 @@ public class ActionPlanPage2 extends AbsoluteLayout implements MmowgliComponent,
     }
     else if (o instanceof QuickUser) {
       QuickUser qu = (QuickUser) o;
-      handleUserTL(ap, User.getTL(qu.id));
+      handleUserTL(ap, User.getTL(qu.id));  // @HibernateUserUpdate
     }
     ActionPlan.updateTL(ap);
     // app.globs().scoreManager().actionPlanUpdated(apId); // check for scoring changes //todo put this in one place, like ActionPlan.update()
   }
-
+  
+  @HibernateUpdate
+  @HibernateUserUpdate
   private void handleUserTL(ActionPlan ap, User u)
   {
     boolean needUpdate = false;
@@ -1263,7 +1267,7 @@ public class ActionPlanPage2 extends AbsoluteLayout implements MmowgliComponent,
       needUpdate = true;
     }
     if (needUpdate)
-      {User.updateTL(u); HSess.closeAndReopen();}
+      User.updateTL(u);
 
     if (!CreateActionPlanPanel.usrContainsByIds(ap.getInvitees(), u)) {
       ap.addInvitee(u);
