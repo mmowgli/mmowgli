@@ -195,6 +195,7 @@ public class UserProfile3Top extends AbsoluteLayout implements MmowgliComponent,
   private boolean listenersDisabled=false;
   
   @HibernateSessionThreadLocalConstructor
+  @HibernateUserRead
   public UserProfile3Top(Object uid)
   {
     this.uid = uid;
@@ -546,6 +547,7 @@ public class UserProfile3Top extends AbsoluteLayout implements MmowgliComponent,
       @HibernateOpened
       @HibernateUpdate
       @HibernateClosed
+      @HibernateUserUpdate
       @Override
       public void valueChange(ValueChangeEvent event)
       {
@@ -569,6 +571,7 @@ public class UserProfile3Top extends AbsoluteLayout implements MmowgliComponent,
       @HibernateOpened
       @HibernateUpdate
       @HibernateClosed
+      @HibernateUserUpdate
       @Override
       public void valueChange(ValueChangeEvent event)
       {
@@ -593,6 +596,7 @@ public class UserProfile3Top extends AbsoluteLayout implements MmowgliComponent,
       @HibernateOpened
       @HibernateUpdate
       @HibernateClosed
+      @HibernateUserUpdate
       @Override
       public void valueChange(ValueChangeEvent event)
       {
@@ -619,6 +623,7 @@ public class UserProfile3Top extends AbsoluteLayout implements MmowgliComponent,
       @HibernateOpened
       @HibernateUpdate
       @HibernateClosed
+      @HibernateUserUpdate
       @Override
       public void valueChange(ValueChangeEvent event)
       {
@@ -943,6 +948,8 @@ public class UserProfile3Top extends AbsoluteLayout implements MmowgliComponent,
     @MmowgliCodeEntry
     @HibernateOpened
     @HibernateClosed
+    @HibernateUpdate
+    @HibernateUserUpdate
     public void valueChange(ValueChangeEvent event)
     {
       if(listenersDisabled)
@@ -1000,6 +1007,8 @@ public class UserProfile3Top extends AbsoluteLayout implements MmowgliComponent,
     @HibernateOpened
     @HibernateClosed
     @Override
+    @HibernateUpdate
+    @HibernateUserUpdate
     public void valueChange(final ValueChangeEvent event)
     {
       if(listenersDisabled)
@@ -1029,6 +1038,7 @@ public class UserProfile3Top extends AbsoluteLayout implements MmowgliComponent,
     @HibernateRead
     @HibernateUpdate
     @HibernateCommitted
+    @HibernateUserUpdate
     public void windowClose(CloseEvent e)
     {
       HSess.init();
@@ -1123,6 +1133,7 @@ public class UserProfile3Top extends AbsoluteLayout implements MmowgliComponent,
  }
   
   @Override
+  @HibernateUserRead
   public boolean userUpdated_oobTL(Object uId)
   {
     if(uId != this.uid)
