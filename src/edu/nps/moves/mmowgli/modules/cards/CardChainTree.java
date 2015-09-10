@@ -227,8 +227,7 @@ public class CardChainTree extends TreeTable implements ItemClickListener
   @SuppressWarnings("unchecked")
   private void loadAllCardsTL()
   {
-    Session sess = HSess.get();
-    Criteria crit = sess.createCriteria(Card.class)
+    Criteria crit = HSess.get().createCriteria(Card.class)
       .add(Restrictions.eq("factCard", false))
       .add(Restrictions.eq("hidden", false))
       .addOrder(Order.desc("creationDate"));
@@ -245,7 +244,7 @@ public class CardChainTree extends TreeTable implements ItemClickListener
 
     // Second root card type
     CardType riskTyp = CardType.getNegativeIdeaCardTypeTL();
-    crit = sess.createCriteria(Card.class)
+    crit = HSess.get().createCriteria(Card.class)
       .add(Restrictions.eq("cardType", riskTyp))
       .add(Restrictions.eq("factCard", false))
       .add(Restrictions.eq("hidden", false))
