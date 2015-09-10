@@ -25,10 +25,9 @@ package edu.nps.moves.mmowgli.modules.gamemaster;
 import java.util.*;
 
 import org.hibernate.Criteria;
-import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
-import com.vaadin.data.Item;
+import com.vaadin.data.*;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanItem;
@@ -308,7 +307,7 @@ public class CreateActionPlanPanel extends Panel implements MmowgliComponent
               form.commit();
               ChatLog.saveTL(ap.getChatLog());
               
-              notifyInviteesTL(); // put invitees on list, but doesn't update (which was a bug)
+              notifyInviteesTL();   //@HibernateUserUpdate  // put invitees on list, but doesn't update (which was a bug)
               
               if (newAp) {
                 GoogleMap gm = new GoogleMap(); // put a default map in place
@@ -372,8 +371,7 @@ public class CreateActionPlanPanel extends Panel implements MmowgliComponent
 
     private void checkPreviousActionPlanTL(Card root)
     {
-      Session sess = HSess.get();
-      Criteria criteria = sess.createCriteria(ActionPlan.class);
+      Criteria criteria = HSess.get().createCriteria(ActionPlan.class);
       criteria.add(Restrictions.eq("chainRoot", root));
       
       @SuppressWarnings("unchecked")
@@ -477,17 +475,19 @@ public class CreateActionPlanPanel extends Panel implements MmowgliComponent
     private void notifyInviteesTL()
     {
       for (User u : invitees) {
-        notifyApInviteeTL(u, ap);
+        notifyApInviteeTL(u, ap);   //@HibernateUserUpdate
       }
       // done by caller    ActionPlan.update(ap);
     }
-
-    public static void notifyApInviteeTL(User u, ActionPlan ap) //todo TL
+    
+    @HibernateUserUpdate
+    @HibernateUpdate
+    public static void notifyApInviteeTL(User u, ActionPlan ap)
     {
-      u = User.getTL(u.getId());
       Set<ActionPlan> set = u.getActionPlansInvited();
       if (set == null)
         u.setActionPlansInvited(set = new HashSet<ActionPlan>(1));
+      
       if(!apContainsByIds(set,ap))
         set.add(ap);
       
@@ -495,7 +495,7 @@ public class CreateActionPlanPanel extends Panel implements MmowgliComponent
         ap.addInvitee(u); //ap.getInvitees().add(u);
         // dont: ActionPlan.update(ap); // ap may be new, not saved
       }
-      User.updateTL(u); HSess.closeAndReopen();
+      User.updateTL(u);
 
       AppMaster.instance().getMailManager().actionPlanInviteTL(ap, u);
     }
@@ -570,6 +570,7 @@ public class CreateActionPlanPanel extends Panel implements MmowgliComponent
       }
 
       @SuppressWarnings("unchecked")
+      @HibernateUserRead
       private void handleMultipleUsersTL(Set<?> set)
       {
         if (set.size() > 0) {
@@ -590,7 +591,8 @@ public class CreateActionPlanPanel extends Panel implements MmowgliComponent
         }
       }
 
-      private void handleSingleUserTL(Object o)
+     @HibernateUserRead
+     private void handleSingleUserTL(Object o)
       {
         if (o instanceof User) {
           handleAddUser((User) o);
