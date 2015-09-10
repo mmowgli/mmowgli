@@ -22,7 +22,9 @@
 
 package edu.nps.moves.mmowgli.utility;
 
-import static edu.nps.moves.mmowgli.MmowgliConstants.*;
+import static edu.nps.moves.mmowgli.MmowgliConstants.DEBUG_LOGS;
+import static edu.nps.moves.mmowgli.MmowgliConstants.ERROR_LOGS;
+import static edu.nps.moves.mmowgli.MmowgliConstants.NEWUSER_CREATION_LOGS;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -30,10 +32,17 @@ import java.util.List;
 
 import edu.nps.moves.mmowgli.AppMaster;
 import edu.nps.moves.mmowgli.MmowgliConstants;
-import edu.nps.moves.mmowgli.db.*;
+import edu.nps.moves.mmowgli.db.ActionPlan;
+import edu.nps.moves.mmowgli.db.Card;
+import edu.nps.moves.mmowgli.db.Game;
+import edu.nps.moves.mmowgli.db.GameLinks;
+import edu.nps.moves.mmowgli.db.Message;
+import edu.nps.moves.mmowgli.db.Pages;
 import edu.nps.moves.mmowgli.db.Pages.PagesData;
-import edu.nps.moves.mmowgli.hibernate.HSess;
+import edu.nps.moves.mmowgli.db.User;
 import edu.nps.moves.mmowgli.hibernate.VHibPii;
+import edu.nps.moves.mmowgli.markers.HibernateUpdate;
+import edu.nps.moves.mmowgli.markers.HibernateUserUpdate;
 import edu.nps.moves.mmowgli.utility.MiscellaneousMmowgliTimer.MSysOut;
 
 public class MailManager
@@ -69,6 +78,8 @@ public class MailManager
   /**
    * The controller has figured out that someone has played the first follow-on to a user's card. Tell that to the parent. But only once.
    */
+  @HibernateUserUpdate
+  @HibernateUpdate
   public void firstChildPlayedTL(Card parent, Card child)
   {
     try {
@@ -94,7 +105,7 @@ public class MailManager
       }
 
       author.setFirstChildEmailSent(true);
-      User.updateTL(author); HSess.closeAndReopen();
+      User.updateTL(author);
 
       String to = sLis.get(0); // elis.get(0).getAddress();
       String from = buildMmowgliReturnAddressTL(); // "mmowgli<mmowgli@nps.navy.mil>";
@@ -156,7 +167,9 @@ public class MailManager
   {
     mailToUserTL(from, to, subject, body, null, Channel.BOTH);
   }
-
+  
+  @HibernateUserUpdate
+  @HibernateUpdate
   public void mailToUserTL(Object from, Object to, String subject, String body, String ccEmail, Channel chan)
   {
     MSysOut.println(DEBUG_LOGS,"2 User.getTL() in MailManager.mailToUserTL()");
@@ -206,7 +219,7 @@ public class MailManager
       Message msg = new Message(sb.toString().trim(), uFrom, uTo);
       Message.saveTL(msg);
       uTo.getGameMessages().add(msg);
-      User.updateTL(uTo); HSess.closeAndReopen();
+      User.updateTL(uTo);
     }
   }
 
