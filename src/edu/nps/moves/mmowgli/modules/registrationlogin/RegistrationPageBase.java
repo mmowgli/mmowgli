@@ -417,6 +417,9 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
   @MmowgliCodeEntry
   @HibernateConditionallyOpened
   @HibernateConditionallyClosed
+  @HibernateUpdate
+  @HibernateUserUpdate
+  @HibernateUserRead
   public void buttonClick(ClickEvent event)
   {
     MSysOut.println(DEBUG_LOGS,"RegistrationPageBase multi-button handler entered");
@@ -609,8 +612,6 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
       _usr.setRegisteredInMove(g.getCurrentMove());
       
       User.updateTL(_usr);
-      HSess.closeAndReopen();
-      _usr = User.getTL(userId);
       
       Mmowgli2UI.getGlobals().getScoreManager().userCreatedTL(_usr);  // give him his points if appropriate
 
@@ -631,6 +632,7 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
    System.err.println("Program logic error in RegistrationPageBase.buttonClick()");
   }
   
+  @HibernateUserRead
   private void handleLoginReturnTL(Long uId)
   {
     UI.getCurrent().setScrollTop(0);
@@ -695,6 +697,8 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
       {
         boolean confirmed = false;
         @Override
+        @HibernateUpdate
+        @HibernateUserUpdate
         public void buttonClick(ClickEvent event)
         {
           MSysOut.println(DEBUG_LOGS,"\"Am I confirmed?\" button handler entered");
@@ -705,18 +709,19 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
 
           if(confirmed) {
             closePopup(emailDialog);
-            wereInReallyTL(u);
+            wereInReallyTL(u); //  @HibernateUserUpdate //@HibernateUserRead
             MSysOut.println(NEWUSER_CREATION_LOGS,"\"Am I confirmed?\", positive confirmation, user "+u.getUserName());
           }
           else {
             MSysOut.println(DEBUG_LOGS,"User.getTL() in RegistrationPageBase.wereInTL()");
-            User locUsr = User.getTL(userId);
-            if(locUsr.isEmailConfirmed()) {
+            //User locUsr = User.getTL(userId);  why necessary?
+            //if(locUsr.isEmailConfirmed()) {
+            if(u.isEmailConfirmed()) {
               confirmed=true;
               event.getButton().setCaption("I'm ready to play mmowgli!");
             }
             else {
-              MSysOut.println(NEWUSER_CREATION_LOGS,"\"Am I confirmed?\", negative confirmation, user "+locUsr.getUserName());
+              MSysOut.println(NEWUSER_CREATION_LOGS,"\"Am I confirmed?\", negative confirmation, user "+u.getUserName());
               Notification.show("Your email is not yet confirmed");
             }
           }
@@ -769,8 +774,12 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
 
   // User is persistent in this session on entry here.
   // MUST do User update at the end.
+  @HibernateUpdate
+  @HibernateUserUpdate
   private void wereInReallyTL(User _u_)
   {
+    boolean updateneeded = false;  // avoid db hit if possible
+    
     if (currentPopup != null)
       UI.getCurrent().removeWindow(currentPopup); // app.getMainWindow().removeWindow(currentPopup);
     
@@ -779,14 +788,28 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
     
     if (_u_ != null) {
       Object cacId = CACManager.getCacId(globs.getCACInfo());
-      _u_.setCacId(cacId == null? null :cacId.toString());
+      if(cacId == null) {
+        if(_u_.getCacId() != null) {
+          _u_.setCacId(null);
+          updateneeded = true;
+        }
+      }
+      else if(!_u_.getCacId().equals(cacId.toString())) {
+        _u_.setCacId(cacId.toString());
+        updateneeded = true;
+      }
+      //_u_.setCacId(cacId == null? null :cacId.toString());
       if (!_u_.isWelcomeEmailSent()) {
         MailManager mmgr = AppMaster.instance().getMailManager();
         mmgr.onNewUserSignupTL(_u_);
         _u_.setWelcomeEmailSent(true);
+        updateneeded = true;
       }
       // If we're here, we've either been email-confirmed or that is not necessary; make sure here
-      _u_.setEmailConfirmed(true);
+      if(!_u_.isEmailConfirmed()) {
+        _u_.setEmailConfirmed(true);
+        updateneeded=true;
+      }
       
       // Adjust session timeouts.  Default (standard user) is set in web.xml
       VaadinSession vsess = UI.getCurrent().getSession();
@@ -799,10 +822,12 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
       MSysOut.println(SYSTEM_LOGS,"Vaadin heartbeat interval (sec): "+vsess.getConfiguration().getHeartbeatInterval());
       MSysOut.println(SYSTEM_LOGS,"Tomcat timeout (\"maxInactiveInterval\") (sec): "+sess.getMaxInactiveInterval());
       GameEventLogger.logUserLoginTL(_u_);
+      if(updateneeded) {
+        User.updateTL(_u_);
+      }
       
-      User.updateTL(_u_);
-      HSess.closeAndReopen();
-      _u_ = User.getTL(_u_.getId()); // refresh
+      HSess.closeAndReopen(); // should be ok
+      _u_ = User.merge(_u_, HSess.get());
       
       MmowgliController cntlr = globs.getController();
       if (cntlr != null)
@@ -832,6 +857,7 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
   }
 
   @SuppressWarnings("serial")
+  @HibernateUserRead
   public void checkUserLimitsTL()
   {
     Serializable uid = Mmowgli2UI.getGlobals().getUserID();
@@ -926,11 +952,12 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
           UI.getCurrent().access(new Runnable()
           {
             @Override
+            @HibernateUserRead
             public void run()
             {
               Object sessKey = HSess.checkInit();
               user = User.getTL(user.getId());
-              wereInReallyTL(user);
+              wereInReallyTL(user);//  @HibernateUpdate @HibernateUserUpdate
               HSess.checkClose(sessKey);
               UI.getCurrent().push();
             }
