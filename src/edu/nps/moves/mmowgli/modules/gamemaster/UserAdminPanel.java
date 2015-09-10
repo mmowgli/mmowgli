@@ -26,12 +26,9 @@ import static edu.nps.moves.mmowgli.MmowgliConstants.APPLICATION_SCREEN_WIDTH;
 import static edu.nps.moves.mmowgli.cache.MCacheUserHelper.QuickUser.*;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.hibernate.Criteria;
-import org.hibernate.Session;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.jasypt.util.password.StrongPasswordEncryptor;
@@ -52,9 +49,7 @@ import com.vaadin.ui.Window.CloseListener;
 
 import edu.nps.moves.mmowgli.*;
 import edu.nps.moves.mmowgli.cache.MCacheUserHelper.QuickUser;
-import edu.nps.moves.mmowgli.components.HtmlLabel;
-import edu.nps.moves.mmowgli.components.MmowgliComponent;
-import edu.nps.moves.mmowgli.components.SendMessageWindow;
+import edu.nps.moves.mmowgli.components.*;
 import edu.nps.moves.mmowgli.db.*;
 import edu.nps.moves.mmowgli.db.pii.UserPii;
 import edu.nps.moves.mmowgli.hibernate.HSess;
@@ -263,8 +258,7 @@ public class UserAdminPanel extends VerticalLayout implements MmowgliComponent, 
 
   private String getNumberUsersLabelTL()
   {
-    Session session = HSess.get();
-    Criteria criteria = session.createCriteria(User.class);
+    Criteria criteria = HSess.get().createCriteria(User.class);
     criteria.setProjection(Projections.rowCount());
     int count = ((Long) criteria.list().get(0)).intValue();
     return "Number of registered players: " + count;
@@ -272,8 +266,7 @@ public class UserAdminPanel extends VerticalLayout implements MmowgliComponent, 
   
   private String getNumberCardsLabelTL()
   {
-    Session session = HSess.get();
-    Criteria criteria = session.createCriteria(Card.class);
+    Criteria criteria = HSess.get().createCriteria(Card.class);
     criteria.setProjection(Projections.rowCount());
     int count = ((Long)criteria.list().get(0)).intValue();
     return "Number cards played: "+count;
@@ -287,8 +280,7 @@ public class UserAdminPanel extends VerticalLayout implements MmowgliComponent, 
   
   private String getNumberGameMastersTL()
   {
-    Session session = HSess.get();
-    Criteria criteria = session.createCriteria(User.class);
+    Criteria criteria = HSess.get().createCriteria(User.class);
     criteria.add(Restrictions.eq("gameMaster", true));
     criteria.setProjection(Projections.rowCount());
     int count = ((Long) criteria.list().get(0)).intValue();
@@ -350,6 +342,7 @@ public class UserAdminPanel extends VerticalLayout implements MmowgliComponent, 
       @MmowgliCodeEntry
       @HibernateOpened
       @HibernateClosed
+      @HibernateUserRead
       public void itemClick(ItemClickEvent event)
       {
         if (event.isDoubleClick()) {
@@ -497,6 +490,7 @@ public class UserAdminPanel extends VerticalLayout implements MmowgliComponent, 
     Window win;
 
     @HibernateSessionThreadLocalConstructor
+    @HibernateUserRead
     public EditPanel(Window w, Object uid)
     {
       this.uid = uid;
@@ -668,7 +662,7 @@ public class UserAdminPanel extends VerticalLayout implements MmowgliComponent, 
         public void buttonClick(ClickEvent event)
         {
           HSess.init();
-          if(loadAndSaveUserTL()) {
+          if(loadAndSaveUserTL()) { //  @HibernateUserUpdate
             closePopup(event);
           }
           HSess.close();
@@ -685,7 +679,7 @@ public class UserAdminPanel extends VerticalLayout implements MmowgliComponent, 
         {
           HSess.init();
           
-          if(loadAndSaveUserTL()) {          
+          if(loadAndSaveUserTL()) {   //  @HibernateUserUpdate       
             closePopup(event);
             HSess.close();  //Commit, else a get() in the call below will retrieve old data.
             HSess.init();
@@ -726,6 +720,7 @@ public class UserAdminPanel extends VerticalLayout implements MmowgliComponent, 
       @MmowgliCodeEntry
       @HibernateOpened
       @HibernateClosed
+      @HibernateUserRead
       public void buttonClick(ClickEvent event)
       {
         HSess.init();
@@ -754,6 +749,7 @@ public class UserAdminPanel extends VerticalLayout implements MmowgliComponent, 
       @MmowgliCodeEntry
       @HibernateOpened
       @HibernateClosed
+      @HibernateUserRead
       public void buttonClick(ClickEvent event)
       {
         HSess.init();
@@ -771,6 +767,7 @@ public class UserAdminPanel extends VerticalLayout implements MmowgliComponent, 
       @MmowgliCodeEntry
       @HibernateOpened
       @HibernateClosed
+      @HibernateUserRead
       public void buttonClick(ClickEvent event)
       {
         HSess.init();
@@ -805,6 +802,7 @@ public class UserAdminPanel extends VerticalLayout implements MmowgliComponent, 
     /**
      * @return true if the account is truely to be disabled
      */
+    @HibernateUserRead
     private boolean handleDisabledTL()
     {
       boolean wantToDisable = lockedOutCb.getValue();
@@ -859,6 +857,11 @@ public class UserAdminPanel extends VerticalLayout implements MmowgliComponent, 
       return false;
     }
     
+    @HibernateUserUpdate
+    @HibernateActionPlanUpdate
+    @HibernateCardUpdate
+    @HibernateUpdate    
+    @HibernateUserRead
     private boolean loadAndSaveUserTL()
     {
       String newUname = tweekString(uNameTf.getValue());
@@ -895,7 +898,7 @@ public class UserAdminPanel extends VerticalLayout implements MmowgliComponent, 
 
       VHibPii.newUserPiiEmail((Long)uid,newEmail);
 
-      User.updateTL(user); HSess.closeAndReopen();
+      User.updateTL(user);
       VHibPii.update(upii);
       
       // if the user name has been changed, a few more things need to happen
