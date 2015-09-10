@@ -24,12 +24,9 @@ package edu.nps.moves.mmowgli.modules.cards;
 
 import static edu.nps.moves.mmowgli.modules.cards.IdeaDashboard.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.hibernate.Criteria;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -39,9 +36,7 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.themes.Reindeer;
 
 import edu.nps.moves.mmowgli.Mmowgli2UI;
-import edu.nps.moves.mmowgli.components.CardTable;
-import edu.nps.moves.mmowgli.components.HtmlLabel;
-import edu.nps.moves.mmowgli.components.MmowgliComponent;
+import edu.nps.moves.mmowgli.components.*;
 import edu.nps.moves.mmowgli.db.*;
 import edu.nps.moves.mmowgli.hibernate.HSess;
 import edu.nps.moves.mmowgli.markers.HibernateSessionThreadLocalConstructor;
@@ -174,9 +169,7 @@ public abstract class IdeaDashboardTabPanel extends AbsoluteLayout implements Mm
    */
   protected List<Card> getCardListTL(User me, CardMarking mark)
   {
-    Session sess = HSess.get();
-
-    Criteria crit = sess.createCriteria(Card.class)
+    Criteria crit = HSess.get().createCriteria(Card.class)
         .addOrder(Order.desc("creationDate"));
 
     Card.adjustCriteriaToOmitCardsTL(crit, me);
@@ -194,8 +187,7 @@ public abstract class IdeaDashboardTabPanel extends AbsoluteLayout implements Mm
   @SuppressWarnings("unchecked")
   protected List<Card> getCardListTL(CardType typ, User me)
   {
-    Session sess = HSess.get();
-    Criteria crit = sess.createCriteria(Card.class)
+    Criteria crit = HSess.get().createCriteria(Card.class)
         .add(Restrictions.eq("cardType", typ))
         .addOrder(Order.desc("creationDate"));
 
