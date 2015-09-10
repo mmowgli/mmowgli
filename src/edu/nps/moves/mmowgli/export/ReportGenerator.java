@@ -111,7 +111,7 @@ public class ReportGenerator implements Runnable
       if(lastReportMS == null)  // first time
         lastReportMS = nowMS;
       
-      MSysOut.println(REPORT_LOGS,"poked = "+poked+" now = "+nowMS+" lastReportMS= "+lastReportMS+" period="+reportPeriod);
+      MSysOut.println(REPORT_LOGS,"poked="+poked+" now="+nowMS+" lastReportMS="+lastReportMS+" period="+reportPeriod);
       if(poked || ( (reportPeriod >0) && (nowMS-lastReportMS) > reportPeriod) ) {
         lastReportMS = nowMS;  // also done below
         poked = false;
