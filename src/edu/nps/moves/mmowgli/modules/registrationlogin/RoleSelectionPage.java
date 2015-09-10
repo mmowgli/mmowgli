@@ -36,6 +36,8 @@ import edu.nps.moves.mmowgli.db.Game;
 import edu.nps.moves.mmowgli.db.GameQuestion;
 import edu.nps.moves.mmowgli.db.User;
 import edu.nps.moves.mmowgli.hibernate.HSess;
+import edu.nps.moves.mmowgli.markers.HibernateUpdate;
+import edu.nps.moves.mmowgli.markers.HibernateUserUpdate;
 import edu.nps.moves.mmowgli.modules.gamemaster.GameEventLogger;
 import edu.nps.moves.mmowgli.utility.MiscellaneousMmowgliTimer.MSysOut;
 
@@ -135,6 +137,8 @@ public class RoleSelectionPage extends MmowgliDialog
   }
   
   @SuppressWarnings("serial")
+  @HibernateUpdate
+  @HibernateUserUpdate
   class LaterListener implements ClickListener
   {
     @Override
@@ -151,6 +155,8 @@ public class RoleSelectionPage extends MmowgliDialog
   }
   
   @SuppressWarnings("serial")
+  @HibernateUpdate
+  @HibernateUserUpdate
   class ContinueListener implements ClickListener
   {
     @Override
