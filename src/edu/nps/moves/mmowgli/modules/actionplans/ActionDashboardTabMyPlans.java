@@ -45,6 +45,7 @@ import edu.nps.moves.mmowgli.db.User;
 import edu.nps.moves.mmowgli.hibernate.HSess;
 import edu.nps.moves.mmowgli.markers.HibernateClosed;
 import edu.nps.moves.mmowgli.markers.HibernateOpened;
+import edu.nps.moves.mmowgli.markers.HibernateUserRead;
 import edu.nps.moves.mmowgli.markers.MmowgliCodeEntry;
 import edu.nps.moves.mmowgli.messaging.WantsActionPlanUpdates;
 import edu.nps.moves.mmowgli.utility.IDButton;
@@ -118,7 +119,7 @@ public class ActionDashboardTabMyPlans extends ActionDashboardTabPanel implement
     flowLay.addComponent(new Label("(appears in another browser tab)"));
 
     ClickListener firstLis;
-    myPlansButt.addClickListener(firstLis = new ButtListener2(buildMyPlansFilter(),null));
+    myPlansButt.addClickListener(firstLis = new ButtListener2(buildMyPlansFilter(),null));  // @HibernateUserRead
 
     AbsoluteLayout rightLay = getRightLayout();
 
@@ -131,6 +132,7 @@ public class ActionDashboardTabMyPlans extends ActionDashboardTabPanel implement
     firstLis.buttonClick(null); // loads the table
   }
 
+  @HibernateUserRead
   private List<Criterion> buildMyPlansFilter()
   {
     me = User.getTL(me.getId());
