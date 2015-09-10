@@ -71,13 +71,13 @@ public class MiscellaneousMmowgliTimer
   // Some default timers
   public static class Tick extends TimerTask
   {
-    public static long PERIOD_MS = 60 * 1000 * 2; // every 2 min
+    public static long PERIOD_MS = 60 * 1000 * 1; // every 1 min
     DateFormat tickFormat = new SimpleDateFormat("EEE d MMM yyyy HH:mm:ss.SSS");
 
     @Override
     public void run()
     {
-      MSysOut.immPrint(MmowgliConstants.TICK_LOGS,"-tick-" + tickFormat.format(new Date()));
+      MSysOut.immPrint(MmowgliConstants.TICK_LOGS,"-tick- " + tickFormat.format(new Date()));
     }
   }
 /*  
