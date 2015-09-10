@@ -22,6 +22,8 @@
 
 package edu.nps.moves.mmowgli.modules.scoring;
 
+import static edu.nps.moves.mmowgli.MmowgliConstants.SCOREMANAGER_LOGS;
+
 import java.util.Map;
 import java.util.Set;
 
@@ -29,10 +31,10 @@ import org.hibernate.Session;
 
 import edu.nps.moves.mmowgli.Mmowgli2UI;
 import edu.nps.moves.mmowgli.db.*;
-import edu.nps.moves.mmowgli.hibernate.HSess;
+import edu.nps.moves.mmowgli.markers.HibernateUpdate;
+import edu.nps.moves.mmowgli.markers.HibernateUserUpdate;
 import edu.nps.moves.mmowgli.modules.cards.CardMarkingManager;
 import edu.nps.moves.mmowgli.utility.MiscellaneousMmowgliTimer.MSysOut;
-import static edu.nps.moves.mmowgli.MmowgliConstants.*;
 /**
  * ScoreManager2.java
  * Created on Aug 8, 2013
@@ -161,6 +163,8 @@ public class ScoreManager2
   }
     
   // C
+  @HibernateUserUpdate
+  @HibernateUpdate
   public void actionPlanCommentEnteredTL(ActionPlan plan, Message comment)
   // --------------------------------------------------------------------
   {
@@ -170,7 +174,7 @@ public class ScoreManager2
     User writer = comment.getFromUser();
     writer = User.mergeTL(writer);
     incrementInnovationScoreTL(writer, userActionPlanCommentPoints);
-    User.updateTL(writer); HSess.closeAndReopen();
+    User.updateTL(writer);
 
     // Authors need a bump
     Set<User> authors = plan.getAuthors();
@@ -178,8 +182,6 @@ public class ScoreManager2
       setActionPlanCommentScoreTL(author, plan);
       User.updateTL(author); /**/
     }
-    if(!authors.isEmpty())
-      HSess.closeAndReopen();
   }
 
   // F
@@ -213,6 +215,8 @@ public class ScoreManager2
   // Caller should do User.update
   // Users who are authors  are User.update 'ed here
   // D
+  @HibernateUserUpdate
+  @HibernateUpdate
   public void actionPlanWasRatedTL(User me, ActionPlan ap, int count)
   //---------------------------------------------------------------
   {
@@ -231,8 +235,6 @@ public class ScoreManager2
       setActionPlanThumbScoreTL(author,ap,actionPlanThumbFactor * (float)ap.getSumThumbs());
       User.updateTL(author); /**/
     }
-    if(!authors.isEmpty())
-      HSess.closeAndReopen();
   }
  
    /* Begin non-card / non-actionplan scoring event(s) */
@@ -389,13 +391,14 @@ public class ScoreManager2
   }
 
   // Updated users in db /**/
+  @HibernateUserUpdate
+  @HibernateUpdate
   private void awardOrRemoveCardAuthorPointsTL(Card newCard, float factor)
   {    
     float authorPoints = cardAuthorPoints * factor;
     if(authorPoints != 0.0f) {
       User u = incrementBasicScoreTL(newCard.getAuthor(),authorPoints);
       User.updateTL(u);
-      HSess.closeAndReopen();
     }
   }
   
@@ -409,7 +412,8 @@ public class ScoreManager2
   
   private User incrementBasicScoreTL(long userid, float f)
   {
-    return incrementBasicScoreTL(User.getTL(userid),f); //DBGet.getUserFresh(userid),f);
+    User u = User.getLockedTL(userid);    // could be many accesses at once
+    return incrementBasicScoreTL(u,f); //User.getTL(userid),f); //DBGet.getUserFresh(userid),f);
   }
   
   private void awardCardAncestorPointsTL(Card c)  /**/
@@ -432,11 +436,12 @@ public class ScoreManager2
     }  
   }
   
+  @HibernateUserUpdate
+  @HibernateUpdate
   private void awardCardAncestorPointsTL(long aId, float points) /**/
   {
     User usr = incrementBasicScoreTL(aId,points);
     User.updateTL(usr); /**/
-    HSess.closeAndReopen();
   }
   
   private void removeCardSuperInterestingPointsTL(Card c)
