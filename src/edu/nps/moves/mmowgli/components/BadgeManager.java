@@ -29,14 +29,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import org.hibernate.Session;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.*;
 
 import edu.nps.moves.mmowgli.AppMaster;
 import edu.nps.moves.mmowgli.db.*;
 import edu.nps.moves.mmowgli.hibernate.HSess;
+import edu.nps.moves.mmowgli.markers.*;
 import edu.nps.moves.mmowgli.messaging.MMessage;
 import edu.nps.moves.mmowgli.messaging.MMessagePacket;
 import edu.nps.moves.mmowgli.modules.cards.CardMarkingManager;
@@ -145,29 +143,31 @@ public class BadgeManager implements Runnable
         Pkt pkt = queue.take();       // block here
         HSess.init();
         
-        checkBadgeThreeTL(); // get checked every time
+        checkBadgeThreeTL();   //@HibernateUserUpdate // get checked every time
 
         switch(pkt.msgType) {
         case NEW_CARD:
         case UPDATED_CARD:
           Card c = Card.getTL(pkt.id);
-          checkBadgeOneTL(c);  // one of each root card type
-          checkBadgeFourTL(c); // marked superinteresting
-          checkBadgeTwoTL(c.getAuthor()); // one of everytype
+          checkBadgeOneTL(c);   //@HibernateUserUpdate // one of each root card type
+          checkBadgeFourTL(c);  //@HibernateUserUpdate // marked superinteresting
+          checkBadgeTwoTL(c.getAuthor());  //@HibernateUserUpdate // one of everytype
           break;
         case NEW_ACTIONPLAN:
         case UPDATED_ACTIONPLAN:
           ActionPlan ap = ActionPlan.getTL(pkt.id);
-          checkBadgeSixTL(ap);  // ap author
+          checkBadgeSixTL(ap);   //@HibernateUserUpdate // ap author
           break;
         case UPDATED_USER:
           User u = User.getTL(pkt.id);
-          checkBadgeFiveTL(u); // user fav list
+          checkBadgeFiveTL(u);  //@HibernateUserUpdate // user fav list
 
           //todo: badge 8, logged in each day
           break;
         }
-        checkLeaderBoardTL();          //top 50 of leader board
+        HSess.closeAndReopen();  // flushes
+        
+        checkLeaderBoardTL();   //dif session on return       //top 50 of leader board
         
         HSess.close();
 
@@ -211,8 +211,9 @@ public class BadgeManager implements Runnable
       .addOrder( Order.desc("basicScore"))
       .list();
 
-      ret |= processLeadersTL(lis);
-
+      ret |= processLeadersTL(lis);  //@HibernateUserRead @HibernateUserUpdate
+      
+      HSess.closeAndReopen();  // flushes
       // do the same for innovation score
 
       lis = (List<User>)HSess.get().createCriteria(User.class)
@@ -222,20 +223,21 @@ public class BadgeManager implements Runnable
       .addOrder( Order.desc("innovationScore"))
       .list();
 
-      ret |= processLeadersTL(lis);
+      ret |= processLeadersTL(lis);  //@HibernateUserRead @HibernateUserUpdate
 
       MSysOut.println(BADGEMANAGER_LOGS,"leaderboard badge check ended: "+System.currentTimeMillis());
     }
     return ret;
   }
 
+  @HibernateUserRead
   private boolean processLeadersTL(List<User> lis)
   {
     boolean ret = false;
     for(User u: lis) {
       u = User.getTL(u.getId()); // maybe new sess in addBadgeTL
       if(!hasBadge(u,BADGE_SEVEN_ID)) {
-        addBadgeTL(u,BADGE_SEVEN_ID);
+        addBadgeTL(u,BADGE_SEVEN_ID);  //@HibernateUserUpdate
         ret = true;
       }
     }
@@ -252,12 +254,14 @@ public class BadgeManager implements Runnable
     return false;
   }
 
+  @HibernateUpdate
+  @HibernateUserUpdate
   private void addBadgeTL(User u, long badgeID)
   {
     Set<Badge> bSet = u.getBadges();
     Badge bdg = Badge.getTL(badgeID);
     bSet.add(bdg);
-    User.updateTL(u); HSess.closeAndReopen();
+    User.updateTL(u);
   }
 
   /* Give the user Badge #5 if they've played a card which somebody else thinks is a favorite */
@@ -276,7 +280,7 @@ public class BadgeManager implements Runnable
     for(Card c : favs) {
       User author = c.getAuthor();
       if(!hasBadge(author,BADGE_FIVE_ID)) {  // First see if he's already got this one
-        addBadgeTL(author,BADGE_FIVE_ID);
+        addBadgeTL(author,BADGE_FIVE_ID); //@HibernateUserUpdate
         ret = true;
       }
     }
@@ -290,7 +294,7 @@ public class BadgeManager implements Runnable
     Set<User> authors = ap.getAuthors();
     for(User u : authors) {
       if(!hasBadge(u,BADGE_SIX_ID)) {
-        addBadgeTL(u,BADGE_SIX_ID);
+        addBadgeTL(u,BADGE_SIX_ID);  //@HibernateUserUpdate
         ret = true;
       }
     }
@@ -305,9 +309,10 @@ public class BadgeManager implements Runnable
     if(hasBadge(author,BADGE_ONE_ID))    // First see if he's already got this one
       return false;
 
-    return checkBadgeOneTL(author);
+    return checkBadgeOneTL(author); //@HibernateUserUpdate
   }
 
+  @HibernateUserRead
   private boolean checkBadgeOneTL(User author)
   {
     Long numInnos =  (Long)HSess.get().createCriteria(Card.class)
@@ -325,10 +330,8 @@ public class BadgeManager implements Runnable
       return false;
     }
     // Got one of each
-    author = User.getTL(author.getId());  // maybe new session
     if(!hasBadge(author,BADGE_ONE_ID)) {
-      author = User.getTL(author.getId());  // maybe new session      
-      addBadgeTL(author,BADGE_ONE_ID);
+      addBadgeTL(author,BADGE_ONE_ID);  //@HibernateUserUpdate
       return true;
     }
     return false;
@@ -341,7 +344,7 @@ public class BadgeManager implements Runnable
       User author = c.getAuthor();
       // Should check against user, don't let user get a badge for his own card
       if(!hasBadge(author,BADGE_FOUR_ID)) {    // First see if he's already got this one
-        addBadgeTL(author,BADGE_FOUR_ID);
+        addBadgeTL(author,BADGE_FOUR_ID); //@HibernateUserUpdate
         return true;
       }
     }
@@ -349,6 +352,9 @@ public class BadgeManager implements Runnable
   }
 
   /* Give the user Badge #3 if they've played the root of a super-active chain */
+  @HibernateUpdate
+  @HibernateUserUpdate
+  @HibernateUserRead
   private boolean checkBadgeThreeTL()
   {
 //    Card c = DBGet.getCard(pkt.id,sess);
@@ -358,16 +364,14 @@ public class BadgeManager implements Runnable
     boolean ret = false;
     // This checks everybody
     List<Card> roots = master.getMcache().getSuperActiveChainRoots();
-    Session sess = HSess.get();
+
     for(Card crd : roots) {
-      User author = crd.getAuthor();
-      MSysOut.println(DEBUG_LOGS, "User.get(sess) from BadgeManager.checkBadgeThreeTL()");
-      author = User.get(author.getId(), sess);  // Hb class not current in this sess
+      User author = User.getTL(crd.getAuthor().getId());
       if(!hasBadge(author,BADGE_THREE_ID)) {
-        Badge third = (Badge)sess.get(Badge.class, BADGE_THREE_ID);
+        Badge third = (Badge)HSess.get().get(Badge.class, BADGE_THREE_ID);
         author.getBadges().add(third);
-        // User update here
-        User.updateTL(author); HSess.closeAndReopen();
+
+        User.updateTL(author);
         ret = true;
       }
     }
@@ -407,7 +411,7 @@ public class BadgeManager implements Runnable
       if(num <= 0)  // If any fail, no go
         return false;
     }
-    addBadgeTL(author,BADGE_TWO_ID);
+    addBadgeTL(author,BADGE_TWO_ID);  //@HibernateUserUpdate
     return true;
   }
 
@@ -423,22 +427,24 @@ public class BadgeManager implements Runnable
 
     HSess.init();
 
-    checkBadgeThreeTL(); // get checked every time
+    checkBadgeThreeTL();   //@HibernateUserUpdate// get checked every time
+    
+    HSess.closeAndReopen();
     
     List<User> uLis = (List<User>)HSess.get().createCriteria(User.class).list();
     for(User u: uLis) {
-      checkBadgeOneTL (u); // one of each root card type
-      checkBadgeTwoTL (User.getTL(u.getId())); // one of everytype
-      checkBadgeFiveTL(User.getTL(u.getId())); // user fav list
+      checkBadgeOneTL (u);  //@HibernateUserUpdate // one of each root card type
+      checkBadgeTwoTL (u);  //@HibernateUserUpdate // one of everytype
+      checkBadgeFiveTL(u);  //@HibernateUserUpdate // user fav list
     }
 
     List<Card> cLis = (List<Card>)HSess.get().createCriteria(Card.class).list();
     for(Card c: cLis)
-      checkBadgeFourTL(Card.getTL(c.getId())); // marked superinteresting
+      checkBadgeFourTL(Card.getTL(c.getId()));  //@HibernateUserUpdate // marked superinteresting
 
     List<ActionPlan> apLis = (List<ActionPlan>)HSess.get().createCriteria(ActionPlan.class).list();
     for(ActionPlan ap: apLis)
-      checkBadgeSixTL(ActionPlan.getTL(ap.getId())); // ap author
+      checkBadgeSixTL(ActionPlan.getTL(ap.getId()));  //@HibernateUserUpdate // ap author
 
     // todo: badge 8, logged in each day
 
