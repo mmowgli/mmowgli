@@ -316,6 +316,7 @@ public class CardLarge extends AbsoluteLayout implements MmowgliComponent
     @HibernateRead
     @HibernateUpdate
     @HibernateCommitted
+    @HibernateUserUpdate
     public void buttonClick(ClickEvent event)
     {
       HSess.init();
@@ -337,7 +338,8 @@ public class CardLarge extends AbsoluteLayout implements MmowgliComponent
       HSess.close(); // will commit
     }  
   }
-
+  
+  @HibernateUserRead
   private boolean checkStarTL(Card c, Object uid)
   {
     User u = User.getTL(uid);
@@ -371,13 +373,11 @@ public class CardLarge extends AbsoluteLayout implements MmowgliComponent
   
   private void update_oobTL_common(Card c)
   {
-    Session sess = HSess.get();
-    
     MSysOut.println(CARD_UPDATE_LOGS, "CardLarge.update_oobTL(), card "+c.getId()+" text: "+c.getText()+" hidden = "+c.isHidden()+" hash = "+hashCode());
     
     // Only 2 things to update...text and marking
     Game g = Game.getTL();
-    content.setValue(formatText(c.getText(),g,sess));
+    content.setValue(formatText(c.getText(),g,HSess.get()));
     if(c.isHidden())
       content.addStyleName("m-cardsummary-hidden");     // red "HIDDEN" text background
     else
