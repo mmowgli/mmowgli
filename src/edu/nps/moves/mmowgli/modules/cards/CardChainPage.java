@@ -685,7 +685,7 @@ public class CardChainPage extends VerticalLayout implements MmowgliComponent,Ne
   public void cardCreatedTL(Card c)
   {
     MmowgliSessionGlobals globs = Mmowgli2UI.getGlobals();
-    Card parent = Card.getTL(cardId);
+    Card parent = Card.getLockedTL(cardId); //Card.getTL(cardId);
     c.setParentCard(parent);   
     Card.saveTL(c);
     
@@ -698,6 +698,7 @@ public class CardChainPage extends VerticalLayout implements MmowgliComponent,Ne
       set = new TreeSet<Card>(new Card.DateDescComparator());
     set.add(c);   
     parent.setFollowOns(set);  // and I don't think this is required
+    
     // If the set has only one card, that's the one we added, so he had no children before.  We want to send an email
     // to the parent author saying that the first followon was played on his card.  But we only do that once -- each player
     // only gets one of this type of email.  Checked-for in mailmanager.
