@@ -140,7 +140,15 @@ public class HSess
     return;
   }
   
-  // Definitely close (and flush) session, but reopen since caller expects and open one
+  // Careful with this one; If any db objects are floating around in the thread, they are now out of sync with the
+  // thread's session; used in game exporters
+  public static void closeAndReopen()
+  {
+    close();
+    init();
+  }
+  
+  // Definitely close (and flush) session, but reopen since caller expects and open one; same caveat as previous method
   public static void closeAndCheckReopen(Object obj)
   {
     close();
@@ -149,11 +157,6 @@ public class HSess
       init();
   }
   
-  public static void closeAndReopen()
-  {
-    close();
-    init();
-  }
   
   //todo Consolidate with VHib
   public static SessionFactory getSessionFactory()
