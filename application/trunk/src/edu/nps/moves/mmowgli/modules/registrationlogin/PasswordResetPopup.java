@@ -50,6 +50,8 @@ import edu.nps.moves.mmowgli.hibernate.VHibPii;
  * Created on:   Created on Jan 23, 2014 11:10:11 AM
  * Description:  Popup to initiate a forgot password reset process
  */
+import edu.nps.moves.mmowgli.markers.HibernateUpdate;
+import edu.nps.moves.mmowgli.markers.HibernateUserUpdate;
 
 /**
  * Allow a registered user to reset their forgotten password
@@ -157,10 +159,10 @@ public class PasswordResetPopup extends Window implements Button.ClickListener
     if(usr != null) {
        UserPii uPii = VHibPii.getUserPii(usr.getId(), piiSess, false);
        List<EmailPii> ePii = uPii.getEmailAddresses(); 
-       finalConfirmationCheckTL_4(ePii.get(0).getAddress(),usr);
+       finalConfirmationCheckTL_4(ePii.get(0).getAddress(),usr);  //  @HibernateUserUpdate
     }
     else
-      proceedWithEnteredEmailTL_2b(piiSess,"No player found.");
+      proceedWithEnteredEmailTL_2b(piiSess,"No player found."); //  @HibernateUserUpdate
   }   
   
   private void proceedWithEnteredEmailTL_2b(Session piiSess, String errorStr)
@@ -170,7 +172,7 @@ public class PasswordResetPopup extends Window implements Button.ClickListener
       errorOut(errorStr != null? errorStr:"No email specified.");
       return;
     }
-    checkValidEmailTL_3(email,piiSess);
+    checkValidEmailTL_3(email,piiSess); //  @HibernateUserUpdate
   }
   
   private void checkValidEmailTL_3(String email, Session piiSess)
@@ -204,7 +206,7 @@ public class PasswordResetPopup extends Window implements Button.ClickListener
       return;
     }
     // otherwise, proceed
-    finalConfirmationCheckTL_4(email, aLis);
+    finalConfirmationCheckTL_4(email, aLis);  //  @HibernateUserUpdate
   }
   
   //Check user email confirmation status
@@ -212,9 +214,11 @@ public class PasswordResetPopup extends Window implements Button.ClickListener
   {
     ArrayList<User> aLis = new ArrayList<User>();
     aLis.add(u);
-    finalConfirmationCheckTL_4(email,aLis);
+    finalConfirmationCheckTL_4(email,aLis); //  @HibernateUserUpdate
   }
 
+  @HibernateUpdate
+  @HibernateUserUpdate
   private void finalConfirmationCheckTL_4(String email, ArrayList<User> aLis)
   {
     ArrayList<User> confirmedUsers = new ArrayList<User>(aLis); // working list
@@ -241,7 +245,7 @@ public class PasswordResetPopup extends Window implements Button.ClickListener
         User us = itr.next();
 
         us.setEmailConfirmed(true);
-        User.updateTL(us); HSess.closeAndReopen();
+        User.updateTL(us);
       }
     }
     
