@@ -28,11 +28,8 @@ import static edu.nps.moves.mmowgli.MmowgliEvent.IDEADASHBOARDCLICK;
 
 import java.awt.Dimension;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
+import java.util.*;
 
-import org.hibernate.Session;
 import org.vaadin.jouni.animator.Animator;
 import org.vaadin.jouni.dom.Dom;
 import org.vaadin.jouni.dom.client.Css;
@@ -42,9 +39,7 @@ import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.BrowserWindowOpener;
 import com.vaadin.ui.*;
 
-import edu.nps.moves.mmowgli.AppMaster;
-import edu.nps.moves.mmowgli.Mmowgli2UI;
-import edu.nps.moves.mmowgli.MmowgliConstants;
+import edu.nps.moves.mmowgli.*;
 import edu.nps.moves.mmowgli.cache.MCacheManager;
 import edu.nps.moves.mmowgli.components.*;
 import edu.nps.moves.mmowgli.components.CardSummaryListHeader.NewCardListener;
@@ -264,15 +259,14 @@ public class PlayAnIdeaPage2 extends VerticalLayout implements MmowgliComponent,
     User me = Mmowgli2UI.getGlobals().getUserTL(); //DBGet.getUser(app.getUser());
     ArrayList<Object> wrappers = new ArrayList<Object>(coll.size());
     
-    Session sess = HSess.get();
     Iterator<Card> itr = coll.iterator();
     while(itr.hasNext()) {
       Card c = itr.next();  //todo can get concurrentmodification exception here, apparently sync doesn't work
-      if(Card.canSeeCard_oob(c, me, sess))
+      if(Card.canSeeCard_oob(c, me, HSess.get()))
         wrappers.add(0,c.getId());
     }
     hcd.loadWrappers(wrappers);
-    hcd.show(sess);
+    hcd.show(HSess.get());
   }
   private Card pendingLeftTop = null;
   private Card pendingRightBottom = null;
@@ -348,7 +342,8 @@ public class PlayAnIdeaPage2 extends VerticalLayout implements MmowgliComponent,
       component.initGui();
     }    
   }
-
+  @HibernateCardSave
+  @HibernateSave
   class ThisNewCardListener implements NewCardListener
   {
     @Override
@@ -362,10 +357,8 @@ public class PlayAnIdeaPage2 extends VerticalLayout implements MmowgliComponent,
       else
         pendingRightBottom = c;
       
-      Card.saveTL(c); // this hits the db.
+      Card.saveTL(c);
       
-      HSess.closeAndReopen();
-      c = Card.getTL(c.getId()); // refresh
       GameEventLogger.cardPlayedTL(c);
       Mmowgli2UI.getGlobals().getScoreManager().cardPlayedTL(c);// update score only from this app instance      
     }
