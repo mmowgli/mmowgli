@@ -195,8 +195,7 @@ public class EventMonitorPanel extends VerticalLayout implements MmowgliComponen
   {
     sb.setLength(0);
 
-    Session session = HSess.get();
-    Criteria criteria = session.createCriteria(User.class);
+    Criteria criteria = HSess.get().createCriteria(User.class);
     criteria.setProjection(Projections.rowCount());
     int count = ((Long) criteria.list().get(0)).intValue();
     sb.append("<html><b>");
@@ -212,7 +211,7 @@ public class EventMonitorPanel extends VerticalLayout implements MmowgliComponen
     sb.append(" online, <b>");
 
     int mov = Game.getTL().getCurrentMove().getNumber();
-    criteria = session.createCriteria(Card.class)
+    criteria = HSess.get().createCriteria(Card.class)
         .createAlias("createdInMove", "MOVE")
         .add(Restrictions.eq("MOVE.number", mov))
         .setProjection(Projections.rowCount());
@@ -223,7 +222,7 @@ public class EventMonitorPanel extends VerticalLayout implements MmowgliComponen
     sb.append(" played during this round, ");
 
       if (Game.getTL().isActionPlansEnabled()) {
-          criteria = session.createCriteria(ActionPlan.class)
+          criteria = HSess.get().createCriteria(ActionPlan.class)
               .createAlias("createdInMove", "MOVE")
               .add(Restrictions.eq("MOVE.number", mov))
               .setProjection(Projections.rowCount());
