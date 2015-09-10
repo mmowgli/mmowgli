@@ -25,19 +25,16 @@ package edu.nps.moves.mmowgli.hibernate;
 import static edu.nps.moves.mmowgli.MmowgliConstants.ERROR_LOGS;
 import static edu.nps.moves.mmowgli.MmowgliConstants.HIBERNATE_LOGS;
 
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.*;
+import org.hibernate.criterion.*;
 
 import com.vaadin.data.hbnutil.HbnContainer;
 
-import edu.nps.moves.mmowgli.cache.MCacheManager;
 import edu.nps.moves.mmowgli.utility.MiscellaneousMmowgliTimer.MSysOut;
 
 /**
@@ -79,12 +76,28 @@ public class DB
   {
     return get(cls,id,HSess.get());
   }
+  public static <T> T getLockedTL(Class<T> cls, Object id)
+  {
+    return getLocked(cls,id,HSess.get());
+  }
   
   public static <T> T get(Class<T> cls, Object id, Session sess)
   {
     return getCommon(cls,id,null,sess);
   }
   
+  private static LockOptions getLock;
+  static {
+    getLock = new LockOptions(LockMode.READ);
+    getLock.setTimeOut(5000); // 5 seconds
+  }
+  
+  @SuppressWarnings("unchecked")
+  public static <T> T getLocked(Class<T> cls, Object id, Session sess)
+  {
+    return (T)sess.get(cls, (Serializable)id, getLock);
+  }
+    
   public static <T> T getRevisionTL(Class<T> cls, Object id, Long revision)
   {
     return getCommon(cls,id,revision,HSess.get());
@@ -194,6 +207,5 @@ public class DB
     catch (InterruptedException ex) {
     }
   }
-  
 
 }
