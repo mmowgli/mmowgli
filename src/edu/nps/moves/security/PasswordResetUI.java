@@ -75,10 +75,9 @@ public class PasswordResetUI extends UI implements ClickListener, HasUUID
     }
     else {
       HSess.init();
-      Session sess = HSess.get();
 
       @SuppressWarnings("unchecked")
-      List<PasswordReset> lis = sess.createCriteria(PasswordReset.class).add(Restrictions.eq(RESETCODE_COL, uid)).list();
+      List<PasswordReset> lis = HSess.get().createCriteria(PasswordReset.class).add(Restrictions.eq(RESETCODE_COL, uid)).list();
 
       if (lis == null || lis.isEmpty())
         vLay.addComponent(new Label("Bad URL2"));
