@@ -32,20 +32,14 @@ import org.hibernate.Session;
 import org.vaadin.cssinject.CSSInject;
 
 import com.vaadin.navigator.Navigator;
-import com.vaadin.server.Page;
-import com.vaadin.server.VaadinRequest;
-import com.vaadin.server.VaadinSession;
+import com.vaadin.server.*;
 import com.vaadin.ui.*;
 
 import edu.nps.moves.mmowgli.components.AppMenuBar;
-import edu.nps.moves.mmowgli.db.Game;
-import edu.nps.moves.mmowgli.db.Move;
-import edu.nps.moves.mmowgli.db.MovePhase;
+import edu.nps.moves.mmowgli.db.*;
 import edu.nps.moves.mmowgli.hibernate.DB;
 import edu.nps.moves.mmowgli.hibernate.HSess;
-import edu.nps.moves.mmowgli.markers.HasUUID;
-import edu.nps.moves.mmowgli.markers.HibernateOpened;
-import edu.nps.moves.mmowgli.markers.MmowgliCodeEntry;
+import edu.nps.moves.mmowgli.markers.*;
 import edu.nps.moves.mmowgli.messaging.*;
 import edu.nps.moves.mmowgli.modules.registrationlogin.RegistrationPageBase;
 import edu.nps.moves.mmowgli.utility.MediaLocator;
@@ -129,7 +123,7 @@ abstract public class Mmowgli2UI extends UI implements WantsMoveUpdates, WantsMo
       setLoginContentTL(); 
     }
     else {
-      setRunningApplicationFrameworkTL();
+      setRunningApplicationFrameworkTL(null);
     }
     controllerHelper = new AbstractMmowgliControllerHelper2(this);
     
@@ -187,7 +181,7 @@ abstract public class Mmowgli2UI extends UI implements WantsMoveUpdates, WantsMo
     layout.setComponentAlignment(regpg,  Alignment.TOP_CENTER);    
   }
   
-  public void setRunningApplicationFrameworkTL()
+  public void setRunningApplicationFrameworkTL(User u)
   {
     VerticalLayout layout = (VerticalLayout)getContent();
     layout.removeAllComponents();
@@ -199,7 +193,7 @@ abstract public class Mmowgli2UI extends UI implements WantsMoveUpdates, WantsMo
     // the outerframe below is centered
     layout.setWidth("100%");
     
-    outerFr = new MmowgliOuterFrame();  // contains header and footer
+    outerFr = new MmowgliOuterFrame(u);  // contains header and footer
     layout.addComponent(outerFr);
     layout.setComponentAlignment(outerFr, Alignment.TOP_CENTER);
     
