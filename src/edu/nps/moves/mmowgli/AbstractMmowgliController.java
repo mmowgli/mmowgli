@@ -420,6 +420,7 @@ public abstract class AbstractMmowgliController implements MmowgliController, MM
     }
   }
   
+  @HibernateUserRead
   private void doStartupTL(Object userId)
   {
   	User u;
@@ -430,7 +431,7 @@ public abstract class AbstractMmowgliController implements MmowgliController, MM
   	
     Mmowgli2UI.getGlobals().setUserIDTL(u);
     Mmowgli2UI ui = Mmowgli2UI.getAppUI();
-    ui.setRunningApplicationFrameworkTL(); 
+    ui.setRunningApplicationFrameworkTL(u); 
 
     Game g = Game.getTL();
     ui.showOrHideFouoButton(g.isShowFouo());
