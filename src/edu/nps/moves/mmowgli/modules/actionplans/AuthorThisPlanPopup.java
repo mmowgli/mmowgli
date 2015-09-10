@@ -36,6 +36,8 @@ import edu.nps.moves.mmowgli.db.User;
 import edu.nps.moves.mmowgli.hibernate.HSess;
 import edu.nps.moves.mmowgli.markers.HibernateClosed;
 import edu.nps.moves.mmowgli.markers.HibernateOpened;
+import edu.nps.moves.mmowgli.markers.HibernateUpdate;
+import edu.nps.moves.mmowgli.markers.HibernateUserUpdate;
 import edu.nps.moves.mmowgli.markers.MmowgliCodeEntry;
 import edu.nps.moves.mmowgli.modules.gamemaster.GameEventLogger;
 
@@ -93,6 +95,8 @@ public class AuthorThisPlanPopup extends MmowgliDialog implements ClickListener
       @MmowgliCodeEntry
       @HibernateOpened
       @HibernateClosed
+      @HibernateUpdate
+      @HibernateUserUpdate
       public void buttonClick(ClickEvent event)
       {
         HSess.init();
@@ -122,6 +126,8 @@ public class AuthorThisPlanPopup extends MmowgliDialog implements ClickListener
       @MmowgliCodeEntry
       @HibernateOpened
       @HibernateClosed
+      @HibernateUpdate
+      @HibernateUserUpdate
       public void buttonClick(ClickEvent event)
       { 
         HSess.init();
