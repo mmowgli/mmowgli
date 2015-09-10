@@ -107,6 +107,7 @@ public class MmowgliMessageBroadcaster
       @MmowgliCodeEntry
       @HibernateOpened
       @HibernateClosed
+      @HibernateUserRead
       public void buttonClick(ClickEvent event)
       {
         if (event.getButton() == bcancelButt)
