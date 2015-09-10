@@ -25,7 +25,6 @@ package edu.nps.moves.mmowgli.modules.cards;
 import java.util.List;
 import java.util.Set;
 
-import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 
 import edu.nps.moves.mmowgli.db.Card;
@@ -77,9 +76,8 @@ public class CardMarkingManager
   @SuppressWarnings("unchecked")
   private static CardMarking getMarking(String label)
   {
-    Session sess = HSess.get();
     List<CardMarking> types = (List<CardMarking>)
-                                  sess.createCriteria(CardMarking.class).
+                                  HSess.get().createCriteria(CardMarking.class).
                                   add(Restrictions.eq("label", label)).
                                   list();
     if(types != null && types.size()>0)
@@ -94,9 +92,10 @@ public class CardMarkingManager
   {
     Set<CardMarking> marks = c.getMarking();  // allows more than one, but we're only using one
     CardMarking hidden = getHiddenMarking();
-    for(CardMarking mark : marks)
+    for(CardMarking mark : marks) {
       if(mark.getId() == hidden.getId())
         return true;
+    }
     return false;
   }
   
