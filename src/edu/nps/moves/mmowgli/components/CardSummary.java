@@ -379,6 +379,7 @@ public class CardSummary extends AbsoluteLayout implements MmowgliComponent//, C
     @HibernateRead
     @HibernateUpdate
     @HibernateCommitted
+    @HibernateUserUpdate
     public void buttonClick(ClickEvent event)
     {
       HSess.init();
