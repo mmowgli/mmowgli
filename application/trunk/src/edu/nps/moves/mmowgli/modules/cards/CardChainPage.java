@@ -23,10 +23,7 @@
 package edu.nps.moves.mmowgli.modules.cards;
 
 import static edu.nps.moves.mmowgli.MmowgliConstants.*;
-import static edu.nps.moves.mmowgli.MmowgliEvent.CARDCHAINPOPUPCLICK;
-import static edu.nps.moves.mmowgli.MmowgliEvent.CARDCREATEACTIONPLANCLICK;
-import static edu.nps.moves.mmowgli.MmowgliEvent.IDEADASHBOARDCLICK;
-import static edu.nps.moves.mmowgli.MmowgliEvent.PLAYIDEACLICK;
+import static edu.nps.moves.mmowgli.MmowgliEvent.*;
 
 import java.io.Serializable;
 import java.net.URLEncoder;
@@ -35,7 +32,7 @@ import java.util.*;
 import org.hibernate.Session;
 import org.vaadin.dialogs.ConfirmDialog;
 
-import com.vaadin.data.Property;
+import com.vaadin.data.*;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.navigator.View;
@@ -51,7 +48,8 @@ import edu.nps.moves.mmowgli.*;
 import edu.nps.moves.mmowgli.components.*;
 import edu.nps.moves.mmowgli.components.CardSummaryListHeader.NewCardListener;
 import edu.nps.moves.mmowgli.db.*;
-import edu.nps.moves.mmowgli.hibernate.*;
+import edu.nps.moves.mmowgli.hibernate.HSess;
+import edu.nps.moves.mmowgli.hibernate.Sess;
 import edu.nps.moves.mmowgli.markers.*;
 import edu.nps.moves.mmowgli.messaging.WantsCardUpdates;
 import edu.nps.moves.mmowgli.messaging.WantsUserUpdates;
@@ -683,6 +681,7 @@ public class CardChainPage extends VerticalLayout implements MmowgliComponent,Ne
   }
   
   @Override
+  @HibernateCardUpdate
   public void cardCreatedTL(Card c)
   {
     MmowgliSessionGlobals globs = Mmowgli2UI.getGlobals();
