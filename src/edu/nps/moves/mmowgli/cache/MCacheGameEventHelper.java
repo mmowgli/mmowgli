@@ -150,8 +150,8 @@ public class MCacheGameEventHelper
         for(int i=0; i<10; i++) { // try for 10 seconds
           try{Thread.sleep(1000l);}catch(InterruptedException ex){}
           HSess.init();
-          Session sess = HSess.get();
-          GameEvent ge = (GameEvent)sess.get(GameEvent.class, evorig.getId());
+
+          GameEvent ge = (GameEvent)HSess.get().get(GameEvent.class, evorig.getId());
           if(ge != null) {
             if(i>0)
               MSysOut.println(myLogLevel,"(MCacheManager)Delayed fetch of GameEvent from db, got it on try "+i);
