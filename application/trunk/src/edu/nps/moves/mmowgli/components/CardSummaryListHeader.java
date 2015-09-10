@@ -457,6 +457,7 @@ public class CardSummaryListHeader extends AbsoluteLayout implements MmowgliComp
       }
 
       @Override
+      @HibernateUserRead
       public void step2()
       {
         CardType ct = CardType.getTL(ctId);
@@ -533,6 +534,7 @@ public class CardSummaryListHeader extends AbsoluteLayout implements MmowgliComp
         @MmowgliCodeEntry
         @HibernateOpened
         @HibernateClosed
+        @HibernateUserRead
         public void windowClose(CloseEvent e)
         {
           HSess.init();
