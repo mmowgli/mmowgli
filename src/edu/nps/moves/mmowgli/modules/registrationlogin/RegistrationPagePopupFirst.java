@@ -240,6 +240,8 @@ public class RegistrationPagePopupFirst extends MmowgliDialog
    * where users are added to the db.  Hibernate transaction serialization may also deal with this.
    * Synchronized keyword would not help in a clustered environment, however.
    */
+  @HibernateUpdate
+  @HibernateUserUpdate
   private User checkUserNameTL(String uName, String email)//, String password)
   {
     if( !checkClassFieldTL(User.class,"userName",uName.toLowerCase(), null)) //A
@@ -264,7 +266,7 @@ public class RegistrationPagePopupFirst extends MmowgliDialog
       u.setRegisterDate(new Date());
       VHibPii.setUserPiiEmail(u.getId(), email);
 
-      User.updateTL(u);   HSess.closeAndReopen();//update 1
+      User.updateTL(u);//update 1
       return u;
     }
     catch(Exception ex) {
@@ -401,6 +403,8 @@ public class RegistrationPagePopupFirst extends MmowgliDialog
     @MmowgliCodeEntry
     @HibernateOpened
     @HibernateClosed
+    @HibernateUpdate
+    @HibernateUserUpdate
     public void buttonClick(ClickEvent event)
     {
       HSess.init();
