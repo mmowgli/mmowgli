@@ -43,6 +43,7 @@ import edu.nps.moves.mmowgli.db.ActionPlan;
 import edu.nps.moves.mmowgli.db.Game;
 import edu.nps.moves.mmowgli.db.User;
 import edu.nps.moves.mmowgli.hibernate.HSess;
+import edu.nps.moves.mmowgli.markers.HibernateUserRead;
 
 /**
  * ActionPlanContainers.java created on Feb 24, 2015
@@ -118,6 +119,7 @@ public class ActionPlanContainers
       super((Class<T>)ActionPlan.class, fact );
     }
     @Override
+    @HibernateUserRead
     protected Criteria getBaseCriteriaTL()
     {
       Serializable uid = Mmowgli2UI.getGlobals().getUserID();
