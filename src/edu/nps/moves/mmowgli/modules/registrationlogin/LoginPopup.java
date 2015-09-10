@@ -164,6 +164,8 @@ public class LoginPopup extends MmowgliDialog
   }
 
   @SuppressWarnings("serial")
+  @HibernateUpdate
+  @HibernateUserUpdate
   class MyContinueListener implements Button.ClickListener
   {
     @MmowgliCodeEntry
@@ -174,13 +176,13 @@ public class LoginPopup extends MmowgliDialog
     {
       MSysOut.println(DEBUG_LOGS,"LoginPopup continue handler entered");
 
-      HSess.init();
+      Object key = HSess.checkInit(); // Saw this leak once HSess.init();
       
       String uname = userIDTf.getValue().toString();
       User luser = User.getUserWithUserNameTL(uname);
       if(luser == null) {
         errorOut("No registered player with that name / ID");
-        HSess.close();
+        HSess.checkClose(key);
         return;
       }
 
@@ -194,7 +196,7 @@ public class LoginPopup extends MmowgliDialog
           errorOut("Password does not match.  Try again.");
           passwordTf.focus();
           passwordTf.selectAll();
-          HSess.close();
+          HSess.checkClose(key);
           return;
         }
       }
@@ -202,13 +204,13 @@ public class LoginPopup extends MmowgliDialog
         errorOut("Password error. Try again.");
         passwordTf.focus();
         passwordTf.selectAll();
-        HSess.close();
+        HSess.checkClose(key);
         return;
       }
 
       if(luser.isAccountDisabled()) {
         errorOut("This account has been disabled.");
-        HSess.close();
+        HSess.checkClose(key);
         return;
       }
 
@@ -217,14 +219,16 @@ public class LoginPopup extends MmowgliDialog
 
       if(g.isEmailConfirmation() && !luser.isEmailConfirmed()) {
         errorOut("This email address has not been confirmed.");
-        HSess.close();
+        HSess.checkClose(key);
         return;
       }
       else {
         // did not fail confirm check; if confirmation off, make sure they can get in in the future or questions will arise
-        luser.setEmailConfirmed(true);
+        if(!luser.isEmailConfirmed()) {
+          luser.setEmailConfirmed(true);
+          User.updateTL(luser);
+        }
         userID = luser.getId();
-        User.updateTL(luser);
       }
       /* replaced with clause below it
       if(!g.isLoginAllowAll()) {
@@ -253,12 +257,12 @@ public class LoginPopup extends MmowgliDialog
           // ok, not allowing everybody in and didn't match any special cases
           errorOut("<center><br/>Sorry.  Logins are currently restricted.  If you think<br/>you should have permission, please "+
           "click<br/>\"Trouble signing in?\" to send us a Trouble Report.</center>");
-          HSess.close();
+          HSess.checkClose(key);
           return;
         }
       }
       
-      HSess.close();
+      HSess.checkClose(key);
       listener.buttonClick(event); // back up the chain
     }
 
