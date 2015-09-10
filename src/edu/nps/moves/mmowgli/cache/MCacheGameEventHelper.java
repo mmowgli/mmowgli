@@ -114,16 +114,16 @@ public class MCacheGameEventHelper
       ev = new GameEvent(GameEvent.EventType.UNSPECIFIED,"/ event not yet in database");
       ev.setId(id);
       updateGameEventWhenPossible(ev);
-    }
-    // The getTL above automatically puts into the cache so the following incorrectly doubles it
-    /*
+      return;
+    } 
+    
     synchronized(gameEvents) {
-      gameEvents.add(0, ev);  // The original but was here, you CAN add a null to position 0
+      gameEvents.add(0, ev);
       int i;
       while((i=gameEvents.size()) > GAMEEVENTCAPACITY)
         gameEvents.remove(i-1);
     }
-    */
+    
   }
   
   public GameEvent getGameEventWhenPossible(Long id)
