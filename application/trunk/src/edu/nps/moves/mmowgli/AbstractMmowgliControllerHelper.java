@@ -734,8 +734,7 @@ public class AbstractMmowgliControllerHelper
   
   public void handleShowTotalRegisteredTL(MenuBar mbar)
   {
-    Session session = HSess.get();
-    Criteria criteria = session.createCriteria(User.class);
+    Criteria criteria = HSess.get().createCriteria(User.class);
     criteria.setProjection(Projections.rowCount());
     criteria.add(Restrictions.eq("accountDisabled", false));
     int count = ((Long) criteria.list().get(0)).intValue();
@@ -743,7 +742,7 @@ public class AbstractMmowgliControllerHelper
     criteria.add(Restrictions.eq("gameMaster", true));
     int gmCount = ((Long) criteria.list().get(0)).intValue();
 
-    Criteria adminCrit = session.createCriteria(User.class);
+    Criteria adminCrit = HSess.get().createCriteria(User.class);
     adminCrit.setProjection(Projections.rowCount());
     adminCrit.add(Restrictions.eq("accountDisabled", false));
     adminCrit.add(Restrictions.eq("administrator", true));
@@ -768,6 +767,7 @@ public class AbstractMmowgliControllerHelper
     countWin.setPositionX(0);
     countWin.setPositionY(0);
   }
+  
   private Component makeHL(String s, int num)
   {
     HorizontalLayout hl = new HorizontalLayout();
