@@ -47,6 +47,7 @@ import edu.nps.moves.mmowgli.components.AppMenuBar;
 import edu.nps.moves.mmowgli.db.Game;
 import edu.nps.moves.mmowgli.db.User;
 import edu.nps.moves.mmowgli.hibernate.HSess;
+import edu.nps.moves.mmowgli.markers.HibernateUserRead;
 import edu.nps.moves.mmowgli.messaging.MessagingManager2;
 import edu.nps.moves.mmowgli.messaging.WantsGameUpdates;
 import edu.nps.moves.mmowgli.modules.scoring.ScoreManager2;
@@ -228,6 +229,7 @@ public class MmowgliSessionGlobals implements Serializable, WantsGameUpdates
     userName = u.getUserName();    
   }
   
+  @HibernateUserRead
   public void setUserIDTL(Object userOrUserId)
   {
   	User me;
@@ -250,6 +252,7 @@ public class MmowgliSessionGlobals implements Serializable, WantsGameUpdates
     return userId;
   }
   
+  @HibernateUserRead
   public User getUserTL()
   {
     MSysOut.println(DEBUG_LOGS,"User.getTL() in MmowgliSessionGlobals.getUserTL()");
