@@ -157,27 +157,26 @@ public class SearchManager
   {
 	  // Message type tags are defined in ApplicationConstants. C=new card, U = new user,
 	  // u = modified user. Right now we index cards and users.
-    Session session = HSess.get();
 	  switch(messageType)
 	  {
 	  	case NEW_CARD: //C':
 	  		Long cardId = MMessage.MMParse(messageType,message).id;
 	  		Card aCard = Card.getTL(cardId);
-		    SearchManager.indexHibernateObject(aCard, session);
+		    SearchManager.indexHibernateObject(aCard, HSess.get());
 		    break;
 		 
 	  	case NEW_USER: //'U':
 	  	case UPDATED_USER: //'u':
 	  	  Long userId = MMessage.MMParse(messageType,message).id; 
 	  		User aUser = User.getTL(userId);
-	  		SearchManager.indexHibernateObject(aUser, session);
+	  		SearchManager.indexHibernateObject(aUser, HSess.get());
 	  		break;
 	  		
 	  	case NEW_ACTIONPLAN:
 	  	case UPDATED_ACTIONPLAN:
 	  	  Long apId = MMessage.MMParse(messageType,message).id; 
 	  	  ActionPlan ap = ActionPlan.getTL(apId);
-	  	  SearchManager.indexHibernateObject(ap, session);
+	  	  SearchManager.indexHibernateObject(ap, HSess.get());
 	  	  break;
   	
 		default:
