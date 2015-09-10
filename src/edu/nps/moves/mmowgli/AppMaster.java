@@ -498,19 +498,18 @@ public class AppMaster
   public void handleMoveSwitchScoring()
   {
     HSess.init();
-    Session sess = HSess.get();
 
-    Game game = (Game) sess.get(Game.class, 1L);
+    Game game = (Game) HSess.get().get(Game.class, 1L);
     if (game.getCurrentMove().getNumber() != game.getLastMove().getNumber()) {
       MSysOut.println(SYSTEM_LOGS, "AppMaster setting up user points for new move number " + game.getCurrentMove().getNumber());
-      List<User> users = (List<User>) sess.createCriteria(User.class).list();
+      List<User> users = (List<User>) HSess.get().createCriteria(User.class).list();
       for (User u : users) {
-        u.setBasicScoreOnly(ScoreManager2.getBasicPointsFromCurrentMove(u, sess)); // needed for table sorting
-        u.setInnovationScoreOnly(ScoreManager2.getInnovPointsFromCurrentMove(u, sess));
-        sess.update(u);
+        u.setBasicScoreOnly(ScoreManager2.getBasicPointsFromCurrentMove(u, HSess.get())); // needed for table sorting
+        u.setInnovationScoreOnly(ScoreManager2.getInnovPointsFromCurrentMove(u, HSess.get()));
+        HSess.get().update(u);
       }
       game.setLastMove(game.getCurrentMove());
-      sess.update(game);
+      HSess.get().update(game);
     }
     HSess.close();
   }
