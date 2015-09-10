@@ -210,6 +210,13 @@ public class User implements Serializable
     return u;
   }
 
+  public static User getLockedTL(Object id)
+  {
+    User u = DB.getLockedTL(User.class, id);
+    MSysOut.println(HIBERNATE_SESSION_LOGS,"User.getLockedTL() id="+id+" revis="+u.getRevision());
+    return u;    
+  }
+  
   public static void saveTL(User u)
   {
     DB.saveTL(u);

@@ -110,6 +110,11 @@ public class Card implements Serializable
     return DB.getTL(Card.class, id);
   }
   
+  public static Card getLockedTL(Object id)
+  {
+    return DB.getLockedTL(Card.class, id);
+  }
+  
   public static Card getRevisionTL(Object id, long revision)
   {
     return DB.getRevisionTL(Card.class, id, revision);
