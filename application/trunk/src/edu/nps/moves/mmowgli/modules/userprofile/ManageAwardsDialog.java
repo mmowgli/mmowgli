@@ -79,7 +79,7 @@ public class ManageAwardsDialog extends Window
     gridLayout.addStyleName("m-headgrid");
     gridLayout.setWidth("100%");
     p.setContent(gridLayout);
-    fillPanelTL();
+    fillPanelTL(u);  //@HibernateUserRead
     
     HorizontalLayout buttPan = new HorizontalLayout();
     buttPan.setWidth("100%");
@@ -98,7 +98,8 @@ public class ManageAwardsDialog extends Window
   }
 
   private ArrayList<AwardType> gridList;
-  private void fillPanelTL()
+  @HibernateUserRead
+  private void fillPanelTL(User u)
   {
     @SuppressWarnings("unchecked")
     List<AwardType> typs = (List<AwardType>)HSess.get().createCriteria(AwardType.class).list();
@@ -110,7 +111,7 @@ public class ManageAwardsDialog extends Window
     gridLayout.setSpacing(true);
     gridLayout.setColumnExpandRatio(2, 0.5f);
     gridLayout.setColumnExpandRatio(3, 0.5f);
-    User u = User.getTL(uId);
+
     Set<Award> uAwards = u.getAwards();
     MediaLocator mediaLoc = Mmowgli2UI.getGlobals().getMediaLocator();
     for(AwardType at: typs) {
@@ -155,6 +156,8 @@ public class ManageAwardsDialog extends Window
     @MmowgliCodeEntry
     @HibernateOpened
     @HibernateClosed
+    @HibernateUpdate
+    @HibernateUserUpdate
     @Override
     public void buttonClick(ClickEvent event)
     {
