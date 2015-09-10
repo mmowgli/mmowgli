@@ -31,9 +31,13 @@ import java.util.regex.Pattern;
 
 import org.hibernate.Session;
 
-import edu.nps.moves.mmowgli.db.*;
+import edu.nps.moves.mmowgli.db.ActionPlan;
+import edu.nps.moves.mmowgli.db.Card;
+import edu.nps.moves.mmowgli.db.Game;
 import edu.nps.moves.mmowgli.db.Game.RegexPair;
+import edu.nps.moves.mmowgli.db.User;
 import edu.nps.moves.mmowgli.hibernate.HSess;
+import edu.nps.moves.mmowgli.markers.HibernateUserRead;
 
 /**
  * MmowgliLinkInserter.java
@@ -117,7 +121,7 @@ public class MmowgliLinkInserter
    * @param s original
    * @return replaced
    */
-  
+  @HibernateUserRead
   public static String insertUserName_oobTL(String s)
   {
     StringBuilder sb = null;
