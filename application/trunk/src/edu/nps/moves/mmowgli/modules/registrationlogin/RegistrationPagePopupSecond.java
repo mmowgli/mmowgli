@@ -33,8 +33,9 @@ import edu.nps.moves.mmowgli.components.MmowgliDialog;
 import edu.nps.moves.mmowgli.db.Affiliation;
 import edu.nps.moves.mmowgli.db.User;
 import edu.nps.moves.mmowgli.hibernate.HSess;
+import edu.nps.moves.mmowgli.markers.HibernateUpdate;
+import edu.nps.moves.mmowgli.markers.HibernateUserUpdate;
 import edu.nps.moves.mmowgli.utility.MiscellaneousMmowgliTimer.MSysOut;
-
 import static edu.nps.moves.mmowgli.MmowgliConstants.NEWUSER_CREATION_LOGS;
 
 /**
@@ -125,6 +126,8 @@ public class RegistrationPagePopupSecond extends MmowgliDialog
   class JoinListener implements ClickListener
   {
     @Override
+    @HibernateUpdate
+    @HibernateUserUpdate
     public void buttonClick(ClickEvent event)
     {
       HSess.init();
