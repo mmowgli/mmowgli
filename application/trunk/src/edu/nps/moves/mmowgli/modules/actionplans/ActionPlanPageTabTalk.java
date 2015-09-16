@@ -52,6 +52,8 @@ import edu.nps.moves.mmowgli.modules.cards.EditCardTextWindow;
 import edu.nps.moves.mmowgli.modules.gamemaster.GameEventLogger;
 import edu.nps.moves.mmowgli.utility.MmowgliLinkInserter;
 
+import static edu.nps.moves.mmowgli.MmowgliConstants.*;
+
 /**
  * ActionPlanPageTabTalk.java
  * Created on Feb 8, 2011
@@ -435,6 +437,7 @@ public class ActionPlanPageTabTalk extends ActionPlanPageTabPanel implements/* C
     chatTextField.setRows(3);
     chatTextField.setWordwrap(true);
     chatTextField.setInputPrompt("Type here to chat, RETURN submits");
+    chatTextField.setId(ACTIONPLAN_TALK_IT_OVER_TEXT_BOX);
     hl.addComponent(chatTextField);
     chatTextField.setWidth("99%");
     hl.setExpandRatio(chatTextField, 1.0f);
@@ -445,6 +448,7 @@ public class ActionPlanPageTabTalk extends ActionPlanPageTabPanel implements/* C
     hl.addComponent(chatSubmitButt);
     chatSubmitButt.addClickListener(new ChatButtonListener());
     chatSubmitButt.setEnabled(!isReadOnly);
+    chatSubmitButt.setId(ACTIONPLAN_TALK_IT_OVER_SUBMIT_BUTTON);
     return hl;
   }
   
