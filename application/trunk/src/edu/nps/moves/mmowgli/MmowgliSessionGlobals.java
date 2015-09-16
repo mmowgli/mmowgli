@@ -259,6 +259,13 @@ public class MmowgliSessionGlobals implements Serializable, WantsGameUpdates
     return User.getTL(getUserID());
   }
   
+  @HibernateUserRead
+  public User getUserLockedTL()
+  {
+    MSysOut.println(DEBUG_LOGS,"User.getTL() in MmowgliSessionGlobals.getUserTL()");
+    return User.getLockedTL(getUserID());
+  }
+  
   public String getUserName()
   {
     return userName;
