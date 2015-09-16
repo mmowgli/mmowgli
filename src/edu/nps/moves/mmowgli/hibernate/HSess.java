@@ -22,12 +22,9 @@
 
 package edu.nps.moves.mmowgli.hibernate;
 
-import static edu.nps.moves.mmowgli.MmowgliConstants.ERROR_LOGS;
-import static edu.nps.moves.mmowgli.MmowgliConstants.HIBERNATE_LOGS;
-import static edu.nps.moves.mmowgli.MmowgliConstants.HIBERNATE_TRANSACTION_TIMEOUT_IN_SECONDS;
+import static edu.nps.moves.mmowgli.MmowgliConstants.*;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import org.hibernate.*;
 
@@ -55,8 +52,43 @@ public class HSess
   private static final ThreadLocal<StackTraceElement[]> dbgThreadLocal = new ThreadLocal<StackTraceElement[]>();
   private static final ThreadLocal<ArrayList<MMessagePacket>> msgs = new ThreadLocal<ArrayList<MMessagePacket>>();
   
+  // Debug 11 Sep 2015
+  
+  private static final ThreadLocal<HashSet<String>> setTL = new ThreadLocal<HashSet<String>>();
+  private static void initSetDbugTL()
+  {
+    setTL.set(new HashSet<String>());
+  }
+  public static void addToDbugSetTL(String s, long id)
+  {
+    setTL.get().add(s+id);
+  }
+  
+  public static void checkInDbugSetTL(String s, long id)
+  {
+    if(setTL.get().contains(s+id)) {
+      System.out.println("*********** >>>>>>>>>>>> Found bug! <<<<<<<<<<< ************");
+      StackTraceElement[] stes = Thread.currentThread().getStackTrace();
+      for (StackTraceElement elem : stes)
+        System.out.println(elem.toString());
+      System.out.println("*********** end of bug trace **************");
+    }
+  }
+  
+  public static void clearDbugSet()
+  {
+    setTL.get().clear();
+  }
+  
+  // End debug
+  
+  
+  
+  
+  
   private static void set(Session sess)
   {
+    initSetDbugTL(); //debug
     threadLocal.set(sess);
     dbgThreadLocal.set(Thread.currentThread().getStackTrace());
     msgs.set(new ArrayList<MMessagePacket>());
@@ -64,6 +96,7 @@ public class HSess
   
   private static void unset()
   {
+    clearDbugSet(); //debug
     threadLocal.remove();
     unsetDBEvents();
   }
