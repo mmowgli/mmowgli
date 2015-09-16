@@ -104,24 +104,28 @@ public class Card implements Serializable
   {
     return DB.getContainer(Card.class);
   }
-
+  
   public static Card getTL(Object id)
   {
+    HSess.checkInDbugSetTL("Card", (long)id); // debug
     return DB.getTL(Card.class, id);
   }
   
   public static Card getLockedTL(Object id)
   {
+    HSess.checkInDbugSetTL("Card", (long)id); // debug
     return DB.getLockedTL(Card.class, id);
   }
   
   public static Card getRevisionTL(Object id, long revision)
   {
+    HSess.checkInDbugSetTL("Card", (long)id); // debug
     return DB.getRevisionTL(Card.class, id, revision);
   }
 
   public static Card get(Object id, Session sess)
   {
+    HSess.checkInDbugSetTL("Card", (long)id); // debug
     return DB.get(Card.class, id, sess);
   }
   
@@ -139,12 +143,13 @@ public class Card implements Serializable
   {
     c.incrementRevision();
     DB.updateTL(c);
+    HSess.addToDbugSetTL("Card", c.getId());  //debug
     MSysOut.println(CARD_UPDATE_LOGS,"Card.updateTL() back from sess.update card "+c.getId()+" with text: "+c.getText()+" hidden = "+c.isHidden());
   }
  
   public static void saveTL(Card c)
   {
-    DB.saveTL(c);;
+    DB.saveTL(c);
     MSysOut.println(CARD_UPDATE_LOGS,"Card.saveTL() back from sess.save card "+c.getId()+" with text: "+c.getText());
   }
 
