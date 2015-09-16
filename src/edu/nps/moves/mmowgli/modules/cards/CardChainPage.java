@@ -267,13 +267,13 @@ public class CardChainPage extends VerticalLayout implements MmowgliComponent,Ne
       MmowgliSessionGlobals globs = Mmowgli2UI.getGlobals();
       Property<?> prop = event.getProperty();
       CardMarking cm = (CardMarking)prop.getValue();
-      Card card = Card.getTL(cardId);
+      Card card = Card.getLockedTL(cardId);
       final User u = Mmowgli2UI.getGlobals().getUserTL();
-    //  card = Card.mergeTL(card);
+      
       if(cm == null) { // markings have been cleared
-        if(card.getMarking()!=null && card.getMarking().size()>0) {
+        if(card.getMarking().size()>0) {
           globs.getScoreManager().cardMarkingWillBeClearedTL(card);   // call this before hitting db
-          HashSet<CardMarking> mset = new HashSet<>(card.getMarking());
+          HashSet<CardMarking> mset = new HashSet<>(card.getMarking());  // for log
           card.getMarking().clear();
           card.setHidden(false);
           Card.updateTL(card);
@@ -298,7 +298,7 @@ public class CardChainPage extends VerticalLayout implements MmowgliComponent,Ne
                     HSess.init();
                     CardMarking cmm = (CardMarking)event.getProperty().getValue();
                     HSess.get().refresh(cmm);
-                    Card c= Card.getTL(cardId);
+                    Card c= Card.getLockedTL(cardId);
                     setMarkingsTL(c,cmm);
                     hideAllChildrenTL(c);  // does the Card.update
                     GameEventLogger.cardMarkedTL(c,u,null);
@@ -408,7 +408,7 @@ public class CardChainPage extends VerticalLayout implements MmowgliComponent,Ne
       EditCardTextWindow w = (EditCardTextWindow)e.getWindow();
       if(w.results != null) {
         HSess.init();
-        Card c = Card.getTL(cardId);
+        Card c = Card.getLockedTL(cardId);
         c.setText(w.results);
         MSysOut.println(MmowgliConstants.CARD_UPDATE_LOGS,"CardChainPage.EditCardCloseListener.windowClose() updating card text to '"+w.results+"'");
         Card.updateTL(c);
@@ -692,22 +692,26 @@ public class CardChainPage extends VerticalLayout implements MmowgliComponent,Ne
     if(parent.isHidden())  // hidden parents produce hidden children
       markHidden(c);
     
+    // Optimized from below
+    parent.getFollowOns().add(c);
+    
+    /*
     SortedSet<Card> set = parent.getFollowOns();
-
-    if(set == null)  // I don't think this happens
-      set = new TreeSet<Card>(new Card.DateDescComparator());
+    // not required for sure if(set == null)  // I don't think this happens
+    //  set = new TreeSet<Card>(new Card.DateDescComparator());
     set.add(c);   
-    parent.setFollowOns(set);  // and I don't think this is required
+    // test parent.setFollowOns(set);  // and I don't think this is required
+    */
     
     // If the set has only one card, that's the one we added, so he had no children before.  We want to send an email
     // to the parent author saying that the first followon was played on his card.  But we only do that once -- each player
     // only gets one of this type of email.  Checked-for in mailmanager.
-    if(set.size() == 1) {      
+    if(parent.getFollowOns().size() == 1) {      
       AppMaster.instance().getMailManager().firstChildPlayedTL(parent,c);
     }
       
     // Now it used to be that we'd wait for the update listener, then fill out our list all over
-    // Trying to optimize so we stick the new one on the top of the list and don' bother updateing ourselves
+    // Trying to optimize so we stick the new one on the top of the list and don't bother updating ourselves
     // if the new card is already there.
     Card.updateTL(parent);
    
