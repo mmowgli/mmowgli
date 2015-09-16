@@ -49,8 +49,8 @@ import edu.nps.moves.mmowgli.utility.MiscellaneousMmowgliTimer.MSysOut;
 
 public class DB
 {
-  static int RETRY_COUNT = 20;
-  static long RETRY_SLEEP = 500;
+  static int RETRY_COUNT = 1; //20;
+  static long RETRY_SLEEP = 0; //500;
   
   public static void updateTL(Object obj)
   {
@@ -81,6 +81,11 @@ public class DB
     return getLocked(cls,id,HSess.get());
   }
   
+  public static Object loadLockedTL(Class<?> cls, Object id)
+  {
+    return loadLocked(cls,id,HSess.get());
+  }
+  
   public static <T> T get(Class<T> cls, Object id, Session sess)
   {
     return getCommon(cls,id,null,sess);
@@ -97,7 +102,10 @@ public class DB
   {
     return (T)sess.get(cls, (Serializable)id, getLock);
   }
-    
+  public static Object loadLocked(Class<?> cls, Object id, Session sess)
+  {
+    return sess.load(cls, (Serializable)id, getLock);
+  }
   public static <T> T getRevisionTL(Class<T> cls, Object id, Long revision)
   {
     return getCommon(cls,id,revision,HSess.get());
@@ -168,6 +176,32 @@ public class DB
   public static <T> T getRetry(Class<T> cls, Object id, Long revision, Session sess)
   //---------------------------------------------------------------------------------
   {
+    for (int i = 0; i < RETRY_COUNT; i++) {
+      //MSysOut.println(HIBERNATE_LOGS, ""+i+" Top of DB.getRetry() loop class: "+cls.getSimpleName()+" id; "+id.toString()+" rev: "+revision);
+      Criteria crit = sess.createCriteria(cls).add(Restrictions.eq("id", id));
+      List<T> list = crit.list();
+
+      if(list.size()>0){
+        if(revision == null || getRevision(list.get(0)) >= revision) {
+          if (i > 0)
+            MSysOut.println(HIBERNATE_LOGS,"DB.getRetry() delayed versioned fetch of " + cls.getSimpleName() + " id: "+id.toString()+" got it on try " + (i+1));
+          return (T)list.get(0);
+        }
+      sleep(RETRY_SLEEP);
+      }
+    } 
+    
+    MSysOut.println(ERROR_LOGS,"******** DB.getRetry() couldn't get " + cls.getSimpleName() + " " + id + " rev: "+revision);
+    //MSysOut.println(ERROR_LOGS,"Stack trace follows (no Exception generated)");
+    //MSysOut.dumpStack(ERROR_LOGS);
+
+    return null;
+  }
+ /*  
+  @SuppressWarnings("unchecked")
+  public static <T> T getRetryOld(Class<T> cls, Object id, Long revision, Session sess)
+  //---------------------------------------------------------------------------------
+  {
     Session ss = VHib.openSession();
     for (int i = 0; i < RETRY_COUNT; i++) {
       //MSysOut.println(HIBERNATE_LOGS, ""+i+" Top of DB.getRetry() loop class: "+cls.getSimpleName()+" id; "+id.toString()+" rev: "+revision);
@@ -198,7 +232,7 @@ public class DB
     MSysOut.dumpStack(ERROR_LOGS);
     return null;
   }
-   
+ */  
   private static void sleep(long msec)
   {
     try {
