@@ -581,7 +581,7 @@ public class ActionPlanPageCommentPanel2 extends Panel implements MmowgliCompone
         }
         if (len > 0) {
           MmowgliSessionGlobals globs = Mmowgli2UI.getGlobals();
-          User me = globs.getUserTL();
+          User me = globs.getUserLockedTL();  // going to update score
           Message m = new Message(s,me);
           Message.saveTL(m);
           ActionPlan actPln = ActionPlan.getTL(apId);
