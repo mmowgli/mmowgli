@@ -28,13 +28,16 @@ import java.util.Map;
 import java.util.Set;
 
 import org.hibernate.Session;
+import org.hibernate.proxy.HibernateProxy;
 
 import edu.nps.moves.mmowgli.Mmowgli2UI;
 import edu.nps.moves.mmowgli.db.*;
+import edu.nps.moves.mmowgli.hibernate.HSess;
 import edu.nps.moves.mmowgli.markers.HibernateUpdate;
 import edu.nps.moves.mmowgli.markers.HibernateUserUpdate;
 import edu.nps.moves.mmowgli.modules.cards.CardMarkingManager;
 import edu.nps.moves.mmowgli.utility.MiscellaneousMmowgliTimer.MSysOut;
+import edu.nps.moves.mmowgli.utility.SerialExecutor;
 /**
  * ScoreManager2.java
  * Created on Aug 8, 2013
@@ -88,8 +91,7 @@ public class ScoreManager2
     refreshScoringParametersTL();
     
     awardCardAuthorPointsTL(newCard);
-    awardCardAncestorPointsTL(newCard); /**/
-    
+    awardCardAncestorPointsTLNew(newCard); /**/    
   }
   
   // Called when the card marking is about to be removed.  This concerns us (Score mgr) if the card was previously super-interesting
@@ -161,7 +163,8 @@ public class ScoreManager2
     actionPlanNewAuthorCommentPointsTL(usr,ap);
     actionPlanNewAuthorThumbPointsTL(usr,ap);
   }
-    
+  
+  /* The message object contains an author object which has been locked */
   // C
   @HibernateUserUpdate
   @HibernateUpdate
@@ -172,7 +175,7 @@ public class ScoreManager2
     MSysOut.println(SCOREMANAGER_LOGS,marker+"ScoreManager2.actionPlanCommentEntered()");
     refreshScoringParametersTL();
     User writer = comment.getFromUser();
-    writer = User.mergeTL(writer);
+    // alread in session writer = User.mergeTL(writer);
     incrementInnovationScoreTL(writer, userActionPlanCommentPoints);
     User.updateTL(writer);
 
@@ -370,12 +373,12 @@ public class ScoreManager2
     return true;
   }
   
+  /* User has been locked */
   private User incrementInnovationScoreTL(User u, float f)
   {
-    User author = User.getTL(u.getId()); //DBGet.getUserFresh(u.getId());
-    float pts = Math.max(author.getInnovationScore()+f, 0.0f);
-    author.mmowgliSetInnovationScoreTL(pts); 
-    return author;
+    float pts = Math.max(u.getInnovationScore()+f, 0.0f);
+    u.mmowgliSetInnovationScoreTL(pts); 
+    return u;
   }
 
   // This call updates User objects in db /**/
@@ -397,26 +400,28 @@ public class ScoreManager2
   {    
     float authorPoints = cardAuthorPoints * factor;
     if(authorPoints != 0.0f) {
-      User u = incrementBasicScoreTL(newCard.getAuthor(),authorPoints);
-      User.updateTL(u);
+      User author = User.getLockedTL(newCard.getAuthor().getId()); // lock it
+      incrementBasicScoreTL(author,authorPoints);
+      User.updateTL(author);
     }
   }
   
-  private User incrementBasicScoreTL(User u, float f)
+  // Assume that this user is current in session
+  private User incrementBasicScoreTL(User author, float f)
   {
-    User author = User.getTL(u.getId()); //DBGet.getUserFresh(u.getId());
     float pts = Math.max(author.getBasicScore()+f, 0.0f); // never negative
     author.mmowgliSetBasicScoreTL(pts);
     return author;
   }
-  
+ /* 
   private User incrementBasicScoreTL(long userid, float f)
   {
     User u = User.getLockedTL(userid);    // could be many accesses at once
     return incrementBasicScoreTL(u,f); //User.getTL(userid),f); //DBGet.getUserFresh(userid),f);
   }
-  
-  private void awardCardAncestorPointsTL(Card c)  /**/
+ */
+  /*
+  private void awardCardAncestorPointsTL(Card c)
   {
     if(cardAncestorPoints == 0.0f)
       return;
@@ -430,7 +435,51 @@ public class ScoreManager2
         if(CardMarkingManager.isHidden(c))// || CardMarkingManager.isScenarioFail(c))
           ;
         else
-          awardCardAncestorPointsTL(aId, cardAncestorPoints*ancestorFactors[level]);  
+          awardCardAncestorPointsTL(c.getAuthor(), cardAncestorPoints*ancestorFactors[level]);  
+      }
+      level++;
+    }  
+  }
+  */
+  private void awardCardAncestorPointsTLSynched(Card c)  /**/
+  {
+    if(cardAncestorPoints == 0.0f)
+      return;
+    int numGens = ancestorFactors.length;
+    long authorId = c.getAuthor().getId();   
+    
+    int level = 0;
+    while((c = c.getParentCard()) != null && level < numGens) {
+      c = Card.mergeTL(c);
+      long aId =(long)c.getAuthor().getId();
+      if(aId != authorId) {  // can't earn points from your own card
+        if(CardMarkingManager.isHidden(c))// || CardMarkingManager.isScenarioFail(c))
+          ;
+        else
+          awardCardAncestorPointsTLSynched(c.getAuthor().getId(), cardAncestorPoints*ancestorFactors[level]);  
+      }
+      level++;
+    }  
+  }
+  
+ 
+  
+ /* 
+  private void oldawardCardAncestorPointsTL(Card c)  ////
+  {
+    if(cardAncestorPoints == 0.0f)
+      return;
+    int numGens = ancestorFactors.length;
+    long authorId = c.getAuthor().getId();   
+    
+    int level = 0;
+    while((c = c.getParentCard()) != null && level < numGens) {
+      long aId =(long)c.getAuthor().getId();
+      if(aId != authorId) {  // can't earn points from your own card
+        if(CardMarkingManager.isHidden(c))// || CardMarkingManager.isScenarioFail(c))
+          ;
+        else
+          oldawardCardAncestorPointsTL(aId, cardAncestorPoints*ancestorFactors[level]);  
       }
       level++;
     }  
@@ -438,10 +487,33 @@ public class ScoreManager2
   
   @HibernateUserUpdate
   @HibernateUpdate
-  private void awardCardAncestorPointsTL(long aId, float points) /**/
+  private void oldawardCardAncestorPointsTL(long aId, float points) ////
   {
     User usr = incrementBasicScoreTL(aId,points);
-    User.updateTL(usr); /**/
+    User.updateTL(usr); ////
+  }
+  */
+  
+  @HibernateUserUpdate
+  @HibernateUpdate
+  private void awardCardAncestorPointsTL(User author, float points) ////
+  {
+    incrementBasicScoreTL(author,points);
+    User.updateTL(author); /**/
+  }
+  
+  private void awardCardAncestorPointsTLSynched(Object userId, float points) ////
+  {
+    // lock it
+    User author = null;
+    Object obj = User.loadLocked(userId);
+    if(obj instanceof HibernateProxy)
+      author = User.getLockedTL(userId);
+    else
+      author = (User)obj;
+    
+    incrementBasicScoreTL(author,points);
+    User.updateTL(author); /**/
   }
   
   private void removeCardSuperInterestingPointsTL(Card c)
@@ -662,5 +734,29 @@ public class ScoreManager2
    }
  }
 */ 
-
+ private SerialExecutor ancestorScorer = new SerialExecutor();
+ private void awardCardAncestorPointsTLNew(Card c)
+ {
+   ancestorScorer.execute(new ScoreRunner(c));
+ }
+ public static final long SCORERUNNERSLEEP = 250L;
+ 
+ class ScoreRunner implements Runnable
+ {
+   Card c;
+   ScoreRunner(Card c)
+   {
+     this.c = c;
+   }
+  @Override
+  public void run()
+  {
+    try{Thread.sleep(SCORERUNNERSLEEP);}catch(InterruptedException ex){}
+    
+    HSess.init();
+    c = Card.mergeTL(c);
+    awardCardAncestorPointsTLSynched(c); 
+    HSess.close();
+  }
+ }
 }
