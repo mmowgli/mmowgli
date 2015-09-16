@@ -338,8 +338,14 @@ public class MmowgliConstants
   public static String USER_NAME_TEXTBOX = "user_name_textbox";
   public static String USER_PASSWORD_TEXTBOX = "user_password_textbox";
   public static String PLAY_AN_IDEA_BLUE_BUTTON = "play_an_idea_blue_button";
+  public static String TAKE_ACTION_ORANGE_BUTTON = "take_action_orange_button";
   public static String GO_TO_IDEA_DASHBOARD_BUTTON = "go_to_idea_dashboard_button";
+  public static String ACTION_DASHBOARD_ACTION_PLANS_TAB = "action_dashboard_action_plans_tab";
+  public static String ACTION_DASHBOARD_MY_ACTION_PLANS_TAB = "action_dashboard_my_action_plans_tab";
+  public static String ACTION_DASHBOARD_NEED_AUTHORS_TAB = "action_dashboard_need_authors_tab";
+  
   public static String ACTIONPLAN_TABLE_TITLE_CELL = "action_plan_table_title_cell";
+  public static String ACTIONPLAN_VIEW_CARD_CHAIN_BUTTON = "action_plan_view_card_chain_button";
   public static String ACTIONPLAN_TAB_THEPLAN = "action_plan_tab_theplan";
   public static String ACTIONPLAN_TAB_TALK = "action_plan_tab_talk";
   public static String ACTIONPLAN_TAB_IMAGES = "action_plan_tab_images";
@@ -350,6 +356,8 @@ public class MmowgliConstants
   public static String ACTIONPLAN_TAB_THEPLAN_TAKE = "action_plan_tab_theplan_take";
   public static String ACTIONPLAN_TAB_THEPLAN_WORK = "action_plan_tab_theplan_work";
   public static String ACTIONPLAN_TAB_THEPLAN_CHANGE = "action_plan_tab_theplan_change";
+  public static String ACTIONPLAN_TALK_IT_OVER_TEXT_BOX = "action_plan_talk_it_over_text_box";
+  public static String ACTIONPLAN_TALK_IT_OVER_SUBMIT_BUTTON = "action_plan_talk_it_over_submit_button";
   public static String LOGIN_CONTINUE_BUTTON = "login_continue_button";
   public static String SIGNOUT_BUTTON = "signout_button";
   
