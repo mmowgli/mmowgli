@@ -38,6 +38,7 @@ import org.hibernate.search.annotations.*;
 import org.jasypt.hibernate4.type.EncryptedStringType;
 
 import edu.nps.moves.mmowgli.hibernate.DB;
+import edu.nps.moves.mmowgli.hibernate.HSess;
 import edu.nps.moves.mmowgli.utility.MiscellaneousMmowgliTimer.MSysOut;
 import static edu.nps.moves.mmowgli.MmowgliConstants.*;
 
@@ -179,6 +180,7 @@ public class User implements Serializable
   {
     u.incrementRevision();
     DB.updateTL(u);
+    HSess.addToDbugSetTL("User", u.getId()); // debug
     MSysOut.println(HIBERNATE_SESSION_LOGS,"User.updateTL() id/newrev="+u.getId()+"/"+u.getRevision());
   }
   
@@ -198,6 +200,7 @@ public class User implements Serializable
 
   public static User get(Object id, Session sess)
   {
+    HSess.checkInDbugSetTL("User", (long)id); // debug
     User u = DB.get(User.class, id, sess);
     MSysOut.println(HIBERNATE_SESSION_LOGS,"User.get() id="+id+" revis="+u.getRevision());
     return u;
@@ -205,6 +208,7 @@ public class User implements Serializable
   
   public static User getTL(Object id)
   {
+    HSess.checkInDbugSetTL("User", (long)id); // debug
     User u = DB.getTL(User.class, id);
     MSysOut.println(HIBERNATE_SESSION_LOGS,"User.getTL() id="+id+" revis="+u.getRevision());
     return u;
@@ -212,9 +216,17 @@ public class User implements Serializable
 
   public static User getLockedTL(Object id)
   {
+    HSess.checkInDbugSetTL("User", (long)id); // debug
     User u = DB.getLockedTL(User.class, id);
     MSysOut.println(HIBERNATE_SESSION_LOGS,"User.getLockedTL() id="+id+" revis="+u.getRevision());
     return u;    
+  }
+  
+  public static Object loadLocked(Object id)
+  {
+    Object o = DB.loadLockedTL(User.class,id);
+    MSysOut.println(HIBERNATE_SESSION_LOGS,"User.loadLockedTL() id="+id);
+    return o;
   }
   
   public static void saveTL(User u)
