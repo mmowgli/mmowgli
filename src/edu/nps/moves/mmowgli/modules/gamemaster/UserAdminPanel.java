@@ -906,6 +906,7 @@ public class UserAdminPanel extends VerticalLayout implements MmowgliComponent, 
         @SuppressWarnings("unchecked")
         List<Card> cardList = (List<Card>)HSess.get().createCriteria(Card.class)
                               .add(Restrictions.eq("author", user)).list();
+        // Perhaps we'd like to lock the cards for update, but I can't figure out how using the createCriteria get
         for(Card c : cardList) {
           c.setAuthorName(newUname);  // It already has my name, but holding the author name in the card is an optimization
           Card.updateTL(c);
