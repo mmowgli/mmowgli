@@ -36,27 +36,20 @@ import org.hibernate.Session;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.event.MouseEvents;
-import com.vaadin.server.ExternalResource;
-import com.vaadin.server.Page;
-import com.vaadin.server.Resource;
+import com.vaadin.server.*;
 import com.vaadin.shared.Position;
 import com.vaadin.ui.*;
 import com.vaadin.ui.AbstractTextField.TextChangeEventMode;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 
-import edu.nps.moves.mmowgli.Mmowgli2UI;
-import edu.nps.moves.mmowgli.MmowgliController;
-import edu.nps.moves.mmowgli.MmowgliEvent;
+import edu.nps.moves.mmowgli.*;
 import edu.nps.moves.mmowgli.db.*;
 import edu.nps.moves.mmowgli.hibernate.DB;
 import edu.nps.moves.mmowgli.hibernate.HSess;
 import edu.nps.moves.mmowgli.markers.*;
-import edu.nps.moves.mmowgli.messaging.WantsGameEventUpdates;
-import edu.nps.moves.mmowgli.messaging.WantsGameUpdates;
-import edu.nps.moves.mmowgli.messaging.WantsMoveUpdates;
-import edu.nps.moves.mmowgli.utility.IDNativeButton;
-import edu.nps.moves.mmowgli.utility.MediaLocator;
+import edu.nps.moves.mmowgli.messaging.*;
+import edu.nps.moves.mmowgli.utility.*;
 import edu.nps.moves.mmowgli.utility.MiscellaneousMmowgliTimer.MSysOut;
 
 /**
@@ -507,6 +500,7 @@ public class Header extends AbsoluteLayout implements MmowgliComponent, WantsGam
   {
     IDNativeButton butt = new IDNativeButton(null,TAKEACTIONCLICK);
     butt.setStyleName("m-takeActionButton");
+    butt.setId(TAKE_ACTION_ORANGE_BUTTON);
     return butt;
   }
   
