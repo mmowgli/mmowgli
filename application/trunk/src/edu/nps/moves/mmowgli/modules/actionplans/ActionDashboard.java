@@ -153,6 +153,7 @@ public class ActionDashboard extends VerticalLayout implements MmowgliComponent,
     TabClickHandler  tabHndlr = new TabClickHandler();
     actionPlansTabButt.setStyleName("m-actionDashboardActionPlansTab");
     actionPlansTabButt.addClickListener(tabHndlr);
+    actionPlansTabButt.setId(ACTION_DASHBOARD_ACTION_PLANS_TAB);
     tabsHL.addComponent(actionPlansTabButt);
     
     tabsHL.addComponent(sp=new Label());
@@ -160,6 +161,7 @@ public class ActionDashboard extends VerticalLayout implements MmowgliComponent,
         
     myPlansTabButt.setStyleName("m-actionDashboardMyPlansTab");
     myPlansTabButt.addClickListener(tabHndlr);
+    myPlansTabButt.setId(ACTION_DASHBOARD_MY_ACTION_PLANS_TAB);
     tabsHL.addComponent(myPlansTabButt);
     myPlansTabButt.addStyleName("m-transparent-background"); // initially
     
@@ -168,6 +170,7 @@ public class ActionDashboard extends VerticalLayout implements MmowgliComponent,
     
     needAuthorsTabButt.setStyleName("m-actionDashboardNeedAuthorsTab");
     needAuthorsTabButt.addClickListener(tabHndlr);
+    needAuthorsTabButt.setId(ACTION_DASHBOARD_NEED_AUTHORS_TAB);
     tabsHL.addComponent(needAuthorsTabButt);
     needAuthorsTabButt.addStyleName("m-transparent-background"); // initially
     
