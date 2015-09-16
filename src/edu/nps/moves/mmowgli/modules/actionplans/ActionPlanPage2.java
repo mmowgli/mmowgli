@@ -423,7 +423,7 @@ public class ActionPlanPage2 extends AbsoluteLayout implements MmowgliComponent,
     addComponent(viewChainButt, "left:690px;top:140px");
     viewChainButt.setStyleName("m-viewCardChainButton");
     viewChainButt.addClickListener(new ViewCardChainHandler());
-
+    viewChainButt.setId(ACTIONPLAN_VIEW_CARD_CHAIN_BUTTON);
     // This guy sits on the bottom naw, gets covered
     // author list and rfe
     VerticalLayout rightVL = new VerticalLayout();
