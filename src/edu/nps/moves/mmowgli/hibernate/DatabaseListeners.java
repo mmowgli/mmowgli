@@ -163,7 +163,7 @@ public class DatabaseListeners
     @Override
     public void onSaveOrUpdate(SaveOrUpdateEvent event) throws HibernateException
     {
-      MSysOut.println(myLogLevel,"Update db listener "+(enabled?"":"(unused) ") +event.getEntity().getClass().getSimpleName()+" session = "+event.getSession().hashCode());
+      MSysOut.println(myLogLevel,"Update db listener "+(enabled?"":"(unused) ") +event.getEntity().getClass().getSimpleName()+getid(event.getObject())+" session = "+event.getSession().hashCode());
  
       super.onSaveOrUpdate(event); // default behavior first      
       if(!enabled)
@@ -323,5 +323,16 @@ public class DatabaseListeners
       HSess.queueDBMessage(mmp);
     else
       AppMaster.instance().incomingDatabaseEvent(mmp);
+  }
+  
+  private String getid(Object obj)
+  {
+    if (obj instanceof Card) 
+      return " "+((Card)obj).getId();
+    else if (obj instanceof User) 
+      return " "+((User)obj).getId();
+    else if (obj instanceof ActionPlan) 
+      return " "+((ActionPlan)obj).getId();
+    return "";
   }
 }
