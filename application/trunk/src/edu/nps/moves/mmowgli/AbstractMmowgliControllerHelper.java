@@ -434,8 +434,7 @@ public class AbstractMmowgliControllerHelper
 
     svrCountWin.setWidth("250px");
     UI.getCurrent().addWindow(svrCountWin);
-    svrCountWin.setPositionX(0);
-    svrCountWin.setPositionY(0);
+    svrCountWin.center();
   }
   
   void handleShowPlayerReport(MenuBar menubar)
@@ -502,8 +501,7 @@ public class AbstractMmowgliControllerHelper
 
     countWin.setWidth("325px");
     UI.getCurrent().addWindow(countWin);
-    countWin.setPositionX(0);
-    countWin.setPositionY(0);    
+    countWin.center();   
   }
   public void handleGMBroadcastAction(MenuBar mbar)
   {
@@ -728,8 +726,7 @@ public class AbstractMmowgliControllerHelper
 
     countWin.setWidth("255px");
     UI.getCurrent().addWindow(countWin);
-    countWin.setPositionX(0);
-    countWin.setPositionY(0);
+    countWin.center();
   }
   
   public void handleShowTotalRegisteredTL(MenuBar mbar)
@@ -764,8 +761,7 @@ public class AbstractMmowgliControllerHelper
 
     countWin.setWidth("415px");
     UI.getCurrent().addWindow(countWin);
-    countWin.setPositionX(0);
-    countWin.setPositionY(0);
+    countWin.center();
   }
   
   private Component makeHL(String s, int num)
@@ -831,8 +827,7 @@ public class AbstractMmowgliControllerHelper
 
     loginWin.setWidth("320px");
     UI.getCurrent().addWindow(loginWin);
-    loginWin.setPositionX(0);
-    loginWin.setPositionY(0);
+    loginWin.center();
 
     @SuppressWarnings("serial")
     ClickListener llis = new ClickListener() {
