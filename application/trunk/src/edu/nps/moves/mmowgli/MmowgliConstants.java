@@ -358,6 +358,10 @@ public class MmowgliConstants
   public static String ACTIONPLAN_TAB_THEPLAN_CHANGE = "action_plan_tab_theplan_change";
   public static String ACTIONPLAN_TALK_IT_OVER_TEXT_BOX = "action_plan_talk_it_over_text_box";
   public static String ACTIONPLAN_TALK_IT_OVER_SUBMIT_BUTTON = "action_plan_talk_it_over_submit_button";
+  public static String ACTIONPLAN_ADD_COMMENT_LINK_BUTTON_TOP = "action_plan_add_comment_link_button_top";
+  public static String ACTIONPLAN_ADD_COMMENT_LINK_BUTTON_BOTTOM = "action_plan_add_comment_link_button_bottom";
+  public static String ACTIONPLAN_COMMENT_TEXTAREA = "action_plan_comment_textarea";
+  public static String ACTIONPLAN_COMMENT_SUBMIT_BUTTON = "action_plan_comment_submit_button";
   public static String LOGIN_CONTINUE_BUTTON = "login_continue_button";
   public static String SIGNOUT_BUTTON = "signout_button";
   
