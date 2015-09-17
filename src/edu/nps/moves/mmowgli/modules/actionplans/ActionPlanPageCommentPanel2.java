@@ -22,8 +22,7 @@
 
 package edu.nps.moves.mmowgli.modules.actionplans;
 
-import static edu.nps.moves.mmowgli.MmowgliConstants.HEADER_AVATAR_H;
-import static edu.nps.moves.mmowgli.MmowgliConstants.HEADER_AVATAR_W;
+import static edu.nps.moves.mmowgli.MmowgliConstants.*;
 
 import java.io.Serializable;
 import java.text.Format;
@@ -45,23 +44,15 @@ import com.vaadin.ui.Window.CloseListener;
 import com.vaadin.ui.themes.BaseTheme;
 import com.vaadin.ui.themes.Reindeer;
 
-import edu.nps.moves.mmowgli.Mmowgli2UI;
-import edu.nps.moves.mmowgli.MmowgliEvent;
-import edu.nps.moves.mmowgli.MmowgliSessionGlobals;
-import edu.nps.moves.mmowgli.components.HtmlLabel;
-import edu.nps.moves.mmowgli.components.MmowgliComponent;
-import edu.nps.moves.mmowgli.components.ToggleLinkButton;
-import edu.nps.moves.mmowgli.db.ActionPlan;
-import edu.nps.moves.mmowgli.db.Message;
-import edu.nps.moves.mmowgli.db.User;
+import edu.nps.moves.mmowgli.*;
+import edu.nps.moves.mmowgli.components.*;
+import edu.nps.moves.mmowgli.db.*;
 import edu.nps.moves.mmowgli.hibernate.HSess;
 import edu.nps.moves.mmowgli.markers.*;
 import edu.nps.moves.mmowgli.messaging.WantsActionPlanUpdates;
 import edu.nps.moves.mmowgli.modules.cards.EditCardTextWindow;
 import edu.nps.moves.mmowgli.modules.gamemaster.GameEventLogger;
-import edu.nps.moves.mmowgli.utility.IDButton;
-import edu.nps.moves.mmowgli.utility.MediaLocator;
-import edu.nps.moves.mmowgli.utility.MmowgliLinkInserter;
+import edu.nps.moves.mmowgli.utility.*;
 
 /**
  * ActionPlanPageCommentPanel.java Created on Mar 22, 2011
@@ -519,6 +510,7 @@ public class ActionPlanPageCommentPanel2 extends Panel implements MmowgliCompone
     public AddedCommentPanel()
     {
       ta = new TextArea();
+      ta.setId(ACTIONPLAN_COMMENT_TEXTAREA);
       ta.setRows(5);
       
       cancelButt = new NativeButton(null,this);
@@ -550,6 +542,7 @@ public class ActionPlanPageCommentPanel2 extends Panel implements MmowgliCompone
       
       submitButt.addStyleName("borderless");
       submitButt.addStyleName("m-nopadding");
+      submitButt.setId(ACTIONPLAN_COMMENT_SUBMIT_BUTTON);
       submitButt.setIcon(mLoc.getSubmitButtonIcon());
       submitButt.setHeight("17px");
       submitButt.setWidth("64px");  // 3px margin
