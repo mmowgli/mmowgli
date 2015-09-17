@@ -26,19 +26,20 @@ import java.util.*;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
+import org.vaadin.viritin.fields.MTextField;
+import org.vaadin.viritin.layouts.MFormLayout;
+import org.vaadin.viritin.layouts.MVerticalLayout;
 
-import com.vaadin.data.*;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
-import com.vaadin.data.util.BeanItem;
 import com.vaadin.server.Page;
 import com.vaadin.shared.Position;
+import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.ui.*;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
-import com.vaadin.ui.themes.BaseTheme;
 
 import edu.nps.moves.mmowgli.*;
 import edu.nps.moves.mmowgli.cache.MCacheUserHelper.QuickUser;
@@ -65,10 +66,6 @@ public class CreateActionPlanPanel extends Panel implements MmowgliComponent
   private static final long serialVersionUID = 8371676076359330962L;
   
   private CreateActionPlanLayout layout;
-  private static String[] apFields = {"title", "subTitle", /*
-     * "planInstructions", "talkItOverInstructions", "imagesInstructions",
-     * "videosInstructions", "mapInstructions",
-     */"whatIsItText", "whatWillItTakeText", "howWillItWorkText", "howWillItChangeText"};
   
   public CreateActionPlanPanel()
   {
@@ -90,12 +87,8 @@ public class CreateActionPlanPanel extends Panel implements MmowgliComponent
     layout.initGui();
   }
 
-  @SuppressWarnings("deprecation")
   public static class CreateActionPlanLayout extends VerticalLayout implements MmowgliComponent
   {
-    /**
-     * 
-     */
     private static final long serialVersionUID = 5206619447249427630L;
     private ActionPlan ap;
     private Object apId;
@@ -112,8 +105,9 @@ public class CreateActionPlanPanel extends Panel implements MmowgliComponent
     private HtmlLabel cardText;
     private TextField cardIdTF;
     private ClickListener closer;
-    private Form form;
-    
+   // private Form form;
+    private TextField titleTF, whoTF, whatTF, accomplTF, howTF, changeTF;
+
     @HibernateSessionThreadLocalConstructor
     public CreateActionPlanLayout(Object apId, Object rootCardId, ClickListener closer)
     {
@@ -138,16 +132,12 @@ public class CreateActionPlanPanel extends Panel implements MmowgliComponent
     @Override
     public void initGui()
     {
-      VerticalLayout baseVLay = this; // todo remove
-      baseVLay.setSpacing(true);
-      baseVLay.setMargin(true);
+      setSpacing(true);
+      setMargin(true);
       
-      VerticalLayout vLay = new VerticalLayout();
-      baseVLay.addComponent(vLay);
-
-      vLay.setSizeUndefined();
+      VerticalLayout vLay = new MVerticalLayout().withMargin(new MarginInfo(false,true,true,true));
       vLay.addStyleName("m-greyborder");
-      vLay.setMargin(true);
+      addComponent(vLay);
 
       if (!newAp) {
         ap = ActionPlan.getTL(apId);
@@ -155,21 +145,15 @@ public class CreateActionPlanPanel extends Panel implements MmowgliComponent
       else
         fillDefaults(ap); // won't cut it, never used
 
-      BeanItem<ActionPlan> apItem = new BeanItem<ActionPlan>(ap,apFields);
-
-      form = new Form();
-      vLay.addComponent(form);
-      
-      form.setCaption("New Action Plan");
-      form.setBuffered(true); //setWriteThrough(false); // use apply button
-      form.setInvalidCommitted(false);
-
-      form.setFormFieldFactory(new APFieldFactory());
-      form.setItemDataSource(apItem);
-
-      form.setVisibleItemProperties(Arrays.asList(apFields));
-      form.setWidth("820px");
-
+      FormLayout formLay = new MFormLayout().withFullWidth().withCaption(null);
+      formLay.addComponent(titleTF = new MTextField("Title (required)").withFullWidth());
+      formLay.addComponent(whoTF = new MTextField("Who is involved in this activity?").withFullWidth());
+      formLay.addComponent(whatTF = new MTextField("What is the plan about?").withFullWidth());
+      formLay.addComponent(accomplTF = new MTextField("What will it take to accomplish this?").withFullWidth());
+      formLay.addComponent(howTF = new MTextField("How will it work?").withFullWidth());
+      formLay.addComponent(changeTF = new MTextField("How will it change the situation?").withFullWidth());
+      vLay.addComponent(formLay);
+     
       GridLayout gLay = new GridLayout();
       gLay.addStyleName("m-greyborder");
       gLay.setColumns(3);
@@ -251,6 +235,7 @@ public class CreateActionPlanPanel extends Panel implements MmowgliComponent
         public void buttonClick(ClickEvent event)
         {
           HSess.init();
+          // still transient ap = ActionPlan.mergeTL(ap);
           Set<User> set = buildCardChainAuthorListTL();
           if (set == null)
             return;
@@ -280,16 +265,16 @@ public class CreateActionPlanPanel extends Panel implements MmowgliComponent
 
       HorizontalLayout buttons = new HorizontalLayout();
       buttons.setSpacing(true);
-      Button discardChanges = new Button("Discard changes");
+      Button discardChanges = new Button("Cancel and close"); //"Discard changes");
       discardChanges.addClickListener(new Button.ClickListener()
       {
         public void buttonClick(ClickEvent event)
         {
-          form.discard();
-          // todo defaults?
+          if(closer != null)
+            closer.buttonClick(event);
         }
       });
-      discardChanges.setStyleName(BaseTheme.BUTTON_LINK);
+      //discardChanges.setStyleName(BaseTheme.BUTTON_LINK);
       buttons.addComponent(discardChanges);
       buttons.setComponentAlignment(discardChanges, Alignment.MIDDLE_LEFT);
 
@@ -302,9 +287,10 @@ public class CreateActionPlanPanel extends Panel implements MmowgliComponent
         public void buttonClick(ClickEvent event)
         {
           HSess.init();
+          ap = ActionPlan.mergeTL(ap);
           try {
             if (checkInvitees() && checkChainRoot()) {
-              form.commit();
+              unloadTextFields();//form.commit();
               ChatLog.saveTL(ap.getChatLog());
               
               notifyInviteesTL();   //@HibernateUserUpdate  // put invitees on list, but doesn't update (which was a bug)
@@ -353,22 +339,30 @@ public class CreateActionPlanPanel extends Panel implements MmowgliComponent
       buttons.addComponent(lab = new Label());
       lab.setWidth("20px");
 
-      // form.getFooter().addComponent(buttons);
-      // form.getFooter().setMargin(false, false, true, true);
-      baseVLay.addComponent(buttons);
-      baseVLay.setComponentAlignment(buttons, Alignment.TOP_RIGHT);
+      addComponent(buttons);
+      setComponentAlignment(buttons, Alignment.TOP_RIGHT);
 
       if (rootCardId != null) {
         Card c = Card.getTL(rootCardId);
         cardIdTF.setValue("" + c.getId());
         cardText.setValue(c.getText());
-        ((TextField)form.getField("title")).setValue(c.getText());  // put as title to start with
+        titleTF.setValue(c.getText());
         ap.setChainRoot(c);
         checkPreviousActionPlanTL(c);
       }
       cardIdTF.addValueChangeListener(new CardIdChangedListener());
     }
-
+    
+    private void unloadTextFields()
+    {
+      ap.setTitle              (titleTF.getValue());
+      ap.setSubTitle           (whoTF.getValue());
+      ap.setWhatIsItText       (whatTF.getValue());
+      ap.setWhatWillItTakeText (accomplTF.getValue());
+      ap.setHowWillItWorkText  (howTF.getValue());
+      ap.setHowWillItChangeText(changeTF.getValue());
+    }
+    
     private void checkPreviousActionPlanTL(Card root)
     {
       Criteria criteria = HSess.get().createCriteria(ActionPlan.class);
@@ -410,8 +404,8 @@ public class CreateActionPlanPanel extends Panel implements MmowgliComponent
           checkPreviousActionPlanTL(crd);
           rootCardId = id;
           cardText.setValue(crd.getText());
+          
           //Put the card text as the title if the title is empty
-          TextField titleTF = (TextField)form.getField("title");
           String titleStr = titleTF.getValue().toString();
           if(titleStr == null || titleStr.length()<=0)
             titleTF.setValue(crd.getText());
@@ -475,6 +469,7 @@ public class CreateActionPlanPanel extends Panel implements MmowgliComponent
     private void notifyInviteesTL()
     {
       for (User u : invitees) {
+        u = User.mergeTL(u);
         notifyApInviteeTL(u, ap);   //@HibernateUserUpdate
       }
       // done by caller    ActionPlan.update(ap);
@@ -642,71 +637,7 @@ public class CreateActionPlanPanel extends Panel implements MmowgliComponent
         }
     }
 */
-    @SuppressWarnings({ "serial", "unchecked" })
-    private class APFieldFactory extends DefaultFieldFactory
-    {
-      @Override
-      public Field<?> createField(Item item, Object propertyId, Component uiContext)
-      {
-        Field<?> fld = super.createField(item, propertyId, uiContext);
-        if (!(fld instanceof TextField))
-          return fld; // not interested yet
-
-        TextField f = (TextField) fld;
-        f.setRequired(true);
-        f.setWidth("100%");
-
-        if ("title".equals(propertyId)) {
-          f.setCaption("Title (required)");
-          f.setRequiredError("Enter the title of the Action Plan");
-        }
-        else if ("subTitle".equals(propertyId)) {
-          f.setRequired(false);
-          f.setCaption("Who is involved in this activity?");
-          f.setDescription("Enter the sub title of the Action Plan");
-        }
-
-        else if ("planInstructions".equals(propertyId)) {
-          f.setCaption("Plan instructions");
-          f.setRequiredError("Enter the text for \"The Plan\" tab");
-        }
-        else if ("talkItOverInstructions".equals(propertyId)) {
-          f.setCaption("Talk instructions");
-          f.setRequiredError("Enter the text for \"Talk it over\" tab");
-        }
-        else if ("imagesInstructions".equals(propertyId)) {
-          f.setCaption("Images instructions");
-          f.setRequiredError("Enter the text for \"Images\" tab");
-        }
-        else if ("videosInstructions".equals(propertyId)) {
-          f.setCaption("Videos instructions");
-          f.setRequiredError("Enter the text for \"Videos\" tab");
-        }
-        else if ("mapInstructions".equals(propertyId)) {
-          f.setCaption("Map instructions");
-          f.setRequiredError("Enter the text for \"Map\" tab");
-        }
-        else if ("whatIsItText".equals(propertyId)) {
-          f.setRequired(false);
-          f.setCaption("What is the plan about?");
-        }
-        else if ("whatWillItTakeText".equals(propertyId)) {
-          f.setRequired(false);
-          f.setCaption("What will it take to accomplish this?");
-        }
-        else if ("howWillItWorkText".equals(propertyId)) {
-          f.setRequired(false);
-          f.setCaption("How will it work?");
-        }
-        else if ("howWillItChangeText".equals(propertyId)) {
-          f.setRequired(false);
-          f.setCaption("How will it change the situation?");
-        }
-
-        return f;
-      }
-    }
-
+  
     private void fillDefaults(ActionPlan ap)
     {
       ap.setPlanInstructions(game.getDefaultActionPlanThePlanText());
