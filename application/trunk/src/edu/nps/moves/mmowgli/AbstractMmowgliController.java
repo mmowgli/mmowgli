@@ -142,7 +142,10 @@ public abstract class AbstractMmowgliController implements MmowgliController, MM
       case CARDAUTHORCLICK:
         ui.navigateTo(new AppEvent(MmowgliEvent.SHOWUSERPROFILECLICK,ui,param));
         break;
-       
+      case TAKEACTIONCLICK:
+        ui.navigateTo(new AppEvent(mEv,ui,param));
+        break;
+        
       default:
         MSysOut.println(SYSTEM_LOGS,"TODO, AbstractMmowgliController.miscEvent(): "+mEv.toString());
     }    
