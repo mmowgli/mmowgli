@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE ivy-module [
-	<!ENTITY vaadin.version "7.5.5">
+	<!ENTITY vaadin.version "7.5.6">
 ]>
 
 <ivy-module version="2.0"
@@ -58,7 +58,7 @@
         <dependency org="org.vaadin.addon" name="ios7hotfixes" rev="6.0.2" />
 
         <dependency org="net.sf.saxon" name="Saxon-HE" rev="9.5.1-5"/>
-        <dependency org="org.vaadin" name="viritin" rev="1.27" />
+        <dependency org="org.vaadin" name="viritin" rev="1.35" />
         <!--<dependency org="org.vaadin.vol" name="openlayers-wrapper" rev="1.3.1" />  won't work with V 7.* -->
         <dependency org="com.google.gdata" name="core" rev="1.47.1"/>
         <dependency org="org.bouncycastle" name="bcpkix-jdk15on" rev="1.51"/>
