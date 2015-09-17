@@ -333,7 +333,7 @@ public class ActionPlanPage2 extends AbsoluteLayout implements MmowgliComponent,
     titleAndThumbsHL.addComponent(vl); //titleTA);
 
     titleUnion.setWidth(ACTIONPLAN_TITLE_W);
-    titleUnion.setValueTL(actPln.getTitle());
+    titleUnion.setValueTL(actPln.getTitle()==null?"":actPln.getTitle());
     
     titleUnion.addStyleName("m-lightgrey-border");
     // titleUnion.addStyleName("m-opacity-75");
@@ -376,6 +376,7 @@ public class ActionPlanPage2 extends AbsoluteLayout implements MmowgliComponent,
     commentsButt.setStyleName(BaseTheme.BUTTON_LINK);
     commentsButt.addStyleName("borderless");
     commentsButt.addStyleName("m-actionplan-comments-button");
+    
     ClickListener commLis;
     commentsButt.addClickListener(commLis = new ClickListener() {
       @Override
@@ -402,6 +403,8 @@ public class ActionPlanPage2 extends AbsoluteLayout implements MmowgliComponent,
     addCommentButt.setStyleName(BaseTheme.BUTTON_LINK);
     addCommentButt.addStyleName("borderless");
     addCommentButt.addStyleName("m-actionplan-comments-button");
+    addCommentButt.setId(ACTIONPLAN_ADD_COMMENT_LINK_BUTTON_TOP);
+
     addCommentButt.addClickListener(addCommentListener = new ClickListener() {
       @Override
       public void buttonClick(ClickEvent event)
@@ -568,6 +571,7 @@ public class ActionPlanPage2 extends AbsoluteLayout implements MmowgliComponent,
     addCommentButtBottom.setStyleName(BaseTheme.BUTTON_LINK);
     addCommentButtBottom.addStyleName("borderless");
     addCommentButtBottom.addStyleName("m-actionplan-comments-button");
+    addCommentButtBottom.setId(ACTIONPLAN_ADD_COMMENT_LINK_BUTTON_BOTTOM);
     addCommentButtBottom.addClickListener(addCommentListener);
     buttLay.addComponent(addCommentButtBottom);
 
