@@ -507,8 +507,10 @@ public class ScoreManager2
     // lock it
     User author = null;
     Object obj = User.loadLocked(userId);
-    if(obj instanceof HibernateProxy)
+    if(obj instanceof HibernateProxy) {
       author = User.getLockedTL(userId);
+      System.out.println("**************** Proxy code at ScoreManager2.awardCardAncestorPointsTLSynched() hit.");
+    }
     else
       author = (User)obj;
     
