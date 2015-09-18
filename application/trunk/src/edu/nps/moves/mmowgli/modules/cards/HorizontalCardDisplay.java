@@ -167,6 +167,7 @@ public class HorizontalCardDisplay extends VerticalLayout implements MmowgliComp
       // instead:
       addComponent(leftLab = new HtmlLabel(new BackArrowFontIcon().getHtml()));
       leftLab.setWidth("14px");
+      setComponentAlignment(leftLab, Alignment.MIDDLE_CENTER);  //the icon dive cannot be resized to fit (setSize(100%"), but this aligns it properly
       leftLab.setDescription("show earlier cards");
       leftLab.addStyleName("m-cursor-pointer");
       leftLab.addStyleName("m-vcr-fonticon");
