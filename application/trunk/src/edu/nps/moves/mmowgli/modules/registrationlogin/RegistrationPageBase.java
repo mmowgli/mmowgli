@@ -433,6 +433,8 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
       String url = VaadinServletService.getCurrentServletRequest().getRequestURI();
       if(url.endsWith("PUSH/"))         //todo figure this out
         url = url.substring(0, url.length()-5);
+      if(url.endsWith("PUSH"))
+        url = url.substring(0, url.length()-4);
       if(url.endsWith("/"))
         url = url+"signup";
       else
