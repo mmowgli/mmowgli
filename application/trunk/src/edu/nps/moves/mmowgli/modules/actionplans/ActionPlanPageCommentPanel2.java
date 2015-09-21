@@ -63,6 +63,15 @@ import edu.nps.moves.mmowgli.utility.*;
  * @author Mike Bailey, jmbailey@nps.edu
  * @version $Id$
  */
+
+// 21 Sep 2015
+// This class has been found to be a performance bottleneck when there are a lot of comments attached.
+// The symptom is slow action plan page load.
+// Using a standard Vaadin table widget/container would solve it by doing transparent lazy loading, but that
+// would take a re-write.  The reason for it being the way it is is because of the artwork/style.
+// Much of Mmowgli could perform better if we didn't have to match the artwork.
+// (However, the artwork is part of what has made Mmowgli the success it is.)
+
 public class ActionPlanPageCommentPanel2 extends Panel implements MmowgliComponent, WantsActionPlanUpdates
 {
   private static final long serialVersionUID = 3236709705155304560L;
