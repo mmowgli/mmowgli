@@ -76,6 +76,7 @@ class TextAreaLabelUnion extends AbsoluteLayout implements LayoutClickListener
       lab = new HtmlLabel();
     }
     vl = new VerticalLayout();
+    vl.setSizeFull();
     
     if(componentStyle == null)
       componentStyle = "m-actionplan-theplan-fields";
@@ -99,8 +100,6 @@ class TextAreaLabelUnion extends AbsoluteLayout implements LayoutClickListener
     labPan.setStyleName(Reindeer.PANEL_LIGHT);
     labPan.setContent(vl);    
     vl.setMargin(false);
-    lab.setWidth(getWidth(),getWidthUnits());
-    lab.setHeight(getHeight(),getHeightUnits());
     vl.addComponent(lab);    
     vl.addLayoutClickListener(this);
     addComponent(labPan,"top:0px;left:0px");
@@ -124,7 +123,7 @@ class TextAreaLabelUnion extends AbsoluteLayout implements LayoutClickListener
   public void setLabelValueTL(String txt)
   {
     String escapedTxt = insertBRs(txt);
-    lab.setValue(MmowgliLinkInserter.insertLinksTL(escapedTxt,null));     
+    lab.setValue(MmowgliLinkInserter.insertLinksTL(escapedTxt,null)); 
   }
   
   public void setLabelValueOobTL(String txt)
