@@ -853,7 +853,11 @@ public class ActionPlanPage2 extends AbsoluteLayout implements MmowgliComponent,
     public ThumbPanel()
     {
       addComponent(pan = new InnerPanel(this));
-
+      
+      Label sp;
+      addComponent(sp=new Label());
+      sp.setHeight("5px");
+      
       HorizontalLayout hl = new HorizontalLayout();
       hl.setMargin(false);
       hl.setSpacing(false);
@@ -862,7 +866,6 @@ public class ActionPlanPage2 extends AbsoluteLayout implements MmowgliComponent,
       BrowsePanel bp = new BrowsePanel();
       hl.addComponent(bp);
 
-      Label sp;
       hl.addComponent(sp=new Label());
       sp.setWidth("75px");
 
