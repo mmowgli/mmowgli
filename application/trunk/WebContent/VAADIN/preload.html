@@ -1,16 +1,33 @@
 <html>
 <head>
-<script type="text/javascript">
+    <style>
+      .legend {                                                   /* NEW */
+        font-size: 12px;                                          /* NEW */
+      }                                                           /* NEW */
+      rect {                                                      /* NEW */
+        stroke-width: 2;                                          /* NEW */
+      }                                                           /* NEW */
+    </style>
+    <script src="instrument/d3.v3.min.js"></script>
+    <script type="text/javascript">
+        
+    // Short description, timingData property start time, timingData property end time, long desc.
+    var metrics = [
+                    ['TCP Connect', 'connectStart', 'connectEnd', 'Time to establish TCP socket'],
+                    ['DNS Lookup', 'domainLookupStart', 'domainLookupEnd', 'Time to do DNS lookup'],
+                    ['Response Time', 'requestStart', 'responseEnd', 'Time from requestStart to responseEnd']
+                  ];
 window.onload = function () {
    
-    // DMcG
+    // Set up data gathering stats
     var perfData = window.performance.timing;
     var stringFormat = JSON.stringify(perfData);
-    var mcgredoDiv = document.getElementById("dmcg");
+    var mcgredoDiv = document.getElementById("loadStatistics");
     if(mcgredoDiv)
     {
         showPagePerformanceData(perfData);
         showResourcePerformanceData();
+        showChartPerformanceData();
     }
 };
 
@@ -84,7 +101,7 @@ function showResourcePerformanceData()
    }
    
    // Slap the table into the doc
-    var mcgredoDiv = document.getElementById("dmcg");
+    var mcgredoDiv = document.getElementById("loadStatistics");
     if(mcgredoDiv)
     {
         mcgredoDiv.appendChild(table);
@@ -132,7 +149,7 @@ function showPagePerformanceData(timingData)
     }
    
     
-    var mcgredoDiv = document.getElementById("dmcg");
+    var mcgredoDiv = document.getElementById("loadStatistics");
     if(mcgredoDiv)
     {
         mcgredoDiv.appendChild(table);
@@ -140,6 +157,172 @@ function showPagePerformanceData(timingData)
     
     
 };
+
+function showChartPerformanceData()
+{
+    console.log("chart performance");
+    
+    /** If a resource takes more time than this (in ms) to load, highlight it. */
+    var LOAD_TIME_SUSPICIOUS = 500;
+    
+    // Color pallete for legends, see https://github.com/mbostock/d3/wiki/Ordinal-Scales#categorical-colors
+    var color = d3.scale.category20b();
+    
+    var legendData = [
+          { label: 'DNS Lookup Time', count: 25 }, 
+          { label: 'Connect--Establish TCP Socket', count: 25 },
+          { label: 'Request--Send request to server', count: 25 },
+          { label: 'Response--Get response back from server', count: 25 }
+        ];
+    
+        var legendWidth = 400;
+        var legendHeight = 200;
+        var legendRadius = Math.min(width, height) / 2;
+        var legendDonutWidth = 75;
+        var legendRectSize = 18;                                  // NEW
+        var legendSpacing = 4;                                    // NEW
+       
+       var svg = d3.select('#loadCharts')
+          .append('svg')
+          .attr('width', legendWidth)
+          .attr('height', legendHeight)
+          .append('g')
+          .attr('transform', 'translate(' + (legendWidth / 2) + 
+            ',' + (legendHeight / 2) + ')');
+    
+       var arc = d3.svg.arc()
+          .innerRadius(legendRadius - legendDonutWidth)
+          .outerRadius(legendRadius);
+    
+       var pie = d3.layout.pie()
+          .value(function(d) { return d.count; })
+          .sort(null);
+  
+  var path = svg.selectAll('path')
+          .data(pie(legendData))
+          .enter()
+          .append('path')
+          .attr('d', arc)
+          .attr('fill', function(d, i) { 
+            return color(d.data.label);
+          });
+
+        var legend = svg.selectAll('.legend')                     // NEW
+          .data(color.domain())                                   // NEW
+          .enter()                                                // NEW
+          .append('g')                                            // NEW
+          .attr('class', 'legend')                                // NEW
+          .attr('transform', function(d, i) {                     // NEW
+            var height = legendRectSize + legendSpacing;          // NEW
+            var offset =  height * color.domain().length / 2;     // NEW
+            var horz = -2 * legendRectSize;                       // NEW
+            var vert = i * height - offset;                       // NEW
+            return 'translate(' + horz + ',' + vert + ')';        // NEW
+          });                                                     // NEW
+
+        legend.append('rect')                                     // NEW
+          .attr('width', legendRectSize)                          // NEW
+          .attr('height', legendRectSize)                         // NEW
+          .style('fill', color)                                   // NEW
+          .style('stroke', color);                                // NEW
+          
+        legend.append('text')                                     // NEW
+          .attr('x', legendRectSize + legendSpacing)              // NEW
+          .attr('y', legendRectSize - legendSpacing)              // NEW
+          .text(function(d) { return d; });                       // NEW
+   
+     var svg = d3.select('#loadCharts').append('br');
+        
+        
+    // How big the data resource pie charts are
+    var width = 60;
+    var height = 60;
+    var radius = Math.min(width, height) / 2;
+    
+  
+   
+    // Get performance data, create charts for each.
+    var resources = window.performance.getEntriesByType("resource");
+    var numberOfResources = resources.length;
+    resources.sort(compareResourcesByTime);
+    
+    // Loop through all the perofmrance data
+    for(var idx = 0; idx < numberOfResources; idx++)
+    {
+        var aResource = resources[idx];
+        var dnsTime = aResource.domainLookupEnd - aResource.domainLookupStart;
+        var connectTime = aResource.connectEnd - aResource.connectStart;
+        var requestTime = aResource.responseStart - aResource.requestStart;
+        var responseTime = aResource.responseEnd - aResource.responseStart;
+        var totalTime = aResource.responseEnd - aResource.startTime;
+        
+        // DNS lookkup time (domainLookupEnd - domainLookupStart)
+        // TCP connect time (connectEnd - connectStart)
+        // request time (responseStart - requestStart)
+        // response time (reponseEnd - reponseStart
+        console.log(aResource.name, " ", dnsTime, " ", connectTime, " ", requestTime, responseTime);
+        var dataset = 
+        [
+            { label:"DNS Lookup Time", count:dnsTime },
+            { label:"Connect--Establish TCP Socket", count:connectTime },
+            { label:"Request--Send request to server", count:requestTime },
+            { label:"Response--Get response back from server", count:responseTime },
+        ];
+        
+        // Set up the SVG elements in the HTML page--add a SVG tag and under that a g tag
+        var svg = d3.select('#loadCharts')
+                .append('svg')
+                .attr('width', width)
+                .attr('height', height)
+                .append('g')
+                .attr('transform', 'translate(' + (width / 2) + ',' + (height / 2) + ')');
+
+        var donutWidth = radius * 0.4;
+        
+        var arc = d3.svg.arc()
+                .innerRadius(radius - donutWidth)
+                .outerRadius(radius);
+
+        var pie = d3.layout.pie()
+                .value(function(d) { return d.count;  })
+                .sort(null);
+
+        var path = svg.selectAll('path')
+                .data(pie(dataset))
+                .enter()
+                .append('path')
+                .attr('d', arc)
+                .attr('fill', function(d,i) {
+                    return color(d.data.label);
+                 });
+                 
+        var tTime = totalTime.toPrecision(4);
+        var txt = tTime + " ms " + aResource.name;
+        
+        // If it's more than LOAD_TIME_SUSPICIOUS, highlight it in red.
+        if(tTime < LOAD_TIME_SUSPICIOUS)
+        {
+            d3.select("#loadCharts").append('b').text(txt);
+        }
+        else
+        {
+            d3.select("#loadCharts").append('b').append('font').attr('color', 'red').text(txt);
+        }
+
+        d3.select('#loadCharts').append('br');
+    } // End loop through resources
+    
+    console.log("end chart performance");
+}
+
+function compareResourcesByTime(a, b)
+{
+  if (a.duration > b.duration)
+    return -1;
+  if (a.duration < b.duration)
+    return 1;
+  return 0;
+}
 
 </script>
 
@@ -228,6 +411,7 @@ function showPagePerformanceData(timingData)
 <image src="https://i.ytimg.com/vi/fAfRuU78X34/sddefault.jpg" id="img1" style="visibility:hidden;"/>
 <div id="textTarget">
 </div>
-<div id="dmcg"></div>
+<div id="loadStatistics"></div>
+<div id="loadCharts"></div>
 </body>
 </html>
