@@ -85,12 +85,12 @@ public class TopCardsGameDesignPanel extends AbstractGameBuilderPanel implements
   {
     super.initGui();
 
-    positiveFields = new CardTypeFields(CardType.getPositiveIdeaCardTypeTL(),globals);
+    positiveFields = new CardTypeFields(CardType.getCurrentPositiveIdeaCardTypeTL(),globals);
     positiveTypeSelect = new NativeSelect();
     addComponent(renderFields(positiveFields, positiveTypeSelect, "1 Choose POSITIVE top card type for this round", cantEditPositiveTypeWarning));
     positiveFields.initGui();
 
-    negativeFields = new CardTypeFields(CardType.getNegativeIdeaCardTypeTL(),globals);
+    negativeFields = new CardTypeFields(CardType.getCurrentNegativeIdeaCardTypeTL(),globals);
     negativeTypeSelect = new NativeSelect();
     addComponent(renderFields(negativeFields, negativeTypeSelect, "2 Choose NEGATIVE top card type for this round", cantEditNegativeTypeWarning));
     negativeFields.initGui();
@@ -115,12 +115,12 @@ public class TopCardsGameDesignPanel extends AbstractGameBuilderPanel implements
     childCardsWarning.setVisible(locked);
     moveBeingEdited = (Move)Move.mergeTL(moveBeingEdited);
    // boolean warning = checkCardCountGtZero(CardType.getPositiveIdeaCardType(moveBeingEdited));  // true if > zero cards
-    boolean warning = checkCardCountGtTL(CardType.getPositiveIdeaCardType(moveBeingEdited),8);  // true if > 8 cards
+    boolean warning = checkCardCountGtTL(CardType.getCurrentPositiveIdeaCardType(moveBeingEdited),8);  // true if > 8 cards
     cantEditPositiveTypeWarning.setVisible(warning);
     positiveFields.setFieldsReadOnly(locked);
     
     //warning = checkCardCountGtZero(CardType.getNegativeIdeaCardType(moveBeingEdited));  
-    warning = checkCardCountGtTL(CardType.getNegativeIdeaCardType(moveBeingEdited), 8);  
+    warning = checkCardCountGtTL(CardType.getCurrentNegativeIdeaCardType(moveBeingEdited), 8);  
     cantEditNegativeTypeWarning.setVisible(warning);
     negativeFields.setFieldsReadOnly(locked);
   }
@@ -354,12 +354,12 @@ public class TopCardsGameDesignPanel extends AbstractGameBuilderPanel implements
     adjustRO();
     
     positiveFields.moveChangedTL(m);
-    CardType ct = CardType.getPositiveIdeaCardType(moveBeingEdited);
+    CardType ct = CardType.getCurrentPositiveIdeaCardType(moveBeingEdited);
     positiveFields.cardTypeChanged(ct);
     changeTypeCombo(positiveTypeSelect, ct);
 
     negativeFields.moveChangedTL(m);
-    ct = CardType.getNegativeIdeaCardType(moveBeingEdited);;
+    ct = CardType.getCurrentNegativeIdeaCardType(moveBeingEdited);;
     changeTypeCombo(negativeTypeSelect, ct);
     negativeFields.cardTypeChanged(ct);
     
