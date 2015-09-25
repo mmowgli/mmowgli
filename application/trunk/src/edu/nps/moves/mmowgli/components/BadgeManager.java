@@ -38,7 +38,6 @@ import edu.nps.moves.mmowgli.markers.*;
 import edu.nps.moves.mmowgli.messaging.MMessage;
 import edu.nps.moves.mmowgli.messaging.MMessagePacket;
 import edu.nps.moves.mmowgli.modules.cards.CardMarkingManager;
-import edu.nps.moves.mmowgli.modules.cards.CardTypeManager;
 import edu.nps.moves.mmowgli.utility.MiscellaneousMmowgliTimer.MSysOut;
 
 /**
@@ -317,14 +316,14 @@ public class BadgeManager implements Runnable
   {
     Long numInnos =  (Long)HSess.get().createCriteria(Card.class)
     .add(Restrictions.eq("author", author))
-    .add(Restrictions.eq("cardType", CardTypeManager.getPositiveIdeaCardType(HSess.get())))
+    .add(Restrictions.eq("cardType", CardType.getCurrentPositiveIdeaCardType(HSess.get())/*CardTypeManager.getPositiveIdeaCardType(HSess.get())*/))  
     .setProjection(Projections.rowCount()).uniqueResult();
     if(numInnos <= 0) {
       return false;
     }
     Long numDefs =  (Long)HSess.get().createCriteria(Card.class)
     .add(Restrictions.eq("author", author))
-    .add(Restrictions.eq("cardType", CardTypeManager.getNegativeIdeaCardType(HSess.get())))
+    .add(Restrictions.eq("cardType", CardType.getCurrentNegativeIdeaCardType(HSess.get()))) //CardTypeManager.getNegativeIdeaCardType(HSess.get())))
     .setProjection(Projections.rowCount()).uniqueResult();
     if(numDefs <= 0) {
       return false;
@@ -393,15 +392,7 @@ public class BadgeManager implements Runnable
 
   private boolean checkBadgeTwoTL(User author)
   {
-    CardType[] allTypes = new CardType[] {
-        CardTypeManager.getNegativeIdeaCardTypeTL(),
-        CardTypeManager.getPositiveIdeaCardTypeTL(),
-        CardTypeManager.getAdaptTypeTL(),
-        CardTypeManager.getCounterTypeTL(),
-        CardTypeManager.getExpandTypeTL(),
-        CardTypeManager.getExploreTypeTL()
-    };
-
+    CardType[] allTypes = CardType.getAllCurrentTypesTL();
     for(CardType ct : allTypes) {
       Long num =  (Long)HSess.get().createCriteria(Card.class)
       .add(Restrictions.eq("author", author))
