@@ -36,17 +36,14 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
 
-import edu.nps.moves.mmowgli.Mmowgli2UI;
-import edu.nps.moves.mmowgli.MmowgliSessionGlobals;
+import edu.nps.moves.mmowgli.*;
 import edu.nps.moves.mmowgli.MmowgliSessionGlobals.CardPermission;
 import edu.nps.moves.mmowgli.cache.MCacheUserHelper.QuickUser;
 import edu.nps.moves.mmowgli.db.*;
 import edu.nps.moves.mmowgli.hibernate.HSess;
 import edu.nps.moves.mmowgli.markers.*;
 import edu.nps.moves.mmowgli.modules.actionplans.AddAuthorDialog;
-import edu.nps.moves.mmowgli.modules.cards.CardMarkingManager;
-import edu.nps.moves.mmowgli.modules.cards.CardStyler;
-import edu.nps.moves.mmowgli.modules.cards.CardTypeManager;
+import edu.nps.moves.mmowgli.modules.cards.*;
 import edu.nps.moves.mmowgli.utility.BaseCoroutine;
 
 /**
@@ -165,7 +162,7 @@ public class CardSummaryListHeader extends AbsoluteLayout implements MmowgliComp
       content.addStyleName(textColorStyle);
     // cause exception w/ 2 windows?
     // content.setDebugId(CardTypeManager.getCardCreateClickDebugId(ct));
-    content.setId(CardTypeManager.getCardCreateClickDebugId(ct));
+    content.setId(CardDebug.getCardCreateClickDebugId(ct));//CardTypeManager.getCardCreateClickDebugId(ct));
     topHalfLay.addComponent(content, CARDLISTHEADER_CONTENT_POS);
     
     boolean cantCreateBecauseHiddenParent = checkNoCreateBecauseHiddenTL(parent);
@@ -334,7 +331,7 @@ public class CardSummaryListHeader extends AbsoluteLayout implements MmowgliComp
       content.setTextChangeTimeout(500);
       // cause exception w/ 2 windows?
       // content.setDebugId(CardTypeManager.getCardContentDebugId(ct));
-      content.setId(CardTypeManager.getCardContentDebugId(ct));
+      content.setId(CardDebug.getCardContentDebugId(ct));//CardTypeManager.getCardContentDebugId(ct));
 
       content.addTextChangeListener(new characterTypedHandler());
 
@@ -360,7 +357,7 @@ public class CardSummaryListHeader extends AbsoluteLayout implements MmowgliComp
       submitButt = new NativeButton("submit");
       // cause exception w/ 2 windows?
       // submitButt.setDebugId(CardTypeManager.getCardSubmitDebugId(ct));
-      submitButt.setId(CardTypeManager.getCardSubmitDebugId(ct));
+      submitButt.setId(CardDebug.getCardSubmitDebugId(ct));//CardTypeManager.getCardSubmitDebugId(ct));
 
       submitButt.setWidth(CARDLISTHEADER_DRAWER_OKBUTT_W);
       submitButt.setHeight(CARDLISTHEADER_DRAWER_OKBUTT_H);
