@@ -159,7 +159,7 @@ public class PlayAnIdeaPage2 extends VerticalLayout implements MmowgliComponent,
     
     leftAbsL.addComponent(howToPlayButt,HOWTO_POS);
     
-    leftType = CardType.getPositiveIdeaCardTypeTL();
+    leftType = CardType.getCurrentPositiveIdeaCardTypeTL();
     leftAbsL.addComponent(poshdr = CardSummaryListHeader.newCardSummaryListHeader(leftType, mockupOnly, null),POS_POS);
     poshdr.initGui();
     poshdr.addNewCardListener(newCardListener);
@@ -171,7 +171,7 @@ public class PlayAnIdeaPage2 extends VerticalLayout implements MmowgliComponent,
     
     rightAbsL.addComponent(gotoDashboardButt,GOTO_POS);
     
-    rightType = CardType.getNegativeIdeaCardTypeTL();    
+    rightType = CardType.getCurrentNegativeIdeaCardTypeTL();    
     rightAbsL.addComponent(neghdr = CardSummaryListHeader.newCardSummaryListHeader(rightType, mockupOnly, null),NEG_POS);
     neghdr.initGui();
     neghdr.addNewCardListener(newCardListener);
