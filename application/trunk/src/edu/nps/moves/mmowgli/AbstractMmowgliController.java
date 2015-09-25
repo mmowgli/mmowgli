@@ -524,10 +524,12 @@ public abstract class AbstractMmowgliController implements MmowgliController, MM
     case UPDATED_GAME:
       globs.gameUpdatedExternallyTL(null);
       break;
+/* refactor
     case UPDATED_CARDTYPE:
       CardType ct = (CardType) HSess.get().get(CardType.class, Long.parseLong(pkt.msg));
       CardTypeManager.updateCardType(ct);
       break;
+*/
  /* Not used with new session report
     case INSTANCEREPORTCOMMAND:
       helper.doSessionReport(pkt.msg);
@@ -622,6 +624,7 @@ public abstract class AbstractMmowgliController implements MmowgliController, MM
         helper.doSessionReport(pkt.msg);
         break;
  */
+/* refactor
       case UPDATED_CARDTYPE:
         Object key = HSess.checkInit();
         CardType ct = (CardType) HSess.get().get(CardType.class, Long.parseLong(pkt.msg));
@@ -629,6 +632,7 @@ public abstract class AbstractMmowgliController implements MmowgliController, MM
 
         CardTypeManager.updateCardType(ct);
         break;
+*/
       }
     }
     catch (RuntimeException re) {
