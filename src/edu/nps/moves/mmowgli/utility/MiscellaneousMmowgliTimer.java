@@ -167,9 +167,16 @@ public class MiscellaneousMmowgliTimer
     {
       MmowgliSessionGlobals globs = Mmowgli2UI.getGlobals();
       if(globs != null)
-        return globs.getVaadinSessionCookie()+" ";
+        return clampTo6chars(globs.getVaadinSessionCookie()+" ");
       else
         return "null-cookie ";
+    }
+    
+    private static String clampTo6chars(String s)
+    {
+      if(s != null && s.length()>9)
+        return s.substring(0,6)+"...";       
+      return s;
     }
 /*    
     private static String msTimeStamp()
