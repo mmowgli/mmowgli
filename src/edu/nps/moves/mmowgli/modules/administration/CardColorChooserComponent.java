@@ -74,7 +74,7 @@ public class CardColorChooserComponent extends HorizontalLayout
 
     // temp
     if(ct == null)
-      this.ct = CardType.getPositiveIdeaCardTypeTL();
+      this.ct = CardType.getCurrentPositiveIdeaCardTypeTL();
     
     addComponent(colorCombo = new ColorSelect());
     colorCombo.addValueChangeListener(new MyColorComboListener());
