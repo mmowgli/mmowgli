@@ -152,8 +152,8 @@ public class IdeaDashboard extends AbsoluteLayout implements MmowgliComponent, V
     recentButt.addClickListener(tabHndlr);
     tabHL.addComponent(recentButt);
     
-    styleWhiteInnovateTab(gameTitleLC, tabHL, tabHndlr, CardType.getPositiveIdeaCardTypeTL());
-    styleWhiteDefendTab  (gameTitleLC, tabHL, tabHndlr, CardType.getNegativeIdeaCardTypeTL());
+    styleWhiteInnovateTab(gameTitleLC, tabHL, tabHndlr, CardType.getCurrentPositiveIdeaCardTypeTL());
+    styleWhiteDefendTab  (gameTitleLC, tabHL, tabHndlr, CardType.getCurrentNegativeIdeaCardTypeTL());
      
     superActiveButt.setStyleName("m-ideaDashboardSuperActiveTab");
     superActiveButt.addStyleName("m-ideaDashboardTab4"); // marker for testing
@@ -172,8 +172,8 @@ public class IdeaDashboard extends AbsoluteLayout implements MmowgliComponent, V
     absL.setHeight("60px");
     absL.setWidth("778px");
     
-    String posText = CardType.getPositiveIdeaCardTypeTL().getTitle();
-    String negText = CardType.getNegativeIdeaCardTypeTL().getTitle();
+    String posText = CardType.getCurrentPositiveIdeaCardTypeTL().getTitle();
+    String negText = CardType.getCurrentNegativeIdeaCardTypeTL().getTitle();
     
     Label lab;    
     absL.addComponent(lab=new Label(posText),"top:0px;left:210px;");
