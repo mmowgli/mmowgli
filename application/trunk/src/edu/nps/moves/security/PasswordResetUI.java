@@ -26,7 +26,6 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
-import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
 import org.jasypt.util.password.StrongPasswordEncryptor;
 
