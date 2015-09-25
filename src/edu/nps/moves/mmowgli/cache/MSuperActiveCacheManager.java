@@ -22,15 +22,15 @@
 
 package edu.nps.moves.mmowgli.cache;
 
+import static edu.nps.moves.mmowgli.MmowgliConstants.MCACHE_LOGS;
+
 import java.util.*;
 import java.util.Map.Entry;
 
 import org.hibernate.Session;
 
 import edu.nps.moves.mmowgli.db.Card;
-import edu.nps.moves.mmowgli.modules.cards.CardTypeManager;
 import edu.nps.moves.mmowgli.utility.MiscellaneousMmowgliTimer.MSysOut;
-import static edu.nps.moves.mmowgli.MmowgliConstants.*;
 
 /**
  * MSuperActiveCacheManager.java
@@ -66,7 +66,7 @@ class MSuperActiveCacheManager
     List<Card> lis = (List<Card>)sess.createCriteria(Card.class).list();
     for(Card c : lis) {
      // System.out.println("&&&& "+c.getId());
-      if(CardTypeManager.isIdeaCard(c.getCardType()))
+      if(c.getCardType().isIdeaCard()) //CardTypeManager.isIdeaCard(c.getCardType()))
         continue; // will never be since we check backwards
       
       newCard(c,sess);
