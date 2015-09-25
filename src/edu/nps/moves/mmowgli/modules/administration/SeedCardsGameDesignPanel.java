@@ -61,8 +61,8 @@ public class SeedCardsGameDesignPanel extends AbstractGameBuilderPanel implement
     setWidth("100%");
     
     Move move1 = Move.getMoveByNumberTL(1);
-    CardType posTyp = CardType.getPositiveIdeaCardType(move1);
-    CardType negTyp = CardType.getNegativeIdeaCardType(move1);    
+    CardType posTyp = CardType.getCurrentPositiveIdeaCardType(move1);
+    CardType negTyp = CardType.getCurrentNegativeIdeaCardType(move1);    
     User seedUser = User.getUserWithUserNameTL("SeedCard");
     
     Card[] posCards = getSeedCardsTL(posTyp,seedUser,MAX_POS,move1);
