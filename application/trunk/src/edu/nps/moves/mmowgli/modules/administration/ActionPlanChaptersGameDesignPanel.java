@@ -22,11 +22,11 @@
 
 package edu.nps.moves.mmowgli.modules.administration;
 
+import static edu.nps.moves.mmowgli.MmowgliConstants.ERROR_LOGS;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
-
-import org.hibernate.Session;
 
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
@@ -36,12 +36,8 @@ import com.vaadin.ui.TextArea;
 import edu.nps.moves.mmowgli.db.Move;
 import edu.nps.moves.mmowgli.db.MovePhase;
 import edu.nps.moves.mmowgli.hibernate.HSess;
-import edu.nps.moves.mmowgli.markers.HibernateClosed;
-import edu.nps.moves.mmowgli.markers.HibernateOpened;
-import edu.nps.moves.mmowgli.markers.HibernateUpdate;
+import edu.nps.moves.mmowgli.markers.*;
 import edu.nps.moves.mmowgli.utility.MiscellaneousMmowgliTimer.MSysOut;
-
-import static edu.nps.moves.mmowgli.MmowgliConstants.*;
 
 /**
  * HeaderFooterGameDesignPanel.java
