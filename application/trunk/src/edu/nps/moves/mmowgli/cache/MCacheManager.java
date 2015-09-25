@@ -92,8 +92,8 @@ public class MCacheManager implements JmsReceiver
       
       supActMgr = new MSuperActiveCacheManager();
 
-      negativeTypeCurrentMove = CardType.getNegativeIdeaCardType(sess);
-      positiveTypeCurrentMove = CardType.getPositiveIdeaCardType(sess);
+      negativeTypeCurrentMove = CardType.getCurrentNegativeIdeaCardType(sess);
+      positiveTypeCurrentMove = CardType.getCurrentPositiveIdeaCardType(sess);
 
       allNegativeIdeaCardsCurrentMove = Collections.synchronizedSortedMap(new TreeMap<Long, Card>(new ReverseIdComparator()));
       allPositiveIdeaCardsCurrentMove = Collections.synchronizedSortedMap(new TreeMap<Long, Card>(new ReverseIdComparator()));
