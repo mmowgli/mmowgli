@@ -23,15 +23,11 @@
 package edu.nps.moves.mmowgli.modules.userprofile;
 
 import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Disjunction;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.*;
 
 import com.vaadin.data.hbnutil.HbnContainer;
 import com.vaadin.data.hbnutil.HbnContainer.EntityItem;
@@ -45,12 +41,9 @@ import edu.nps.moves.mmowgli.Mmowgli2UI;
 import edu.nps.moves.mmowgli.MmowgliEvent;
 import edu.nps.moves.mmowgli.components.CardTableSimple;
 import edu.nps.moves.mmowgli.components.HtmlLabel;
-import edu.nps.moves.mmowgli.db.Card;
-import edu.nps.moves.mmowgli.db.CardType;
-import edu.nps.moves.mmowgli.db.User;
+import edu.nps.moves.mmowgli.db.*;
 import edu.nps.moves.mmowgli.hibernate.HSess;
 import edu.nps.moves.mmowgli.markers.*;
-import edu.nps.moves.mmowgli.modules.cards.CardTypeManager;
 import edu.nps.moves.mmowgli.utility.IDNativeButton;
 
 /**
@@ -285,7 +278,7 @@ public class UserProfileMyIdeasPanel2 extends UserProfileTabPanel implements Cli
     return crit;
  }
   
-  @SuppressWarnings({ "unchecked", "deprecation"})
+  @SuppressWarnings("unchecked")
   private Component createProfileTL()
   {
     VerticalLayout lay = new VerticalLayout();
@@ -310,41 +303,41 @@ public class UserProfileMyIdeasPanel2 extends UserProfileTabPanel implements Cli
     int count=0;
     int largest=-1;
     
-    List<Card> lisPos = commonCriteria().add(Restrictions.eq("cardType",ct=CardTypeManager.getPositiveIdeaCardTypeTL())).list();
+    List<Card> lisPos = commonCriteria().add(Restrictions.eq("cardType",ct=CardType.getCurrentPositiveIdeaCardTypeTL()/*CardTypeManager.getPositiveIdeaCardTypeTL()*/)).list();
     count+=lisPos.size();
     largest = Math.max(largest, lisPos.size());
     
-    List<Card> lisNeg = commonCriteria().add(Restrictions.eq("cardType",ct=CardTypeManager.getNegativeIdeaCardTypeTL())).list();
+    List<Card> lisNeg = commonCriteria().add(Restrictions.eq("cardType",ct=CardType.getCurrentNegativeIdeaCardTypeTL())).list(); //CardTypeManager.getNegativeIdeaCardTypeTL())).list();
     count+=lisNeg.size();
     largest=Math.max(largest, lisNeg.size());
     
-    List<Card> lisExpand = commonCriteria().add(Restrictions.eq("cardType",ct=CardTypeManager.getExpandTypeTL())).list();
+    List<Card> lisExpand = commonCriteria().add(Restrictions.eq("cardType",ct=CardType.getExpandTypeTL())).list();//CardTypeManager.getExpandTypeTL())).list();
     count+=lisExpand.size();
     largest=Math.max(largest,lisExpand.size());
     
-    List<Card> lisAdapt = commonCriteria().add(Restrictions.eq("cardType",ct=CardTypeManager.getAdaptTypeTL())).list();
+    List<Card> lisAdapt = commonCriteria().add(Restrictions.eq("cardType",ct=CardType.getAdaptTypeTL())).list();//CardTypeManager.getAdaptTypeTL())).list();
     count+=lisAdapt.size();
     largest=Math.max(largest,lisAdapt.size());
 
-    List<Card> lisCounter = commonCriteria().add(Restrictions.eq("cardType",ct=CardTypeManager.getCounterTypeTL())).list();
+    List<Card> lisCounter = commonCriteria().add(Restrictions.eq("cardType",ct=CardType.getCounterTypeTL())).list();//CardTypeManager.getCounterTypeTL())).list();
     count+=lisCounter.size();
     largest=Math.max(largest,lisCounter.size());
 
-    List<Card> lisExplore = commonCriteria().add(Restrictions.eq("cardType",ct=CardTypeManager.getExploreTypeTL())).list();
+    List<Card> lisExplore = commonCriteria().add(Restrictions.eq("cardType",ct=CardType.getExploreTypeTL())).list();//CardTypeManager.getExploreTypeTL())).list();
     count+=lisExplore.size();
     largest=Math.max(largest,lisExplore.size());
 
-    ct = CardTypeManager.getPositiveIdeaCardTypeTL();
+    ct = CardType.getCurrentPositiveIdeaCardTypeTL(); //CardTypeManager.getPositiveIdeaCardTypeTL();
     row(ct.getSummaryHeader(),largest,lisPos.size(),ct,gridL);
-    ct = CardTypeManager.getNegativeIdeaCardTypeTL();
+    ct = CardType.getCurrentNegativeIdeaCardTypeTL(); //CardTypeManager.getNegativeIdeaCardTypeTL();
     row(ct.getSummaryHeader(),largest,lisNeg.size(),ct,gridL);
-    ct = CardTypeManager.getExpandTypeTL();
+    ct = CardType.getExpandTypeTL(); //CardTypeManager.getExpandTypeTL();
     row(ct.getSummaryHeader(),largest,lisExpand.size(),ct,gridL);
-    ct = CardTypeManager.getAdaptTypeTL();
+    ct = CardType.getAdaptTypeTL(); //CardTypeManager.getAdaptTypeTL();
     row(ct.getSummaryHeader(),largest,lisAdapt.size(),ct,gridL);
-    ct= CardTypeManager.getCounterTypeTL();
+    ct = CardType.getCounterTypeTL(); //CardTypeManager.getCounterTypeTL();
     row(ct.getSummaryHeader(),largest,lisCounter.size(),ct,gridL);
-    ct = CardTypeManager.getExploreTypeTL();
+    ct = CardType.getExploreTypeTL(); //CardTypeManager.getExploreTypeTL();
     row(ct.getSummaryHeader(),largest,lisExplore.size(),ct,gridL);
     
     gridL.addComponent(new Label(""));
@@ -377,7 +370,7 @@ public class UserProfileMyIdeasPanel2 extends UserProfileTabPanel implements Cli
     hLay.setMargin(false);
 
     hLay.addComponent(lab=new HtmlLabel("&nbsp;"));;
-    lab.addStyleName(CardTypeManager.getColorStyle(ct));
+    lab.addStyleName(CardType.getColorStyle(ct)); //CardTypeManager.getColorStyle(ct));
     lab.setWidth(""+width+"px");    
     hLay.addComponent(lab=new Label(""+sz));
     
