@@ -23,9 +23,7 @@
 package edu.nps.moves.mmowgli.db;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.persistence.*;
 
@@ -34,6 +32,7 @@ import org.hibernate.criterion.Restrictions;
 
 import edu.nps.moves.mmowgli.hibernate.DB;
 import edu.nps.moves.mmowgli.hibernate.HSess;
+import edu.nps.moves.mmowgli.modules.cards.CardStyler;
 
 /**
  * @author Mike Bailey, jmbailey@nps.edu
@@ -79,7 +78,7 @@ public class CardType implements Serializable
       throw new AssertionError("Unknown card class: " + this);
     }
   };
-  
+    
   long id;      /* Primary key, auto-generated. */
   String title;
   String titleAlternate;
@@ -132,14 +131,14 @@ public class CardType implements Serializable
     return lis;    
   }
 
-  public static CardType getPositiveIdeaCardTypeTL()
+  public static CardType getCurrentPositiveIdeaCardTypeTL()
   {
-    return getPositiveIdeaCardType(HSess.get());
+    return getCurrentPositiveIdeaCardType(HSess.get());
   }
   
-  public static CardType getPositiveIdeaCardType(Session sess)
+  public static CardType getCurrentPositiveIdeaCardType(Session sess)
   {
-    return getPositiveIdeaCardType(Game.get(sess).getCurrentMove());
+    return getCurrentPositiveIdeaCardType(Game.get(sess).getCurrentMove());
   }
   
   // Following used by MmowgliMobile
@@ -166,7 +165,7 @@ public class CardType implements Serializable
   }
   public static CardType getExpandType(Move m)
   {
-    return _getChildType(m,EXPAND_CARD_TYPE);    
+    return _getChildType(m,EXPAND_CARD_TYPE);
   } 
   public static CardType getCounterTypeTL()
   {
@@ -259,7 +258,7 @@ public class CardType implements Serializable
     MovePhase.updateTL(phase);
   }
   
-  public static CardType getPositiveIdeaCardType(Move m)
+  public static CardType getCurrentPositiveIdeaCardType(Move m)
   {
     Set<CardType> typs = m.getCurrentMovePhase().getAllowedCards();
     for(CardType ct : typs)
@@ -269,12 +268,12 @@ public class CardType implements Serializable
     
   }
 
-  public static CardType getNegativeIdeaCardTypeTL()
+  public static CardType getCurrentNegativeIdeaCardTypeTL()
   {
-    return getNegativeIdeaCardType(HSess.get());
+    return getCurrentNegativeIdeaCardType(HSess.get());
   }
   
- public static CardType getNegativeIdeaCardType(Session sess)
+ public static CardType getCurrentNegativeIdeaCardType(Session sess)
   {
 //    Disjunction disj = Restrictions.disjunction();
 //    disj.add(Restrictions.eq("title", "Worst Strategy"));
@@ -293,10 +292,10 @@ public class CardType implements Serializable
 //      if(ct.isNegativeIdeaCard())
 //        return ct;
 //    return null;
-     return getNegativeIdeaCardType(Game.get(sess).getCurrentMove());
+     return getCurrentNegativeIdeaCardType(Game.get(sess).getCurrentMove());
   }
   
-  public static CardType getNegativeIdeaCardType(Move m)
+  public static CardType getCurrentNegativeIdeaCardType(Move m)
   {
     Set<CardType> typs = m.getCurrentMovePhase().getAllowedCards();
     for(CardType ct : typs)
@@ -515,44 +514,53 @@ public class CardType implements Serializable
   {
     return getDefinedDescendantsByType(sess,EXPLORE_CARD_TYPE);
   }
-
+/*
   public static void setExpandCardTypeTL(Move m, CardType ct)
   {
     setChildCardTypeTL(m,ct,EXPAND_CARD_TYPE);
   }
+*/  
   public static void setExpandCardTypeAllPhasesTL(Move m, CardType ct)
   {
     setChildCardTypeAllPhasesTL(m,ct,EXPAND_CARD_TYPE);
   }
+/*
   public static void setCounterTLCardType(Move m, CardType ct)
   {
     setChildCardTypeTL(m,ct,COUNTER_CARD_TYPE);
   }
+*/
   public static void setCounterCardTypeAllPhasesTL(Move m, CardType ct)
   {
     setChildCardTypeAllPhasesTL(m,ct,COUNTER_CARD_TYPE);
   }
+ /*
   public static void setAdaptCardTypeTL(Move m, CardType ct)
   {
     setChildCardTypeTL(m,ct,ADAPT_CARD_TYPE);
   }
+*/
   public static void setAdaptCardTypeAllPhasesTL(Move m, CardType ct)
   {
     setChildCardTypeAllPhasesTL(m,ct,ADAPT_CARD_TYPE);
   }
+  /*
   public static void setExploreCardTypeTL(Move m, CardType ct)
   {
     setChildCardTypeTL(m,ct,EXPLORE_CARD_TYPE);
   }
+  */
   public static void setExploreCardTypeAllPhasesTL(Move m, CardType ct)
   {
     setChildCardTypeAllPhasesTL(m,ct,EXPLORE_CARD_TYPE);    
   }
+  /*
   private static void setChildCardTypeTL(Move m, CardType newCt, int ordinal)
   {
     MovePhase phase = m.getCurrentMovePhase();
     setChildCardTypeTL(phase, newCt, ordinal);
   }
+  */
   private static void setChildCardTypeAllPhasesTL(Move m, CardType newCt, int ordinal)
   {
     List<MovePhase> lis = m.getMovePhases();
@@ -576,4 +584,77 @@ public class CardType implements Serializable
     phase.setAllowedCards(typs);
     MovePhase.updateTL(phase);   
   }
+
+  public static CardType[] getAllCurrentTypesTL()
+  {
+    return new CardType[] {
+        CardType.getCurrentNegativeIdeaCardTypeTL(), //CardTypeManager.getNegativeIdeaCardTypeTL(),
+        CardType.getCurrentPositiveIdeaCardTypeTL(), //CardTypeManager.getPositiveIdeaCardTypeTL(),
+        CardType.getAdaptTypeTL(), //CardTypeManager.getAdaptTypeTL(),
+        CardType.getCounterTypeTL(), //CardTypeManager.getCounterTypeTL(),
+        CardType.getExpandTypeTL(), //CardTypeManager.getExpandTypeTL(),
+        CardType.getExploreTypeTL() //CardTypeManager.getExploreTypeTL()
+    };
+  }
+  @SuppressWarnings("unchecked")
+  public static CardType getDescendantOrdinal(int i)
+  {
+    Session sess = HSess.getSessionFactory().openSession();      // no leaked sessions
+    List<CardType> types = (List<CardType>)
+                                  sess.createCriteria(CardType.class).
+                                  add(Restrictions.eq("descendantOrdinal",i)).
+                                  list();
+    assert types.size()==1 : "CardType table error, descendantOrdinal: "+i;
+    
+    sess.close();
+    return types.get(0);
+  }
+  @SuppressWarnings("unchecked")
+  public static CardType getDescendantOrdinalTL(int i)
+  {
+    List<CardType> types = (List<CardType>)
+                                  HSess.get().createCriteria(CardType.class).
+                                  add(Restrictions.eq("descendantOrdinal",i)).
+                                  list();
+    assert types.size()==1 : "CardType table error, descendantOrdinal: "+i;
+    return types.get(0);
+  }
+
+  @SuppressWarnings("unchecked")
+  public static List<CardType> getDefinedPositiveIdeaCardsTL()
+  {
+    return (List<CardType>) HSess.get().createCriteria(CardType.class)
+                                .add(Restrictions.eq("cardClass", CardType.CardClass.POSITIVEIDEA))
+                                .list();
+  }
+  
+  @SuppressWarnings("unchecked")
+  public static List<CardType> getDefinedNegativeIdeaCardsTL()
+  {
+    return (List<CardType>) HSess.get().createCriteria(CardType.class)
+                                .add(Restrictions.eq("cardClass", CardType.CardClass.NEGATIVEIDEA))
+                                .list();
+  }
+
+  public static String getBackgroundColorStyle(CardType ct)
+  {
+    return CardStyler.getCardBaseColor(ct);// new way
+  }
+  
+  public static String getColorStyle(CardType ct)
+  {
+    String sty = ct.getCssColorStyle();
+    if(sty == null)
+      sty = "m-lightgray";
+    return sty;
+  }
+  
+  public static String getColorStyle_light(CardType ct)
+  {
+    String sty = ct.getCssLightColorStyle();
+    if(sty == null)
+      sty = "m-lightergray";
+    return sty;
+  }
+
 }
