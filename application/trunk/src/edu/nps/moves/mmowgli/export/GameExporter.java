@@ -261,8 +261,8 @@ public class GameExporter extends BaseExporter
     //addElementWithText(topCardsElem,"ScreenShot","topcardsScreenShot.png");
 
     MovePhase phase = MovePhase.getCurrentMovePhase(sess);
-    CardType posCt = CardType.getPositiveIdeaCardType(sess);
-    CardType negCt = CardType.getNegativeIdeaCardType(sess);
+    CardType posCt = CardType.getCurrentPositiveIdeaCardType(sess);
+    CardType negCt = CardType.getCurrentNegativeIdeaCardType(sess);
 
     String s = phase.getPlayACardTitle();
     addElementWithText(topCardsElem,"PlayACardText",s==null?"":s);
