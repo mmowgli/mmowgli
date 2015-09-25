@@ -39,7 +39,6 @@ import edu.nps.moves.mmowgli.db.*;
 import edu.nps.moves.mmowgli.markers.HasUUID;
 import edu.nps.moves.mmowgli.messaging.MMessage;
 import edu.nps.moves.mmowgli.messaging.MMessagePacket;
-import edu.nps.moves.mmowgli.modules.cards.CardTypeManager;
 import edu.nps.moves.mmowgli.utility.MiscellaneousMmowgliTimer.MSysOut;
 
 public class DatabaseListeners
@@ -200,7 +199,7 @@ public class DatabaseListeners
         msg = "";
       }
       else if(obj instanceof CardType) {
-        CardTypeManager.updateCardType((CardType)obj);
+       // CardTypeManager.updateCardType((CardType)obj);  nothing to do here, after refactor
         msgTyp = UPDATED_CARDTYPE;
         msg = ""+((CardType)obj).getId();
       }
