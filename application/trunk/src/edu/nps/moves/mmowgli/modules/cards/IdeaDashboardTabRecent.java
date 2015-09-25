@@ -179,7 +179,7 @@ public class IdeaDashboardTabRecent extends IdeaDashboardTabPanel implements Cli
   private void insertExpandTableTL()
   {
     if(expandTable == null  || (lastTable != null && lastTable != expandTable)) {
-      expandTable = createTypeTableTL(CardTypeManager.getExpandTypeTL());
+      expandTable = createTypeTableTL(CardType.getExpandTypeTL()); //CardTypeManager.getExpandTypeTL());
       
       if(lastTable!= null)
         tableLay.removeComponent(lastTable);
@@ -191,7 +191,7 @@ public class IdeaDashboardTabRecent extends IdeaDashboardTabPanel implements Cli
   private void insertAdaptTableTL() 
   {
     if(adaptTable == null || (lastTable != null && lastTable != adaptTable)) {
-      adaptTable = createTypeTableTL(CardTypeManager.getAdaptTypeTL());   
+      adaptTable = createTypeTableTL(CardType.getAdaptTypeTL()); //CardTypeManager.getAdaptTypeTL());   
       
       if(lastTable!= null)
         tableLay.removeComponent(lastTable);
@@ -204,7 +204,7 @@ public class IdeaDashboardTabRecent extends IdeaDashboardTabPanel implements Cli
   private void insertCounterTableTL()
   {
     if (counterTable == null || (lastTable != null && lastTable != counterTable)) {
-      counterTable = createTypeTableTL(CardTypeManager.getCounterTypeTL());
+      counterTable = createTypeTableTL(CardType.getCounterTypeTL());//CardTypeManager.getCounterTypeTL());
 
       if (lastTable != null)
         tableLay.removeComponent(lastTable);
@@ -216,7 +216,7 @@ public class IdeaDashboardTabRecent extends IdeaDashboardTabPanel implements Cli
   private void insertExploreTableTL()
   {
     if(exploreTable == null || (lastTable != null && lastTable != exploreTable)) {
-      exploreTable = createTypeTableTL(CardTypeManager.getExploreTypeTL());    
+      exploreTable = createTypeTableTL(CardType.getExploreTypeTL()); //CardTypeManager.getExploreTypeTL());    
 
       if (lastTable != null)
         tableLay.removeComponent(lastTable);
