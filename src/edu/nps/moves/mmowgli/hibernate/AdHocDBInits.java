@@ -70,8 +70,8 @@ public class AdHocDBInits
     Calendar cal = new GregorianCalendar(2015,04,13);
     cal.set(Calendar.HOUR_OF_DAY, 1300);
     Move curMov = g.getCurrentMove();
-    CardType pos = CardType.getPositiveIdeaCardType(curMov);
-    CardType neg = CardType.getNegativeIdeaCardType(curMov);
+    CardType pos = CardType.getCurrentPositiveIdeaCardType(curMov);
+    CardType neg = CardType.getCurrentNegativeIdeaCardType(curMov);
     
     Card crd = null;
     for(int i=0; i<8; i++) {      
