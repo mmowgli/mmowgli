@@ -57,7 +57,7 @@ public class IdeaDashboardTabDefend extends IdeaDashboardTabPanel
   @Override
   public void initGui()
   {
-    String defendCardName = CardType.getNegativeIdeaCardTypeTL().getTitle();
+    String defendCardName = CardType.getCurrentNegativeIdeaCardTypeTL().getTitle();
     Label leftLabel = new Label(
         "This is a list of all "+defendCardName+" cards that have been played.");
     getLeftLayout().addComponent(leftLabel, "top:0px;left:0px"); 
@@ -81,7 +81,8 @@ public class IdeaDashboardTabDefend extends IdeaDashboardTabPanel
     super.setVisible(visible);
     if(visible)
       if(!initted) {
-        buildCardClassTable(CardTypeManager.getNegativeIdeaCardTypeTL()); // getting class instead of type since the root idea cards can change move to move
+       // buildCardClassTable(CardTypeManager.getNegativeIdeaCardTypeTL()); // getting class instead of type since the root idea cards can change move to move
+        buildCardClassTable(       CardType.getCurrentNegativeIdeaCardTypeTL()); // getting class instead of type since the root idea cards can change move to move
         initted=true;
       }
   }
