@@ -67,7 +67,7 @@ public class HSess
   public static void checkInDbugSetTL(String s, long id)
   {
     if(setTL.get().contains(s+id)) {
-      System.out.println("*********** >>>>>>>>>>>> Found bug! <<<<<<<<<<< ************");
+      System.out.println("*********** >>>>>>>>>>>> Found bug! "+s+" "+id+" <<<<<<<<<<< ************");
       StackTraceElement[] stes = Thread.currentThread().getStackTrace();
       for (StackTraceElement elem : stes)
         System.out.println(elem.toString());
