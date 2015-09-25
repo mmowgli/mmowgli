@@ -56,7 +56,7 @@ public class IdeaDashboardTabInnovate extends IdeaDashboardTabPanel
   @Override
   public void initGui()
   {
-    String innovCardName = CardType.getPositiveIdeaCardTypeTL().getTitle();
+    String innovCardName = CardType.getCurrentPositiveIdeaCardTypeTL().getTitle();
     Label leftLabel = new Label(
         "This is a list of all "+innovCardName+" cards that have been played.");
     getLeftLayout().addComponent(leftLabel, "top:0px;left:0px"); 
@@ -86,7 +86,8 @@ public class IdeaDashboardTabInnovate extends IdeaDashboardTabPanel
     super.setVisible(visible);
     if(visible)
       if(!initted) {
-        buildCardClassTable(CardTypeManager.getPositiveIdeaCardTypeTL());   // getting class instead of type since the root idea cards can change move to move
+        //buildCardClassTable(CardTypeManager.getPositiveIdeaCardTypeTL());   // getting class instead of type since the root idea cards can change move to move
+        buildCardClassTable(CardType.getCurrentPositiveIdeaCardTypeTL());   // getting class instead of type since the root idea cards can change move to move
         initted=true;
       }
   }
