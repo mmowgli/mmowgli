@@ -22,16 +22,14 @@
 
 package edu.nps.moves.mmowgliMobile.ui;
 
-import com.vaadin.addon.touchkit.ui.NavigationButton;
+import com.vaadin.addon.touchkit.ui.*;
 import com.vaadin.addon.touchkit.ui.NavigationButton.NavigationButtonClickEvent;
-import com.vaadin.addon.touchkit.ui.VerticalComponentGroup;
 import com.vaadin.data.Container;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.CssLayout;
 
 import edu.nps.moves.mmowgli.db.*;
 import edu.nps.moves.mmowgli.hibernate.HSess;
-import edu.nps.moves.mmowgli.modules.cards.CardTypeManager;
 import edu.nps.moves.mmowgliMobile.data.*;
 
 /**
@@ -66,12 +64,12 @@ public class GameDataCategoriesView2 extends ForwardButtonView
       {
         HSess.init();
         Folder[] fa = new Folder[2];
-        CardType posTyp = CardTypeManager.getPositiveIdeaCardTypeTL();
+        CardType posTyp = CardType.getCurrentPositiveIdeaCardTypeTL(); // CardTypeManager.getPositiveIdeaCardTypeTL();
         Container cntr = new CardsByTypeContainer<Card>(posTyp);
         fa[0] = new Folder(posTyp.getTitle(), cntr, Card.class);
         fa[0].addParam(CardType.class.getSimpleName(),posTyp);
 
-        CardType negTyp = CardTypeManager.getNegativeIdeaCardTypeTL();
+        CardType negTyp = CardType.getCurrentNegativeIdeaCardTypeTL(); //CardTypeManager.getNegativeIdeaCardTypeTL();
         cntr = new CardsByTypeContainer<Card>(negTyp);
         fa[1] = new Folder(negTyp.getTitle(), cntr, Card.class);
         fa[1].addParam(CardType.class.getSimpleName(),negTyp);
