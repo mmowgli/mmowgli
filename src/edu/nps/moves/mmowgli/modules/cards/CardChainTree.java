@@ -26,7 +26,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import org.hibernate.Criteria;
-import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
@@ -36,9 +35,7 @@ import com.vaadin.event.ItemClickEvent.ItemClickListener;
 import com.vaadin.server.Resource;
 import com.vaadin.ui.*;
 
-import edu.nps.moves.mmowgli.AppEvent;
-import edu.nps.moves.mmowgli.Mmowgli2UI;
-import edu.nps.moves.mmowgli.MmowgliEvent;
+import edu.nps.moves.mmowgli.*;
 import edu.nps.moves.mmowgli.components.HtmlLabel;
 import edu.nps.moves.mmowgli.db.*;
 import edu.nps.moves.mmowgli.hibernate.HSess;
@@ -243,7 +240,7 @@ public class CardChainTree extends TreeTable implements ItemClickListener
       loadRootTL(c);
 
     // Second root card type
-    CardType riskTyp = CardType.getNegativeIdeaCardTypeTL();
+    CardType riskTyp = CardType.getCurrentNegativeIdeaCardTypeTL();
     crit = HSess.get().createCriteria(Card.class)
       .add(Restrictions.eq("cardType", riskTyp))
       .add(Restrictions.eq("factCard", false))
