@@ -131,7 +131,6 @@ public class MCacheManager implements JmsReceiver
     return CardDbHelper.getCardsCurrentMoveOnly(sess,negativeTypeCurrentMove);
   }
 
-  // Feb 2015 Before leaving this method, make sure that the referenced object can be read from the db. It's easy to out race Hibernate it seems
   public boolean handleIncomingDatabaseMessage(MMessagePacket packet)
   {
     MSysOut.println(myLogLevel,"MCacheManager.handleIncomingDatabaseMessageTL(), type = "+packet.msgType);
