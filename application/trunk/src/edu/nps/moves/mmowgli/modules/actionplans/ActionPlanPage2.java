@@ -1283,7 +1283,15 @@ public class ActionPlanPage2 extends AbsoluteLayout implements MmowgliComponent,
 
     AppMaster.instance().getMailManager().actionPlanInviteTL(ap, u);
     
-    User me = Mmowgli2UI.getGlobals().getUserTL();
+    // Don't get "me" from the database if "me" = "u", above. We've just updated u and that would lose the update.
+    long meId = (Long)Mmowgli2UI.getGlobals().getUserID();
+    
+    User me = null;
+    if(meId == u.getId())
+      me = u;
+    else
+      me = User.getTL(meId);
+    
     GameEventLogger.logActionPlanInvitationExtendedTL(ap, me.getUserName(), u.getUserName());
   }
 
