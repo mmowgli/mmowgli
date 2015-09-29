@@ -22,9 +22,7 @@
 
 package edu.nps.moves.mmowgli.components;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -44,7 +42,7 @@ import edu.nps.moves.mmowgli.db.pii.Query2Pii;
 import edu.nps.moves.mmowgli.hibernate.HSess;
 import edu.nps.moves.mmowgli.hibernate.VHibPii;
 import edu.nps.moves.mmowgli.markers.*;
-import edu.nps.moves.mmowgli.modules.registrationlogin.RegistrationPagePopupFirst;
+import edu.nps.moves.mmowgli.modules.registrationlogin.RegistrationPagePopupFirstA;
 import edu.nps.moves.mmowgli.modules.registrationlogin.Vips;
 import edu.nps.moves.mmowgli.utility.BrowserWindowOpener;
 import edu.nps.moves.mmowgli.utility.BulkMailHandler;
@@ -450,7 +448,7 @@ public class SignupsTable extends Table
     private boolean isInGame(QueryWrapper wrap, Session piiSess)
     {
       if(wrap.isIngame() == null) {
-        wrap.setIngame(!RegistrationPagePopupFirst.checkEmail(wrap.getEmail()));
+        wrap.setIngame(!RegistrationPagePopupFirstA.checkEmail(wrap.getEmail()));
         piiSess.update(wrap.qpii);
       }
       return wrap.isIngame();
