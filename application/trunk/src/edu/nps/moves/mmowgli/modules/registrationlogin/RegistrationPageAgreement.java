@@ -89,9 +89,12 @@ abstract public class RegistrationPageAgreement extends MmowgliDialog
     lab.setHeight("15px");
   
     HorizontalLayout hl = new HorizontalLayout();
-    hl.setWidth("100%");
+    hl.setWidth("98%"); //"100%");
     contentVLayout.addComponent(hl);
     
+    hl.addComponent(lab=new Label());
+    lab.setWidth("20px");
+       
     NativeButton rejectButt = new NativeButton();
     hl.addComponent(rejectButt);
     rejectButt.setStyleName("m-rejectNoThanksButton");
