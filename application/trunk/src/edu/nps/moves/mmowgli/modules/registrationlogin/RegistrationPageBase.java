@@ -479,11 +479,10 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
       closePopup(currentPopup);
       boolean rejected = ((RegistrationPageAgreementCombo)currentPopup).getRejected();
       Game g = Game.getTL();
-      GameLinks gl = GameLinks.getTL();
       if(rejected) {
-        // Either let them try again or close and say thankyou
-   //     app.getMainWindow().setScrollTop(0);
-        Mmowgli2UI.getAppUI().quitAndGoTo(gl.getThanksForInterestLink());
+        // Either let them try again or close and say thank you
+        handleLoginReturnTL(null); // back to try again
+        //Mmowgli2UI.getAppUI().quitAndGoTo(GameLinks.getTL().getThanksForInterestLink());  // bye bye
         HSess.checkClose(key);
         return;
       }
@@ -500,12 +499,11 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
     }
     if (currentPopup instanceof RegistrationPageSecondPermissionPopup) {
       closePopup(currentPopup);
-      GameLinks gl = GameLinks.getTL();
       boolean rejected = ((RegistrationPageSecondPermissionPopup)currentPopup).getRejected();
       if(rejected) {
         // Either let them try again or close and say thankyou
-   //     app.getMainWindow().setScrollTop(0);
-        Mmowgli2UI.getAppUI().quitAndGoTo(gl.getThanksForInterestLink());
+        handleLoginReturnTL(null); // back to try again
+        //Mmowgli2UI.getAppUI().quitAndGoTo(GameLinks.getTL().getThanksForInterestLink());  // bye bye
         HSess.checkClose(key);
         return;
       }
@@ -542,17 +540,37 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
     */
     if(currentPopup instanceof RegistrationPageSurvey) {
       closePopup(currentPopup);
+      if(((RegistrationPageSurvey)currentPopup).wasCancelButtonClicked()) {
+        // Either let them try again or close and say thankyou
+        handleLoginReturnTL(null); // back to try again
+        //Mmowgli2UI.getAppUI().quitAndGoTo(GameLinks.getTL().getThanksForInterestLink());  // bye bye
+        HSess.checkClose(key);
+        return;
+      }
       // don't have to do the survey
       boolean rejected = ((RegistrationPageSurvey)currentPopup).getRejected();
-      if(!rejected) {
+      okSurvey = !rejected;
+      if(!rejected)
         MSysOut.println(NEWUSER_CREATION_LOGS,"Accept survey clicked");
-        okSurvey = true;
-      }
-      else
+      else 
         MSysOut.println(NEWUSER_CREATION_LOGS,"Reject survey clicked");
 
-      RegistrationPagePopupFirst p1 = new RegistrationPagePopupFirst(this);
-      openPopup(p1,p1.getUsualWidth());
+      RegistrationPagePopupFirstA pa = new RegistrationPagePopupFirstA(this);
+      openPopup(pa,pa.getUsualWidth());
+      HSess.checkClose(key);
+      return;
+    }
+    
+    if(currentPopup instanceof RegistrationPagePopupFirstA) {
+      closePopup(currentPopup);
+      userId = ((RegistrationPagePopupFirstA)currentPopup).getUserId();
+      if(userId == null) {  // cancelled
+        UI.getCurrent().setScrollTop(0);
+        HSess.checkClose(key);
+        return;
+      }
+      RegistrationPagePopupFirstB pb = new RegistrationPagePopupFirstB(this,userId);
+      openPopup(pb,pb.getUsualWidth());
       HSess.checkClose(key);
       return;
     }
@@ -569,9 +587,9 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
       HSess.checkClose(key);
       return;
     }
-    if (currentPopup instanceof RegistrationPagePopupFirst) {
+    if (currentPopup instanceof RegistrationPagePopupFirstB) {
       closePopup(currentPopup);
-      userId = ((RegistrationPagePopupFirst)currentPopup).getUserId();
+      userId = ((RegistrationPagePopupFirstB)currentPopup).getUserId();
       if(userId == null) {  // cancelled
         UI.getCurrent().setScrollTop(0);
         HSess.checkClose(key);
