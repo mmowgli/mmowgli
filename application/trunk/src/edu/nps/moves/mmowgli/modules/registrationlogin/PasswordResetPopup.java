@@ -186,7 +186,7 @@ public class PasswordResetPopup extends Window implements Button.ClickListener
     }
 
     // Check that is in DB
-    if (RegistrationPagePopupFirst.checkEmail(email,piiSess)) {
+    if (RegistrationPagePopupFirstA.checkEmail(email,piiSess)) {
       errorOut("Email address not found."); // in database for user: " + user.getUserName() + ".");
       return;
     }
