@@ -60,7 +60,11 @@ public class RegistrationPageSecondPermissionPopup extends MmowgliDialog
     setTitleString(g.getSecondLoginPermissionPageTitle());
 
     contentVLayout.setSpacing(true);
-    Label lab = new HtmlLabel(g.getSecondLoginPermissionPageText());
+    Label lab;
+    contentVLayout.addComponent(lab = new Label());
+    lab.setHeight("15px");
+    
+    lab = new HtmlLabel(g.getSecondLoginPermissionPageText());
     lab.setWidth("82%");
     lab.addStyleName(labelStyle);
     contentVLayout.addComponent(lab);
