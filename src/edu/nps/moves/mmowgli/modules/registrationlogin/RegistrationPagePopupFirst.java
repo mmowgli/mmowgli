@@ -66,6 +66,7 @@ import edu.nps.moves.mmowgli.utility.MiscellaneousMmowgliTimer.MSysOut;
  * @author Mike Bailey, jmbailey@nps.edu
  * @version $Id$
  */
+//todo remove, since it has been split into A and B
 public class RegistrationPagePopupFirst extends MmowgliDialog
 {
   private static final long serialVersionUID = 7361125239325635297L;
