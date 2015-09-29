@@ -195,9 +195,16 @@ public abstract class MmowgliDialog extends Window implements MmowgliComponent
     @Override
     public void buttonClick(ClickEvent event)
     {
+      cancelButtonClicked=true;
       HSess.init();
       cancelClickedTL(event);   // allow subclass to override
       HSess.close();
     }
+  }
+  
+  private boolean cancelButtonClicked=false;
+  public boolean wasCancelButtonClicked()
+  {
+    return cancelButtonClicked;
   }
 }
