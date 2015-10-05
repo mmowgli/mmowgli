@@ -138,7 +138,7 @@ public class AppMenuBar extends CustomComponent implements WantsGameUpdates
   {
     MenuBar.MenuItem ret = menubar.addItem("Game Master", null);
     ret.setIcon(VaadinIcons.GAVEL);
-    ret.addItem("Monitor Game Master Events Log", new MCommand(MENUGAMEMASTERMONITOREVENTS));
+    ret.addItem("Monitor Game Master Events Log", new MCommand(MENUGAMEMASTERMONITOREVENTS)).setIcon(VaadinIcons.LINES);
     ret.addItem("Post comment to Game Master Event Log", new MCommand(MENUGAMEMASTERPOSTCOMMENT)).setIcon(VaadinIcons.COMMENT_O);
     ret.addSeparator();
     
