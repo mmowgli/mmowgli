@@ -9,12 +9,24 @@
 
 /* 13 Mar 2014: images gotten from "background: transparent url('#{$imageRepo}/blah.png') no-repeat;" don't get their token replaced
    apparently have to use explicit background-image.... */
+/* This font-face declaration must be outside your theme mixin. */
+@font-face {
+    font-family: 'Vaadin-Icons';
+    src: url('fonts/Vaadin-Icons.eot');
+    src: url('fonts/Vaadin-Icons.eot?#iefix') format('embedded-opentype'),
+         url('fonts/Vaadin-Icons.woff') format('woff'),
+         url('fonts/Vaadin-Icons.ttf') format('truetype'),
+         url('fonts/Vaadin-Icons.svg#icomoon') format('svg');
+}
+.Vaadin-Icons {
+    font-family: 'Vaadin-Icons';
+}
    
 @mixin mmowgli2 { 
   /* Include all the styles from the reindeer theme */
   @include reindeer;
 
-  /* this works around an apparent style bug for treetable where double arrows were showing */
+/* this works around an apparent style bug for treetable where double arrows were showing */
   .v-table-cell-content-m-cardchain-row .v-table-cell-wrapper .v-treetable-node-open,
   .v-table-cell-content-m-cardchain-row .v-table-cell-wrapper .v-treetable-node-closed {
     background:none;
@@ -28,7 +40,13 @@
     position: relative;
     left: -45px;
   }
-   
+  .m-rotate-180 {
+    -webkit-transform: rotate(180deg);     /* Chrome and other webkit browsers */
+    -moz-transform: rotate(180deg);        /* FF */
+    -o-transform: rotate(180deg);          /* Opera */
+    -ms-transform: rotate(180deg);         /* IE9 */
+    transform: rotate(180deg);             /* W3C compliant browsers */
+  }
   /* Insert your theme rules here */
   .m-redborder {
 	border: 1px solid #FF0000;
