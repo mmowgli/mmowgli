@@ -1,0 +1,382 @@
+
+.m-touchkit-blueicon .v-icon {
+    color: #00a3e8;
+}
+.message-layout .m-actionplan-text {
+	color: #797b7f;
+	font-size: 14px;
+}
+.message-layout .m-actionplan-hr hr{  /* doesn't help*/
+	margin-bottom: 5px;
+    /*margin-left: -20px;
+    margin-right: -20px;*/
+    margin-top: 5px;
+}
+span.m-actionplan-text-authors, .message-layout .m-actionplan-text-authors, 
+span.m-card-text-author, .message-layout .m-card-text-author {
+	color: #00a3e8;
+	font-weight: bold;
+	font-size: 14px;	
+}
+.message-layout .m-card-author {
+	color: #797b7f;
+	font-size: 17px;
+	/*font-weight: bold;*/
+	margin-left: 5px;
+	vertical-align: bottom;	
+}
+.message-layout .m-text-center {
+	text-align: center;
+}
+.message-layout .light-text,
+.message-layout .light {
+	color: #797b7f;
+}
+.m-user-top-label {
+	color: #797b7f;
+	font-size: 115%;
+}
+.m-user-top-value {
+  font-size: 135%;
+}
+.message-layout .m-pill-label {
+
+   width: 80px;
+   /*height: 25px;*/
+   padding: 5px;
+   position: relative;
+   -moz-border-radius:    10px;
+   -webkit-border-radius: 10px;
+   border-radius:         10px;
+   text-align: center;
+   /*
+   color: white;
+   background: red;
+   */
+}
+.message-button .m-messageList-normal {
+  font-weight:normal;
+  color: #797b7f;
+  font-size: 14px;
+}
+.message-button .m-messageList-italics {
+  font-style:italic;
+  color: #797b7f;
+  font-size: 14px;
+}
+.message-button .m-messageList-bold {
+  font-weight:bold;
+  color: #5d5d5d;
+  font-size: 14px;
+}
+.message-button .m-bold14 {
+  font-weight:bold;
+  font-size: 14px;
+}
+.m-horiz-padding-3 {
+  padding-left: 3px;
+  padding-right: 3px;
+}
+.message-button .m-messageList-italic-bold {
+  font-weight:bold;
+  color: #5d5d5d;
+  font-size: 14px;
+  font-style:italic;	
+}
+.message-view.no-message {
+	background: transparent;
+}
+
+.no-message .message-layout  {
+	height: 100%;
+	background: transparent;
+	-webkit-box-shadow: inset 0 1px 5px rgba(0,0,0,.3);
+}
+
+.no-message .message-layout div {
+	height: 100%;
+	font-size: 20px;
+	font-weight: bold;
+	text-shadow: 0 1px 0 rgba(255,255,255,.4);
+	color: #6a6c6f;
+	text-align: center;
+	position: relative;
+}
+
+.no-message .message-layout .v-label {
+	height: auto;
+	top: 40%;
+}
+
+.v-app .no-message .message-layout {
+	padding: 0;
+}
+
+
+
+
+.m-card-list .v-table-cell-wrapper {
+	height: 80px;
+}
+.m-actionplan-list .v-table-cell-wrapper {
+	height: 105px;
+}
+.m-user-list .v-table-cell-wrapper {
+	height: 35px; //50px;
+}
+
+.m-card-render {
+    border: 4px solid;
+    border-radius: 25px;
+    margin: 3px;
+    border-color: #888888;
+    background-color: white;
+}
+.m-card-header {
+    border-radius: 20px 20px 0px 0px; //TL TR BR BL
+}
+.m-card-footer {
+    background-color: #EEEEEE;
+    border-radius: 0px 0px 20px 20px; //TL TR BR BL
+}
+.m-card-child-button {
+  border-radius:12px;
+  color:#797b7f;
+  font-size: 10px;
+}
+.m-author-button {
+  font-size:14px;
+  border-radius:12px;
+}
+
+.m-userview-top {
+    border: 3px solid;
+    border-radius: 12px;
+    border-color: #888888;
+    background-color: #E1D5BB;
+}
+.m-userview-mid {
+    border: 3px solid;
+    border-radius: 12px;
+    border-color: #888888;
+    background-color: #EEEEEE;
+}
+.m-userview-bottom {
+    border: 3px solid;
+    border-radius: 12px;
+    border-color: #888888;
+    background-color: white;
+}
+
+.m-ridgeborder {
+  border-color: #888888;
+  border-width: 2px;
+  border-style: ridge;
+}
+  .m-text-align-right {
+    text-align:right;
+  }
+  .m-text-align-left {
+    text-align:left;
+  }
+  .m-text-align-center {
+    text-align:center;
+  }
+   .m-redborder {
+	border: 1px solid #FF0000;
+  }
+    .m-blueborder {
+    border: 1px solid #0000FF;
+  }
+  .m-greenborder {
+    border: 1px solid #00FF00;
+  }
+  .m-cyanborder {
+	border: 1px solid cyan;
+  }
+  
+/* CARDS */
+/* Duplicate in mobile style file */
+/*********/
+.m-orange, .m-expand-color, .m-f26522, #m-orange {
+ /* color: white;*/
+  background-color: #f26522;
+}
+.m-orange-text {
+  color: #EB642D;
+}
+
+.m-red, .m-counter-color, .m-b61861, #m-red {
+  /* color: white;*/
+  background-color: #b61861;
+}
+.m-red-text {
+  color: #B20062;
+}
+.m-blue, .m-adapt-color, .m-0f75bc, #m-blue {
+  /* color: white;*/
+  background-color: #0f75bc;
+}
+.m-blue-text {
+  color: #2775BD;	
+}
+.m-lime, .m-explore-color, .m-8cc63f, #m-lime {
+  /* color: white;*/
+  background-color: #8cc63f;
+}
+.m-lime-text {
+  color: #90CB41;
+}
+
+//cardstyle
+.m-orange, .m-orange-back, .m-expand-color, .m-f26522 {
+  background-color: #f26522;
+}
+.m-orange-text {
+  color: #EB642D;
+}
+
+//cardstyle
+.m-red, .m-red-back, .m-counter-color, .m-b61861 {
+  background-color: #b61861;
+}
+.m-red-text {
+  color: #B20062;
+}
+
+//cardstyle
+.m-blue, .m-blue-back, .m-adapt-color, .m-0f75bc {
+  background-color: #0f75bc;
+}
+.m-blue-text {
+  color: #2775BD;	
+}
+
+//cardstyle
+.m-lime, .m-lime-back, .m-explore-color, .m-8cc63f {
+  background-color: #8cc63f;
+}
+.m-lime-text {
+  color: #90CB41;
+}
+
+//cardstyle
+.m-purple, .m-purple-back, .m-resource-color, .m-662d91 {
+  background-color: #662d91;
+}
+.m-purple-text {
+  color: #682491;
+}
+
+//cardstyle
+.m-green, .m-green-back, .m-risk-color, .m-00a651{
+  background-color: #00a651;
+}
+.m-green-text {
+  color: #24AB51; /*green*/	
+}
+
+//cardstyle
+.m-darkred, .m-darkred-back, .m-ab0000 {
+  background-color: #AB0000;
+}
+.m-darkred-text {
+  color: #AB0000;	
+}
+
+//cardstyle
+.m-armyblack, .m-armyblack-back, .m-000000 {
+  background-color: #000000;
+}
+.m-armyblack-text {
+  color: #000000;
+}
+
+//cardstyle
+.m-armygold, .m-armygold-back, .m-fcc702 {
+  background-color: #FCC702;
+}
+.m-armygold-text {
+  color: #FCC702;
+}
+
+//cardstyle
+.m-navyblue, .m-navyblue-back, .m-032e57 {
+  background-color: #032E57;
+}
+.m-navyblue-text {
+  color: #032E57;	
+}
+
+//cardstyle
+.m-navygold, .m-navygold-back, .m-fcbb38 {
+  background-color: #fcbb38;
+}
+.m-navygold-text {
+  color: #fcbb38;
+}
+
+//cardstyle
+.m-whitecard, m-whitecard-back {
+  background-color: #EEEEEE;
+}
+.m-whitecard-text {
+  color: #EEEEEE;
+}
+
+.m-white-text {
+  color: white;
+}
+
+.m-black-text {
+  color: black;
+}
+
+//cardstyle
+.m-blackcard, .m-blackcard-back {
+  background-color: #373737;
+}
+.m-blackcard-text {
+  color: #58595B;
+}
+
+.m-lightgray {
+  background-color: LightGray;
+}
+.m-lightgray-text {
+  color: LightGray;
+}
+.m-lightergray {
+  background-color: #e3e3e3;
+}
+.m-lightergray-text {
+  color: #e3e3e3;
+}
+
+        .m-662D91 {color:#662D91;}
+
+        .m-00A651 {color:#00A651;}
+
+        .m-F26522 {color:#F26522;}
+
+        .m-B61861 {color:#B61861;}
+
+        .m-0F75BC {color:#0F75BC;}
+
+        .m-8CC63F {color:#8CC63F;}
+
+        .m-AB0000 {color:#AB0000;}
+ 
+        .m-000000 {color:#000000;}
+
+        .m-FCC702 {color:#FCC702;}
+
+        .m-032E57 {color:#032E57;}
+
+        .m-FCBB38 {color:#FCBB38;}
+
+        .m-FFFFFF {color:#FFFFFF;}
+
+        .m-373737 {color:#373737;}
+        
+        .m-888888 {color:#888888;} // this works for controlling icon size:    font-size:24px;}
