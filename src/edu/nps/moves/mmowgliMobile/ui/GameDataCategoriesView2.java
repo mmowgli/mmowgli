@@ -22,15 +22,24 @@
 
 package edu.nps.moves.mmowgliMobile.ui;
 
-import com.vaadin.addon.touchkit.ui.*;
+import org.vaadin.teemu.VaadinIcons;
+
+import com.vaadin.addon.touchkit.ui.NavigationButton;
 import com.vaadin.addon.touchkit.ui.NavigationButton.NavigationButtonClickEvent;
+import com.vaadin.addon.touchkit.ui.VerticalComponentGroup;
 import com.vaadin.data.Container;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.CssLayout;
 
-import edu.nps.moves.mmowgli.db.*;
+import edu.nps.moves.mmowgli.db.ActionPlan;
+import edu.nps.moves.mmowgli.db.Card;
+import edu.nps.moves.mmowgli.db.CardType;
+import edu.nps.moves.mmowgli.db.Game;
+import edu.nps.moves.mmowgli.db.User;
 import edu.nps.moves.mmowgli.hibernate.HSess;
-import edu.nps.moves.mmowgliMobile.data.*;
+import edu.nps.moves.mmowgliMobile.data.AllActionPlansContainer;
+import edu.nps.moves.mmowgliMobile.data.AllUsersContainer;
+import edu.nps.moves.mmowgliMobile.data.CardsByTypeContainer;
+import edu.nps.moves.mmowgliMobile.data.Folder;
 
 /**
  * Displays accounts, mailboxes, message list hierarchically
@@ -52,7 +61,7 @@ public class GameDataCategoriesView2 extends ForwardButtonView
 
     // Cards
     NavigationButton butt = new NavigationButton("Idea Cards");
-    butt.setIcon(FontAwesome.LIGHTBULB_O); //cardsIcon);
+    butt.setIcon(VaadinIcons.LIGHTBULB); //cardsIcon);
     butt.addStyleName("m-touchkit-blueicon");
     accounts.addComponent(butt);
     butt.addClickListener(new NavigationButton.NavigationButtonClickListener()
@@ -83,7 +92,7 @@ public class GameDataCategoriesView2 extends ForwardButtonView
 
     // Action Plans
     butt = new NavigationButton("Action Plans");
-    butt.setIcon(FontAwesome.LIST_OL);//apIcon
+    butt.setIcon(VaadinIcons.LIST);//apIcon
     butt.addStyleName("m-touchkit-blueicon");
     accounts.addComponent(butt);
     butt.addClickListener(new NavigationButton.NavigationButtonClickListener()
@@ -100,7 +109,7 @@ public class GameDataCategoriesView2 extends ForwardButtonView
     });
 
     butt = new NavigationButton("Player Profiles");
-    butt.setIcon(FontAwesome.USERS); //usersIcon);
+    butt.setIcon(VaadinIcons.USERS); //usersIcon);
     butt.addStyleName("m-touchkit-blueicon");
     accounts.addComponent(butt);
     butt.addClickListener(new NavigationButton.NavigationButtonClickListener()

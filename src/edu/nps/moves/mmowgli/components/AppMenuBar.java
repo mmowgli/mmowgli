@@ -22,11 +22,11 @@
 
 package edu.nps.moves.mmowgli.components;
 
-import static edu.nps.moves.mmowgli.MmowgliConstants.CLUSTERMONITORTARGETWINDOWNAME;
-import static edu.nps.moves.mmowgli.MmowgliConstants.CLUSTERMONITORURL;
+import static edu.nps.moves.mmowgli.MmowgliConstants.*;
 import static edu.nps.moves.mmowgli.MmowgliEvent.*;
 
-import com.vaadin.server.FontAwesome;
+import org.vaadin.teemu.VaadinIcons;
+
 import com.vaadin.ui.*;
 import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
@@ -137,42 +137,42 @@ public class AppMenuBar extends CustomComponent implements WantsGameUpdates
   private MenuBar.MenuItem buildGameMasterMenu()
   {
     MenuBar.MenuItem ret = menubar.addItem("Game Master", null);
-    ret.setIcon(FontAwesome.GAVEL);
+    ret.setIcon(VaadinIcons.GAVEL);
     ret.addItem("Monitor Game Master Events Log", new MCommand(MENUGAMEMASTERMONITOREVENTS));
-    ret.addItem("Post comment to Game Master Event Log", new MCommand(MENUGAMEMASTERPOSTCOMMENT)).setIcon(FontAwesome.COMMENT_O);
+    ret.addItem("Post comment to Game Master Event Log", new MCommand(MENUGAMEMASTERPOSTCOMMENT)).setIcon(VaadinIcons.COMMENT_O);
     ret.addSeparator();
     
-    ret.addItem("Broadcast message to game masters", new MCommand(MENUGAMEMASTERBROADCASTTOGMS)).setIcon(FontAwesome.BULLHORN);
-    ret.addItem("Broadcast message to all players", new MCommand(MENUGAMEMASTERBROADCAST)).setIcon(FontAwesome.BULLHORN);
+    ret.addItem("Broadcast message to game masters", new MCommand(MENUGAMEMASTERBROADCASTTOGMS)).setIcon(VaadinIcons.MEGAFONE);
+    ret.addItem("Broadcast message to all players", new MCommand(MENUGAMEMASTERBROADCAST)).setIcon(VaadinIcons.MEGAFONE);
     
-    ret.addItem("Edit blog headline", new MCommand(MENUGAMEMASTERBLOGHEADLINE)).setIcon(FontAwesome.EXCLAMATION_CIRCLE);
+    ret.addItem("Edit blog headline", new MCommand(MENUGAMEMASTERBLOGHEADLINE)).setIcon(VaadinIcons.EXCLAMATION_CIRCLE);
     ret.addSeparator();
 
     if (Game.getTL().isActionPlansEnabled()) {
-        ret.addItem("Create Action Plan", new MCommand(MENUGAMEMASTERCREATEACTIONPLAN)).setIcon(FontAwesome.FILE_TEXT_O);
-        ret.addItem("Invite additional players to be Action Plan authors", new MCommand(MENUGAMEMASTERINVITEAUTHORSCLICK)).setIcon(FontAwesome.USER_MD);
+        ret.addItem("Create Action Plan", new MCommand(MENUGAMEMASTERCREATEACTIONPLAN)).setIcon(VaadinIcons.FILE_TEXT_O);
+        ret.addItem("Invite additional players to be Action Plan authors", new MCommand(MENUGAMEMASTERINVITEAUTHORSCLICK)).setIcon(VaadinIcons.USERS);
     }
 
     ret.addSeparator();
-    ret.addItem("Show active players",new MCommand(MENUGAMEMASTERACTIVEPLAYERREPORTCLICK)).setIcon(FontAwesome.USER_MD);
-    //ret.addItem("Show active player count overall", new MCommand(MENUGAMEMASTERACTIVECOUNTCLICK)).setIcon(FontAwesome.USER_MD);
-    //ret.addItem("Show active player count by server", new MCommand(MENUGAMEMASTERACTIVECOUNTBYSERVERCLICK)).setIcon(FontAwesome.USER_MD);
-   // this is non functional ret.addItem("Show user polling data for this server",  new MCommand(MENUGAMEMASTERUSERPOLLINGCLICK)).setIcon(FontAwesome.USER_MD);
-    ret.addItem("Show registered user counts", new MCommand(MENUGAMEMASTERTOTALREGISTEREDUSERS)).setIcon(FontAwesome.USER_MD);
-    ret.addItem("Show card count", new MCommand(MENUGAMEMASTERCARDCOUNTCLICK)).setIcon(FontAwesome.LIGHTBULB_O);
-    ret.addItem("View game login permissions buttons", viewGamePermissionsClicked).setIcon(FontAwesome.SIGN_IN);
+    ret.addItem("Show active players",new MCommand(MENUGAMEMASTERACTIVEPLAYERREPORTCLICK)).setIcon(VaadinIcons.USERS);
+    //ret.addItem("Show active player count overall", new MCommand(MENUGAMEMASTERACTIVECOUNTCLICK)).setIcon(VaadinIcons.USERS);
+    //ret.addItem("Show active player count by server", new MCommand(MENUGAMEMASTERACTIVECOUNTBYSERVERCLICK)).setIcon(VaadinIcons.USERS);
+   // this is non functional ret.addItem("Show user polling data for this server",  new MCommand(MENUGAMEMASTERUSERPOLLINGCLICK)).setIcon(VaadinIcons.USERS);
+    ret.addItem("Show registered user counts", new MCommand(MENUGAMEMASTERTOTALREGISTEREDUSERS)).setIcon(VaadinIcons.USERS);
+    ret.addItem("Show card count", new MCommand(MENUGAMEMASTERCARDCOUNTCLICK)).setIcon(VaadinIcons.HASH);
+    ret.addItem("View game login permissions buttons", viewGamePermissionsClicked).setIcon(VaadinIcons.SIGN_IN);
 
     ret.addSeparator();
 
     if (Game.getTL().isActionPlansEnabled())
-        ret.addItem("Show displayed Action Plan as html", new MCommand(MENUGAMEMASTER_EXPORT_SELECTED_ACTIONPLAN)).setIcon(FontAwesome.FILE_TEXT_O);
+        ret.addItem("Show displayed Action Plan as html", new MCommand(MENUGAMEMASTER_EXPORT_SELECTED_ACTIONPLAN)).setIcon(VaadinIcons.FILE_TEXT_O);
     
-    ret.addItem("Show displayed Idea Card tree as html", new MCommand(MENUGAMEMASTER_EXPORT_SELECTED_CARD)).setIcon(FontAwesome.LIGHTBULB_O);
-    ret.addItem("Open game Reports Index page", new MCommand(MENUGAMEMASTEROPENREPORTSPAGE)).setIcon(FontAwesome.FILE_TEXT_O);
+    ret.addItem("Show displayed Idea Card tree as html", new MCommand(MENUGAMEMASTER_EXPORT_SELECTED_CARD)).setIcon(VaadinIcons.LIGHTBULB);
+    ret.addItem("Open game Reports Index page", new MCommand(MENUGAMEMASTEROPENREPORTSPAGE)).setIcon(VaadinIcons.FILE_TEXT_O);
     ret.addSeparator();
-    ret.addItem("View (read-only) game designer values", new MCommand(MENUGAMEADMIN_BUILDGAMECLICK_READONLY));
+    ret.addItem("View (read-only) game designer values", new MCommand(MENUGAMEADMIN_BUILDGAMECLICK_READONLY)).setIcon(VaadinIcons.EYE);
     ret.addSeparator();
-    ret.addItem("About this Mmowgli", new MCommand(MENUGAMEMASTERABOUTMMOWGLI)).setIcon(FontAwesome.INFO_CIRCLE);
+    ret.addItem("About this Mmowgli", new MCommand(MENUGAMEMASTERABOUTMMOWGLI)).setIcon(VaadinIcons.INFO_CIRCLE);
     
     return ret;
   }
@@ -183,11 +183,11 @@ public class AppMenuBar extends CustomComponent implements WantsGameUpdates
   private MenuBar.MenuItem buildDesignerMenu()
   {
     MenuBar.MenuItem ret = menubar.addItem("<span style='width:100px'>Game Designer</span>",null);
-    ret.setIcon(FontAwesome.PENCIL_SQUARE_O);
+    ret.setIcon(VaadinIcons.PENCIL);
     
-    ret.addItem("Customize game", new MCommand(MENUGAMEADMIN_BUILDGAMECLICK)).setIcon(FontAwesome.PENCIL);
-    ret.addItem("Publish updated game design report ", new MCommand(MENUGAMEADMIN_EXPORTGAMESETTINGS)).setIcon(FontAwesome.FILE_TEXT_O);
-    ret.addItem("Show signup email addresses and feedback", new MCommand(MENUGAMEADMINDUMPSIGNUPS)).setIcon(FontAwesome.USER_MD);
+    ret.addItem("Customize game", new MCommand(MENUGAMEADMIN_BUILDGAMECLICK)).setIcon(VaadinIcons.PENCIL);
+    ret.addItem("Publish updated game design report ", new MCommand(MENUGAMEADMIN_EXPORTGAMESETTINGS)).setIcon(VaadinIcons.FILE_TEXT_O);
+    ret.addItem("Show signup email addresses and feedback", new MCommand(MENUGAMEADMINDUMPSIGNUPS)).setIcon(VaadinIcons.CHECK);
     return ret;
   }
 
@@ -198,59 +198,59 @@ public class AppMenuBar extends CustomComponent implements WantsGameUpdates
   {
     Game game = Game.getTL();
 
-    MenuBar.MenuItem ret = menubar.addItem("Game Administrator", null); ret.setIcon(FontAwesome.COG);
-    ret.addItem("Player administration", new MCommand(MENUGAMEMASTERUSERADMIN)).setIcon(FontAwesome.USER_MD);
+    MenuBar.MenuItem ret = menubar.addItem("Game Administrator", null); ret.setIcon(VaadinIcons.COG);
+    ret.addItem("Player administration", new MCommand(MENUGAMEMASTERUSERADMIN)).setIcon(VaadinIcons.USERS);
     
-    maxUsersMI = ret.addItem("null text", new MCommand(MENUGAMEADMINLOGINLIMIT));
+    maxUsersMI = ret.addItem("null text", new MCommand(MENUGAMEADMINLOGINLIMIT)); maxUsersMI.setIcon(VaadinIcons.BAN);
     setMaxUsersMIText(game);
 
-    ret.addItem("<a href='"+CLUSTERMONITORURL+"' target='"+CLUSTERMONITORTARGETWINDOWNAME+"'>Open cluster monitor</a>",new NullMCommand());
+    ret.addItem("<a href='"+CLUSTERMONITORURL+"' target='"+CLUSTERMONITORTARGETWINDOWNAME+"'>Open cluster monitor</a>",new NullMCommand()).setIcon(VaadinIcons.WRENCH);
 
     ret.addSeparator();
-    ret.addItem("Dump player emails in plain text", new MCommand(MENUGAMEADMINDUMPEMAILS)).setIcon(FontAwesome.USER_MD);
-    ret.addItem("Dump game master emails in plain text", new MCommand(MENUGAMEADMINDUMPGAMEMASTERS)).setIcon(FontAwesome.USER_MD);
+    ret.addItem("Dump player emails in plain text", new MCommand(MENUGAMEADMINDUMPEMAILS)).setIcon(VaadinIcons.USERS);
+    ret.addItem("Dump game master emails in plain text", new MCommand(MENUGAMEADMINDUMPGAMEMASTERS)).setIcon(VaadinIcons.USERS);
     ret.addSeparator();
 
-    topCardsRoMI = ret.addItem("Top idea cards read-only", topCardsReadOnlyChecked); topCardsRoMI.setIcon(FontAwesome.LOCK);
+    topCardsRoMI = ret.addItem("Top idea cards read-only", topCardsReadOnlyChecked); topCardsRoMI.setIcon(VaadinIcons.LOCK);
     topCardsRoMI.setCheckable(true);
     topCardsRoMI.setChecked(game.isTopCardsReadonly());
 
-    cardsRoMI=ret.addItem("Card-play read-only", cardsReadOnlyChecked); cardsRoMI.setIcon(FontAwesome.LOCK);
+    cardsRoMI=ret.addItem("Card-play read-only", cardsReadOnlyChecked); cardsRoMI.setIcon(VaadinIcons.LOCK);
     cardsRoMI.setCheckable(true);
     cardsRoMI.setChecked(game.isCardsReadonly());
 
-    gameRoMI = ret.addItem("Entire game read-only", gameReadOnlyChecked); gameRoMI.setIcon(FontAwesome.LOCK);
+    gameRoMI = ret.addItem("Entire game read-only", gameReadOnlyChecked); gameRoMI.setIcon(VaadinIcons.LOCK);
     gameRoMI.setCheckable(true);
     gameRoMI.setChecked(game.isReadonly());
     ret.addSeparator();
 
-    ret.addItem("Game login button displays and permissions", gamePermissionsClicked).setIcon(FontAwesome.SIGN_IN);
+    ret.addItem("Game login button displays and permissions", gamePermissionsClicked).setIcon(VaadinIcons.SIGN_IN);
     
-    emailConfirmationMI = ret.addItem("Require new signup email confirmation",emailConfirmationChecked);
+    emailConfirmationMI = ret.addItem("Require new signup email confirmation",emailConfirmationChecked); emailConfirmationMI.setIcon(VaadinIcons.USER_CHECK);
     emailConfirmationMI.setCheckable(true);
     emailConfirmationMI.setChecked(game.isEmailConfirmation());
     ret.addSeparator();
 
-    ret.addItem("Manage signups", new MCommand(MENUGAMEADMINMANAGESIGNUPS)).setIcon(FontAwesome.USER_MD);
-    ret.addItem("Add to VIP list", new MCommand(MENUGAMEMASTERADDTOVIPLIST)).setIcon(FontAwesome.USER_MD);
-    ret.addItem("View and/or delete from VIP list", new MCommand(MENUGAMEMASTERVIEWVIPLIST)).setIcon(FontAwesome.USER_MD);
+    ret.addItem("Manage signups", new MCommand(MENUGAMEADMINMANAGESIGNUPS)).setIcon(VaadinIcons.USERS);
+    ret.addItem("Add to VIP list", new MCommand(MENUGAMEMASTERADDTOVIPLIST)).setIcon(VaadinIcons.USERS);
+    ret.addItem("View and/or delete from VIP list", new MCommand(MENUGAMEMASTERVIEWVIPLIST)).setIcon(VaadinIcons.USERS);
 
     ret.addSeparator();
 
     String gameReports = Game.getTL().isActionPlansEnabled() ? "Publish Action Plan, Idea Card and Game Design reports now" : "Publish Idea Card and Game Design reports now";
-    ret.addItem(gameReports, new MCommand(MENUGAMEADMINPUBLISHREPORTS)).setIcon(FontAwesome.FILE_TEXT_O);
+    ret.addItem(gameReports, new MCommand(MENUGAMEADMINPUBLISHREPORTS)).setIcon(VaadinIcons.FILE_TEXT_O);
 
     if (Game.getTL().isActionPlansEnabled()) {
-        ret.addItem("Create and show Action Plans report in browser", new MCommand(MENUGAMEADMINEXPORTACTIONPLANS)).setIcon(FontAwesome.FILE_TEXT_O);
+        ret.addItem("Create and show Action Plans report in browser", new MCommand(MENUGAMEADMINEXPORTACTIONPLANS)).setIcon(VaadinIcons.FILE_TEXT_O);
     }
 
-    ret.addItem("Create and show Cards report in browser", new MCommand(MENUGAMEADMINEXPORTCARDS)).setIcon(FontAwesome.FILE_TEXT_O);
+    ret.addItem("Create and show Cards report in browser", new MCommand(MENUGAMEADMINEXPORTCARDS)).setIcon(VaadinIcons.FILE_TEXT_O);
 
     ret.addSeparator();
-    ret.addItem("Advance game round and/or phase", advanceRoundClicked).setIcon(FontAwesome.ARROW_RIGHT);
-    ret.addItem("Kill all player sessions", new MCommand(MENUGAMEADMINKILLALLSESSIONS)).setIcon(FontAwesome.ARROW_RIGHT);
+    ret.addItem("Advance game round and/or phase", advanceRoundClicked).setIcon(VaadinIcons.ARROW_RIGHT);
+    ret.addItem("Kill all player sessions", new MCommand(MENUGAMEADMINKILLALLSESSIONS)).setIcon(VaadinIcons.STOP_COG);
     ret.addSeparator();
-    ret.addItem("Add Image to database", addImageClicked).setIcon(FontAwesome.IMAGE);
+    ret.addItem("Add Image to database", addImageClicked).setIcon(VaadinIcons.FILE_PICTURE);
     return ret;
   }
 
