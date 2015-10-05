@@ -22,7 +22,8 @@
 
 package edu.nps.moves.mmowgli.utility;
 
-import com.vaadin.server.FontAwesome;
+import org.vaadin.teemu.VaadinIcons;
+
 import com.vaadin.server.FontIcon;
 
 /**
@@ -38,15 +39,16 @@ public class BackArrowFontIcon implements FontIcon
 {
   private static final long serialVersionUID = 2264120643738215441L;
   
-  public static final String fontFamily = "FontAwesome";
-  public static final int codepoint = FontAwesome.PLAY.getCodepoint();
+  public static final String fontFamily = "VaadinIcons";
+  public static final int codepoint = VaadinIcons.PLAY.getCodepoint();
 
   // The following is the only part of this which we use, since we're not adding this as a font icon.
+
   @Override
-  public String getHtml()
-  {
-    //return "<span class=\"v-icon fa-rotate-180\" style=\"font-family: " + fontFamily + ";\">&#x" + Integer.toHexString(codepoint) + ";</span>";
-    return "<i class=\"fa fa-play fa-rotate-180\"/>";
+  public String getHtml() {
+     return "<div class=\"m-rotate-180\" style=\"font-size:18px; line-height:21.8px; margin-left:3px;\">" +
+             VaadinIcons.PLAY.getHtml() +
+             "</div>";
   }
 
   @Override

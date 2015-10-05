@@ -27,19 +27,24 @@ import java.util.ArrayList;
 import java.util.Vector;
 
 import org.hibernate.Session;
+import org.vaadin.teemu.VaadinIcons;
 
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
-import com.vaadin.server.FontAwesome;
-import com.vaadin.ui.*;
+import com.vaadin.ui.Alignment;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.NativeButton;
+import com.vaadin.ui.VerticalLayout;
 
 import edu.nps.moves.mmowgli.Mmowgli2UI;
 import edu.nps.moves.mmowgli.MmowgliSessionGlobals;
 import edu.nps.moves.mmowgli.components.CardSummary;
-import edu.nps.moves.mmowgli.components.MmowgliComponent;
 import edu.nps.moves.mmowgli.components.HtmlLabel;
+import edu.nps.moves.mmowgli.components.MmowgliComponent;
 import edu.nps.moves.mmowgli.db.User;
 import edu.nps.moves.mmowgli.hibernate.HSess;
 import edu.nps.moves.mmowgli.markers.HibernateClosed;
@@ -144,7 +149,7 @@ public class HorizontalCardDisplay extends VerticalLayout implements MmowgliComp
       start.addStyleName("m-vcr-fonticon");
       start.setDescription("show earliest cards");
       start.setHtmlContentAllowed(true);
-      start.setIcon(FontAwesome.STEP_BACKWARD);
+      start.setIcon(VaadinIcons.STEP_BACKWARD);
       
       addComponent(start);
     
@@ -189,7 +194,7 @@ public class HorizontalCardDisplay extends VerticalLayout implements MmowgliComp
       right.addStyleName("m-vcr-fonticon");
       right.setDescription("show newer cards");
       right.setHtmlContentAllowed(true);
-      right.setIcon(FontAwesome.PLAY);
+      right.setIcon(VaadinIcons.PLAY);
       addComponent(right);
       
       end = new NativeButton(null,endLis);
@@ -197,7 +202,7 @@ public class HorizontalCardDisplay extends VerticalLayout implements MmowgliComp
       end.addStyleName("m-vcr-fonticon");
       end.setDescription("show newest cards");
       end.setHtmlContentAllowed(true);
-      end.setIcon(FontAwesome.STEP_FORWARD);
+      end.setIcon(VaadinIcons.STEP_FORWARD);
       addComponent(end);
       
       addComponent(sp=new Label());

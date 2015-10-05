@@ -29,6 +29,8 @@ import java.text.NumberFormat;
 import java.util.Map;
 import java.util.Set;
 
+import org.vaadin.teemu.VaadinIcons;
+
 import com.vaadin.data.Container;
 import com.vaadin.data.hbnutil.HbnContainer;
 import com.vaadin.data.hbnutil.HbnContainer.EntityItem;
@@ -36,10 +38,14 @@ import com.vaadin.data.util.AbstractBeanContainer;
 import com.vaadin.data.util.BeanItem;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.event.ItemClickEvent.ItemClickListener;
-import com.vaadin.server.FontAwesome;
-import com.vaadin.ui.*;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Label;
+import com.vaadin.ui.Table;
+import com.vaadin.ui.UI;
+import com.vaadin.ui.Window;
 import com.vaadin.ui.Window.CloseEvent;
 import com.vaadin.ui.Window.CloseListener;
 import com.vaadin.ui.themes.BaseTheme;
@@ -49,9 +55,15 @@ import edu.nps.moves.mmowgli.Mmowgli2UI;
 import edu.nps.moves.mmowgli.MmowgliSessionGlobals;
 import edu.nps.moves.mmowgli.cache.MCacheActionPlanHelper.QuickActionPlan;
 import edu.nps.moves.mmowgli.components.HtmlLabel;
-import edu.nps.moves.mmowgli.db.*;
+import edu.nps.moves.mmowgli.db.ActionPlan;
+import edu.nps.moves.mmowgli.db.Game;
+import edu.nps.moves.mmowgli.db.Move;
+import edu.nps.moves.mmowgli.db.User;
 import edu.nps.moves.mmowgli.hibernate.HSess;
-import edu.nps.moves.mmowgli.markers.*;
+import edu.nps.moves.mmowgli.markers.HibernateClosed;
+import edu.nps.moves.mmowgli.markers.HibernateOpened;
+import edu.nps.moves.mmowgli.markers.HibernateSessionThreadLocalConstructor;
+import edu.nps.moves.mmowgli.markers.MmowgliCodeEntry;
 import edu.nps.moves.mmowgli.modules.actionplans.ActionPlanContainers.HelpWantedContainer;
 import edu.nps.moves.mmowgli.modules.actionplans.ActionPlanContainers.QuickAllPlansInThisMove;
 
@@ -317,7 +329,7 @@ public class ActionPlanTable extends Table
       if(TITLE_COLUMN_NAME.equals(columnId)) {
         Label lab = null;     
         if(ap.isSuperInteresting()) {
-          lab = new HtmlLabel("<b>"+FontAwesome.STAR.getHtml()+"&nbsp;"+ap.getTitle()+"</b>");
+          lab = new HtmlLabel("<b>"+VaadinIcons.STAR.getHtml()+"&nbsp;"+ap.getTitle()+"</b>");
           lab.addStyleName("m-actionplan-highlighted_background");
           lab.setDescription("SUPER INTERESTING: "+ap.getTitle());
         }
@@ -438,7 +450,7 @@ public class ActionPlanTable extends Table
       else if (TITLE_COLUMN_NAME.equals(columnId)) {        
         Label lab = null;     
         if(qap.isSuperInteresting()) {
-          lab = new HtmlLabel("<b>"+FontAwesome.STAR.getHtml()+"&nbsp;"+qap.getTitle()+"</b>");
+          lab = new HtmlLabel("<b>"+VaadinIcons.STAR.getHtml()+"&nbsp;"+qap.getTitle()+"</b>");
           lab.addStyleName("m-actionplan-highlighted_background");
           lab.setDescription("SUPER INTERESTING: "+qap.getTitle());
         }

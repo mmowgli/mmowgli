@@ -22,9 +22,10 @@
 
 package edu.nps.moves.mmowgliMobile.ui;
 
+import org.vaadin.teemu.VaadinIcons;
+
 import com.vaadin.addon.touchkit.ui.NavigationButton;
 import com.vaadin.addon.touchkit.ui.NavigationButton.NavigationButtonClickEvent;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.Table.ColumnHeaderMode;
@@ -72,7 +73,7 @@ public class FolderView2 extends ForwardButtonView //NavigationView
             }
           });
           
-          btn.setIcon(FontAwesome.FOLDER_OPEN); //childFolderIcon);
+          btn.setIcon(VaadinIcons.FOLDER_OPEN); //childFolderIcon);
           if(f.getPojoClass() == Card.class){
             CardType typ = (CardType) f.getParam(CardType.class.getSimpleName());
             String col = CardStyler.getCardBaseColor(typ);

@@ -22,9 +22,10 @@
 
 package edu.nps.moves.mmowgliMobile.ui;
 
+import org.vaadin.teemu.VaadinIcons;
+
 import com.vaadin.addon.touchkit.ui.NavigationManager;
 import com.vaadin.addon.touchkit.ui.Toolbar;
-import com.vaadin.server.FontAwesome;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -48,7 +49,7 @@ public class MmowgliFooter2 extends Toolbar
   @SuppressWarnings("serial")
   public MmowgliFooter2()
   {
-    Button homeButton = new Button(FontAwesome.HOME);
+    Button homeButton = new Button(VaadinIcons.HOME);
     homeButton.setStyleName("no-decoration");
     addComponent(homeButton);
 
