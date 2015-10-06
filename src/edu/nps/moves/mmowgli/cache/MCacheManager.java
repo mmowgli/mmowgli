@@ -121,6 +121,29 @@ public class MCacheManager implements JmsReceiver
     }
   }
 
+  public Object[][] getCaches()
+  {
+    Object[][] arr = new Object[2][8];
+    arr[0][0] = "allNegativeIdeaCardsCurrentMove";
+    arr[0][1] = "unhiddenNegativeIdeaCardsCurrentMove";
+    arr[0][2] = "allNegativeIdeaCards";
+    arr[0][3] = "unhiddenNegativeIdeaCardsAll";
+    arr[0][4] = "allPositiveIdeaCardsCurrentMove";
+    arr[0][5] = "unhiddenPositiveIdeaCardsCurrentMove";
+    arr[0][6] = "allPositiveIdeaCards";
+    arr[0][7] = "unhiddenPositiveIdeaCardsAll";
+    
+    arr[1][0] = allNegativeIdeaCardsCurrentMove;
+    arr[1][1] = unhiddenNegativeIdeaCardsCurrentMove;
+    arr[1][2] = allNegativeIdeaCards;
+    arr[1][3] = unhiddenNegativeIdeaCardsAll;
+    arr[1][4] = allPositiveIdeaCardsCurrentMove;
+    arr[1][5] = unhiddenPositiveIdeaCardsCurrentMove;
+    arr[1][6] = allPositiveIdeaCards;
+    arr[1][7] = unhiddenPositiveIdeaCardsAll;
+    return arr;
+  }
+  
   private List<Card> positiveCardsCurrentMoveOnly(Session sess)
   {
     return CardDbHelper.getCardsCurrentMoveOnly(sess,positiveTypeCurrentMove);
@@ -477,24 +500,24 @@ public class MCacheManager implements JmsReceiver
   private  MCacheData<Card> getResourceCards(Card updateFirst, int start, Integer count, boolean unhiddenOnly)
   {
     if(unhiddenOnly)
-      return getIdeaCard(unhiddenPositiveIdeaCardsCurrentMove,updateFirst,start,count);
-    return getIdeaCard(allPositiveIdeaCardsCurrentMove, updateFirst, start, count);
+      return getIdeaCardGroup(unhiddenPositiveIdeaCardsCurrentMove,updateFirst,start,count);
+    return getIdeaCardGroup(allPositiveIdeaCardsCurrentMove, updateFirst, start, count);
   }
 
   private  MCacheData<Card> getRiskCards(Card updateFirst, int start, Integer count, boolean unhiddenOnly)
   {
     if(unhiddenOnly)
-      return getIdeaCard(unhiddenNegativeIdeaCardsCurrentMove,updateFirst,start,count);
-    return getIdeaCard(allNegativeIdeaCardsCurrentMove, updateFirst, start, count);
+      return getIdeaCardGroup(unhiddenNegativeIdeaCardsCurrentMove,updateFirst,start,count);
+    return getIdeaCardGroup(allNegativeIdeaCardsCurrentMove, updateFirst, start, count);
   }
 
-  private MCacheData<Card> getIdeaCard(SortedMap<Long, Card> map, Card updateFirst, int start, Integer count)
+  private MCacheData<Card> getIdeaCardGroup(SortedMap<Long, Card> map, Card updateFirst, int start, Integer count)
   {
     synchronized (map) {
       if (updateFirst != null)
         map.put(updateFirst.getId(), updateFirst);
 
-      Card[] carrbig = new Card[0];
+      Card[] carrbig = new Card[map.size()];
       carrbig = map.values().toArray(carrbig);
 
       int ender = carrbig.length - 1;
@@ -505,7 +528,8 @@ public class MCacheManager implements JmsReceiver
     }
   }
 
-  private void _rebuildCards(Session sess)
+  /* This is public so an administrator can do it from a menu */
+  public void _rebuildCards(Session sess)
   {
     synchronized (allNegativeIdeaCardsCurrentMove) {
       synchronized (unhiddenNegativeIdeaCardsCurrentMove) {

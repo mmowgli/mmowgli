@@ -25,6 +25,7 @@ package edu.nps.moves.mmowgli.components;
 import static edu.nps.moves.mmowgli.MmowgliConstants.*;
 import static edu.nps.moves.mmowgli.MmowgliEvent.*;
 
+import org.vaadin.dialogs.ConfirmDialog;
 import org.vaadin.teemu.VaadinIcons;
 
 import com.vaadin.ui.*;
@@ -34,12 +35,14 @@ import com.vaadin.ui.MenuBar.MenuItem;
 import edu.nps.moves.mmowgli.Mmowgli2UI;
 import edu.nps.moves.mmowgli.MmowgliController;
 import edu.nps.moves.mmowgli.MmowgliEvent;
+import edu.nps.moves.mmowgli.cache.MCacheManager;
 import edu.nps.moves.mmowgli.db.Game;
 import edu.nps.moves.mmowgli.hibernate.HSess;
 import edu.nps.moves.mmowgli.markers.*;
 import edu.nps.moves.mmowgli.messaging.WantsGameUpdates;
 import edu.nps.moves.mmowgli.modules.administration.AdvanceMoveDialog;
 import edu.nps.moves.mmowgli.modules.administration.EntryPermissionsDialog;
+import edu.nps.moves.mmowgli.modules.cards.ShowCardCacheCountsDialog;
 import edu.nps.moves.mmowgli.modules.userprofile.InstallImageDialog;
 
 /**
@@ -250,7 +253,9 @@ public class AppMenuBar extends CustomComponent implements WantsGameUpdates
     ret.addItem("Advance game round and/or phase", advanceRoundClicked).setIcon(VaadinIcons.ARROW_RIGHT);
     ret.addItem("Kill all player sessions", new MCommand(MENUGAMEADMINKILLALLSESSIONS)).setIcon(VaadinIcons.STOP_COG);
     ret.addSeparator();
-    ret.addItem("Add Image to database", addImageClicked).setIcon(VaadinIcons.FILE_PICTURE);
+    ret.addItem("(Dev only) Add Image to database", addImageClicked).setIcon(VaadinIcons.TOOLS);
+    ret.addItem("(Dev only) Display card cache counts", showCardCacheCounts).setIcon(VaadinIcons.TOOLS);
+    ret.addItem("(Dev only) Rebuild card caches", rebuildCardCaches).setIcon(VaadinIcons.TOOLS);
     return ret;
   }
 
@@ -349,7 +354,32 @@ public class AppMenuBar extends CustomComponent implements WantsGameUpdates
       InstallImageDialog.show("Image names must be unique in the database.",null,false,null);
     }
   };
- 
+  
+  @SuppressWarnings("serial")
+  private Command showCardCacheCounts = new Command()
+  {
+	public void menuSelected(MenuItem selectedItem)
+	{
+	  ShowCardCacheCountsDialog.show();
+	}
+  };
+  
+  @SuppressWarnings("serial")
+  private Command rebuildCardCaches = new Command() {
+    public void menuSelected(MenuItem selectedItem) {
+      ConfirmDialog.show(UI.getCurrent(), "Warning!", "Heavyweight action -- are you really sure?", "Yes", "No",
+        new ConfirmDialog.Listener() {
+          public void onClose(ConfirmDialog dialog) {
+            if (dialog.isConfirmed()) {
+              HSess.init();
+              MCacheManager.instance()._rebuildCards(HSess.get());
+              HSess.close();
+            }
+          }
+      });
+    }
+  };
+
   @SuppressWarnings("serial")
   private Command advanceRoundClicked = new Command()
   {
