@@ -44,7 +44,7 @@ public class ShowCardCacheCountsDialog extends Window
 
   public static void show()
   {
-	ShowCardCacheCountsDialog dialog = new ShowCardCacheCountsDialog();
+	  ShowCardCacheCountsDialog dialog = new ShowCardCacheCountsDialog();
     dialog.center();
     UI.getCurrent().addWindow(dialog);
   }
