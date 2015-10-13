@@ -297,8 +297,9 @@ public class LeafletMap extends VerticalLayout implements MmowgliComponent, View
     boolean oldinitting = initting;
     initting = true;
     for(String key : activeLayers) {
-      MLayer lay = layerMap.get(key);      
-      lay.setActive(true);
+      MLayer lay = layerMap.get(key);
+      if(lay != null)
+        lay.setActive(true);
     }
     initting = oldinitting;
   }
@@ -396,7 +397,7 @@ public class LeafletMap extends VerticalLayout implements MmowgliComponent, View
       Point center = event.getCenter();
       me.setMapCenterLatitude(center.getLat().floatValue());
       me.setMapCenterLongitude(center.getLon().floatValue());
-      me.setMapZoom(event.getZoomLevel());
+      me.setMapZoom((int) event.getZoomLevel());  // todo save double in db?
       User.updateTL(me);
       HSess.close();
     }    
