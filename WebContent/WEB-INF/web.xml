@@ -128,7 +128,8 @@
   <context-param>
     <description>Where the game images reside, normally same place game css files point to</description>
     <param-name>gameImagesUrl</param-name>
-    <param-value>https://web.mmowgli.nps.edu/mmowMedia/images/</param-value>
+    <!--<param-value>https://web.mmowgli.nps.edu/mmowMedia/images/</param-value>-->
+    <param-value>VAADIN/art/</param-value>
   </context-param>
   <context-param>
     <description>File system path on server where uploaded images sit</description>
