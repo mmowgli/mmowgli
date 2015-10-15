@@ -52,7 +52,7 @@ import com.vaadin.shared.ui.ui.Transport;
 @JavaScript ({
            "https://platform.twitter.com/widgets.js",
            "http://openlayers.org/api/OpenLayers.js",
-           "http://ol3js.org/en/master/build/ol.js",
+           //nogo v7"http://ol3js.org/en/master/build/ol.js",
            //"http://maps.google.com/maps/api/js?v=3&output=embed"})  // last one for openstrmap plus google layers
            //"https://maps.google.com/maps/api/js?v=3&key=AIzaSyBeWoPydbJRnvH0D8DnCCeLDP1VVPURKh0&sensor=false&output=embed"})
            "../../VAADIN/instrument/mmowgli1.js"
