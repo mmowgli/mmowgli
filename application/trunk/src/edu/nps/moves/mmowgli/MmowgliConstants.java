@@ -44,6 +44,8 @@ public class MmowgliConstants
   
   public static String VAADIN_BUILD_VERSION = "unset";
   
+  public static String APP_IMAGES_INTERNAL_PATH = "VAADIN/art/";
+  
   public static double MAP_LAT_DEFAULT = 10.919618;
   public static double MAP_LON_DEFAULT = 53.613281;
   public static int    MAP_ZOOM_DEFAULT = 5;
