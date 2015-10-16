@@ -33,7 +33,9 @@ import org.hibernate.criterion.Restrictions;
 import com.vaadin.server.ExternalResource;
 import com.vaadin.server.FileResource;
 import com.vaadin.server.Resource;
-import com.vaadin.ui.*;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.Embedded;
 
 import edu.nps.moves.mmowgli.AppMaster;
 import edu.nps.moves.mmowgli.db.*;
@@ -42,7 +44,6 @@ import edu.nps.moves.mmowgli.db.Media.Source;
 import edu.nps.moves.mmowgli.hibernate.HSess;
 import edu.nps.moves.mmowgli.imageServer.ImageServlet;
 import edu.nps.moves.mmowgli.modules.cards.CardStyler;
-
 /**
  * MediaLocator.java Created on Dec 22, 2010
  * 
@@ -60,18 +61,19 @@ public class MediaLocator implements Serializable
   
   private    URL gameImagesUrl;
   private String gameImagesUrlStr;
-   
+  
   public static int HTTP = 80;
   public static int HTTPS = 443;
   
 	public MediaLocator()
-	{		
-		gameImagesUrlStr = AppMaster.instance().getGameImagesUrlString();
+	{
+	  AppMaster am = AppMaster.instance();
+		gameImagesUrlStr = am.getGameImagesUrlString();
 		
     if(!gameImagesUrlStr.endsWith("/"))
       gameImagesUrlStr = gameImagesUrlStr+"/";
 	  
-		gameImagesUrl = buildGameImagesUrl(AppMaster.instance().getAppUrl(), gameImagesUrlStr);
+		gameImagesUrl = buildGameImagesUrl(am.getAppUrl(), gameImagesUrlStr);
 	}
 	
 //@formatter:off
@@ -83,7 +85,8 @@ public class MediaLocator implements Serializable
 
 			return new URL(appURL.getProtocol(),
 					           appURL.getHost(),
-			               "/");
+					           appURL.getPort(),
+			               appURL.getFile()+urlString);
 		}
 		catch (MalformedURLException ex) {
 			System.err.println("Program error in MediaLocatior");
@@ -131,8 +134,8 @@ public class MediaLocator implements Serializable
 	        return new ExternalResource(gameImagesUrl); // anything
 	      }
 
-		case GAME_IMAGES_REPOSITORY:		  
-			String path = url;
+		case GAME_IMAGES_REPOSITORY:
+		  String path = url;
 			if(m.getType() == MediaType.AVATARIMAGE)
 				path = "avatars/"+path;
 			else if(m.getType() == MediaType.VIDEO)
@@ -146,8 +149,7 @@ public class MediaLocator implements Serializable
 				System.err.println(ex.getClass().getSimpleName()+" "+ex.getLocalizedMessage()+" in MediaLocator.locate()");
 				return new ExternalResource(gameImagesUrl); // anything
 			}
-			
-		case WEB_FULL_URL:
+  	case WEB_FULL_URL:
 		  try {
         return new ExternalResource(new URL(url));
       }
@@ -225,13 +227,7 @@ public class MediaLocator implements Serializable
     return locate(new Media("cardSummaryStarGold.png","cardSummStarGold","enabled favorite star image",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
 
   }
-/*
-	public String getCardChainPopupColorSelector(Card c)
-	{
-		// todo, switch on card type
-		return "m-card-chain-node-selected";
-	}
-*/
+
   public Resource getCardSummaryListHeaderBackground(CardType ct)
   {
     return locate(new Media(CardStyler.getCardHeaderImage(ct),"","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
@@ -257,33 +253,12 @@ public class MediaLocator implements Serializable
   {
     return locate(new Media("cardBigStarGold.png","cardBigStarGold","enabled favorite star image",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
   }
-/*
-  public Resource getCardChainPopupIcon()
-  {
-    return locate(new Media("viewCardChainSwoosh.png","cardChainIcon","mini card chain pict.",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  }
 
-  public Resource getCallToActionTheSituation()
-  {
-    return locate(new Media("theSituation.png","theSituationIcon","\"The Situation\" in script",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  }
-*/
   public Resource getCallToActionBang()
   {
     return locate(new Media("callToActionBang290w31h.png","callToActionInScriptIcon","\"Call To Action!\" in script",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
   }
 
-/*
-  public Resource getCallToActionWeNeedYourHelp()
-  {
-    return locate(new Media("weNeedYourHelp.png","weNeedYourHelpIcon","\"We need your help\" in script",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  }
-
-  public Resource getCallToActionVideoBackground()
-  {
-    return locate(new Media("callToActionBackground.png","callToActionBackground","call-to-action top background",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  }
-*/
   public Resource getFooterBackground()
   {
     return locate(new Media("footer.png","footerbackground","footer background",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
@@ -296,8 +271,6 @@ public class MediaLocator implements Serializable
   
   public Resource getHeaderBackground()
   {
-    //return locate(new Media("headerNew992w172h.png","headerbackground","header background",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-    //return locate(new Media("headerNoBanner992w172h.png","headerbackground","header background",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
     return locate(new Media("headerNoBannerNoScore992w172h.png","headerbackground","header background",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
   }
   
@@ -309,14 +282,9 @@ public class MediaLocator implements Serializable
   
   public Resource getCheckMark12px()
   {
-    return locate(new Media("12px-Black_check.svg.png","black check mark","black check mark",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));   
+    return locate(new Media("12px-Black_check.svg.png","black check mark","black check mark",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
   }
- /* 
-  public Resource getActionPlanBackground()
-  {
-    return locate(new Media("actionPlanTemplate985w1093h.png","actplanbackground","action plan background",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  }
-*/  
+
   public Resource getIdeaDashboardBackground()
   {
     return locate(new Media("ideaDashboardBackground.png","ideadashbackground","idea dashboard background",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
@@ -325,60 +293,8 @@ public class MediaLocator implements Serializable
   public Resource getActionDashboardPlanBackground()
   {
     return locate(new Media("actionDashboardBackgroundNew980x833.png","actdashbackground","action dashboard background",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  //return locate(new Media("actionDashboardBackground.png",          "actdashbackground","action dashboard background",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  }
-/*
-  public Resource getGoToIdeaDashboardIcon()
-  {
-    return locate(new Media("goToIdeaDashboard.png","goToIdeaDashboardbackground","go to idea dashboard background",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
   }
 
-  
-  public Resource getViewCardChainSwoosh()
-  {
-    return locate(new Media("viewCardChainSwoosh.png","viewCardChainSwooshImage","view Card Chain Swoosh",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  }
-
-  public Resource getAddAuthorTabImage()
-  {
-    return locate(new Media("addAuthButt.png","addauthorbuttimg","add author tab button image",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  }
-
-  public Resource getPowerPlayTabImage()
-  {
-    return locate(new Media("powPlayButt.png","dopowerplaybuttimg","do power play tab button image",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  }
-
-  public Resource getActionDashboardPowerPlayTabBlue()
-  {
-    return locate(new Media("powerPlaysTabBlue.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  }
-
-  public Resource getActionDashboardPlansInPlayTabBlue()
-  {
-    return locate(new Media("plansInPlayTabBlue.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  }
-
-  public Resource getActionPlanTalkTabBlue()
-  {
-    return locate(new Media("talkItOverTabBlue.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  }
-
-  public Resource getActionPlanImagesTabBlue()
-  {
-    return locate(new Media("imagesTabBlue.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  }
-
-  public Resource getActionPlanVideosTabBlue()
-  {
-    return locate(new Media("videosTabBlue.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  }
-
-  public Resource getActionPlanMapTabBlue()
-  {
-    return locate(new Media("mapTabBlue.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  }
-*/
   public Resource getActionPlanAddImageButt()
   {
     return locate(new Media("addYourImageOrange.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
@@ -388,81 +304,18 @@ public class MediaLocator implements Serializable
   {
     return locate(new Media("addYourVideoOrange189w50h.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
   }
-/*  
-  public Resource getActionPlanSearchLibButt()
-  {
-    return locate(new Media("searchImageLibraryBlack.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  }
-  
-  public Resource getActionPlanSearchVidLibButt()
-  {
-    return locate(new Media("searchVideoLibraryBlack188w50h.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  }
-*/  
+
   public Resource getActionPlanZoomButt()
   {
     return locate(new Media("zoomIcon.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
   }
-/*  
-  public Resource getActionPlanReplaceImageButt()
-  {
-    return locate(new Media("replaceGreen.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  }
- 
-  public Resource getActionPlanDeleteImageButt()
-  {
-    return locate(new Media("deleteBlack.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  }
 
-  public Resource getIdeaDashboardBestTabBlue()
-  {
-    return locate(new Media("ideaDashboardBestTab.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  }
-
-  public Resource getIdeaDashboardWorstTabBlue()
-  {
-    return locate(new Media("ideaDashboardWorstTab.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  }
-
-  public Resource getIdeaDashboardSuperActiveTabBlue()
-  {
-    return locate(new Media("ideaDashboardActiveTab.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  }
-
-  public Resource getDialogBackground()
-  {
-    return locate(new Media("lightboxDialogBckgrnd.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  }
-
-  public void decorateDialogCancelButton(Button butt)
-  {
-    butt.setIcon(locate(new Media("lightboxDialogCancelButton.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY)));
-    butt.addStyleName("borderless");
-  }
-*/  
   public void decorateDialogContinueButton(Button butt)
   {
     butt.setIcon(locate(new Media("continue.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY)));
     butt.addStyleName("borderless"); 
   }
-/*
-  public void decorateDialogRejectButton(NativeButton rejectButt)
-  {
-    rejectButt.setIcon(locate(new Media("rejectNoThanks244w76h.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY)));
-    rejectButt.addStyleName("borderless");  
-  }
 
-  public void decorateDialogAcceptAndContinueButton(NativeButton continueButt)
-  {
-    continueButt.setIcon(locate(new Media("acceptAndContinue244w76h.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY)));
-    continueButt.addStyleName("borderless");  
-  }
-
-  public Resource getDialogHeaderBackground()
-  {
-    return locate(new Media("lightboxDialogHeaderBckgrnd.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  }
-*/
   public Resource getDialogFooterBackground()
   {
     return locate(new Media("lightboxDialogFooterBckgrnd.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
@@ -512,86 +365,26 @@ public class MediaLocator implements Serializable
   
   public Resource getCardHeaderImageFromStyleName(String name)
   {
-    return locate(new Media(CardStyler.getCardHeaderImage(name),"","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));    
+    return locate(new Media(CardStyler.getCardHeaderImage(name),"","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
   } 
 
   public Resource getCardParentImageFromStyleName(String name)
   {
     return locate(new Media(CardStyler.getCardParentImage(name),"","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
   }
-/* 
-  public Resource getUserProfileActionPlansTabBlue()
-  {
-    return locate(new Media("userProfileActPlanTab158x46h.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  }
-  
-  public Resource getUserProfileMyIdeasTab()
-  {
-    return locate(new Media("userProfileMyIdeasTab173w51h.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  }
-  
-  public Resource getUserProfileMyIdeasTab_grey()
-  {
-    return locate(new Media("userProfileMyIdeasTab173w51h_grey.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  }
-  
-  public Resource getUserProfileInvestmentsTabBlue()
-  {
-    return locate(new Media("userProfileInvestTab139w46h.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  }
-  
-  public Resource getUserProfileBuddiesTabBlue()
-  {
-    return locate(new Media("userProfileBuddiesTab124w46h.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  }
 
-  public void decorateResetButton(Button butt)
-  {
-    butt.setIcon(locate(new Media("resetButton54w17h.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY)));
-    butt.addStyleName("borderless");   
-  }
-  
-  public void decorateSaveChangesButton(Button butt)
-  {
-    butt.setIcon(locate(new Media("saveChangesButton119w24h.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY)));
-    butt.addStyleName("borderless");      
-  }
- */ 
   public void decorateImageButton(Button butt, String imageName)
   {
     butt.setIcon(locate(new Media(imageName,"","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY)));
     butt.addStyleName("borderless");   
   }
-  /*
-  public void decorateImNewToMmowgliButton(Button butt)
-  {
-    butt.setIcon(locate(new Media("imNewButton202w22h.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY)));
-    butt.addStyleName("borderless");
-  }
-*/
-//  public void decorateImRegisteredButton(Button butt)
-//  {
-//    butt.setIcon(locate(new Media("imaplayer144w24h.png"/*"imRegisteredButton133w24h.png"*/,"","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY)));
-//    butt.addStyleName("borderless");
-//  }
-/*
-  public Resource getIllDoThisLaterButton()
-  {
-    return locate(new Media("illDoThisLaterButton160w18h.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  }
-*/
+
   public void decorateGetABriefingButton(Button butt)
   {
     butt.setIcon(locate(new Media("getABriefing129w24h.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY)));
     butt.addStyleName("borderless");       
   }
-/*
-  public void decorateChangePasswordButton(Button butt)
-  {
-    butt.setIcon(locate(new Media("changePassword155w25h.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY)));
-    butt.addStyleName("borderless");          
-  }
-*/  
+
   public void decorateCancelButton(Button butt)
   {
     butt.setIcon(getCancelButtonIcon());
@@ -612,12 +405,6 @@ public class MediaLocator implements Serializable
   {
     return locate(new Media("submitButton61w17h.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
   }
-  /*
-  public Resource getDiscardMyChangesButtonIcon()
-  {
-    return locate(new Media("discardMyChanges181w26h.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));    
-  }
-*/
   
   public void decorateSelectButton(Button butt)
   {
@@ -640,27 +427,12 @@ public class MediaLocator implements Serializable
     butt.setIcon(getOkButtonIcon());
     butt.addStyleName("borderless");    
   }
-/*  
-  public void decorateSaveButton(Button butt)
-  {
-    decorateSelectButton(butt);
-  }
-*/  
+
   public Resource getSaveButtonIcon()
   {
     return getSelectButtonIcon();
   }
-/*
-  public Resource getDialogRegenButton()
-  {
-    return locate(new Media("regenerate98w24h.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  }
 
-  public Resource getDialogCloseButtonIcon()
-  {
-    return locate(new Media("closeButton85w42h.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  }
-*/
   public void decoratePlayIdeaButton(Button butt, Game g)
   {
     butt.setIcon(getPlayIdeaButt(g));//locate(new Media("playIdeaButt124w18h.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY)));
@@ -672,32 +444,9 @@ public class MediaLocator implements Serializable
     String img = g.getPlayIdeaButtonImage();
     if(img == null || img.length()<=0)
       return null;
-   // return locate(new Media("playIdeaButt124w18h.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
     return locate(new Media(img,"playideabuttonimage","play idea button image",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
   }
-  /*
-  public void decorateTakeActionButton(Button butt)
-  {
-    butt.setIcon(locate(new Media("takeActionButt119w18h.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY)));
-    butt.addStyleName("borderless");
-  }
 
-  public Resource getTakeActionButt()
-  {
-    return locate(new Media("takeActionButt119w18h.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-  }
-
-  public void decorateSignOutButton(Button butt)
-  {
-    butt.setIcon(getSignOutButt());
-    butt.addStyleName("borderless");   
-  }
-
-  public Resource getSignOutButt()
-  {
-    return locate(new Media("signOutButt72w26h.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));    
-  }
-  */
   public Component getLeaderboardTitle()
   {
     Embedded emb = new Embedded(null,locate(new Media("LeaderboardTitle246w28h.png","","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY)));
@@ -745,34 +494,6 @@ public class MediaLocator implements Serializable
     emb.setHeight("29px");
     return emb;
   }
-/*
-  public String getBackgroundImageLinkTL()
-  {
-    return imageGetCommon(Game.getTL().getBackgroundImageLink());
-  }
-
-  public String getSignupHeaderImageLinkTL()
-  {
-    return imageGetCommon(Game.getTL().getCurrentMove().getCurrentMovePhase().getSignupHeaderImage());
-  }
-
-  public String imageGetCommon(String url)
-  {
-    if(url == null)
-      return url;
-    
-    if(url.toLowerCase().startsWith("http"))
-      return url;
-
-    // else find it in the repository
-    Resource res = locate(new Media(url,"","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY));
-    if(res instanceof ExternalResource)
-      return ((ExternalResource)res).getURL();
-    
-    // else
-    return new Media(url,"","",MediaType.IMAGE,Source.GAME_IMAGES_REPOSITORY).getUrl();   // not vetted 
-  }
-  */
 
   public Embedded getDialog2CornerResource()
   {
