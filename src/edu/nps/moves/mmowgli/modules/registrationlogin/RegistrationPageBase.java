@@ -182,6 +182,7 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
       signupVL.setExpandRatio(lab, 1.0f);
 
       signupVL.addComponent(lab=new HtmlLabel(phase.getSignupButtonSubText()));
+      lab.addStyleName("m-text-align-center");
       signupButt.setDescription(phase.getSignupButtonToolTip());
       lab.setDescription(phase.getSignupButtonToolTip());
       lab.setEnabled(phase.isSignupButtonEnabled());
@@ -234,6 +235,7 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
 */
       newButtVL.addComponent(lab = new HtmlLabel(phase.getNewButtonSubText()));
       newButtVL.setComponentAlignment(lab, Alignment.MIDDLE_CENTER);
+      lab.addStyleName("m-text-align-center");
       lab.setEnabled(phase.isNewButtonEnabled());
       imNewButt.setDescription(phase.getNewButtonToolTip());
       lab.setDescription(phase.getNewButtonToolTip());
@@ -269,6 +271,7 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
       rightButtVL.setExpandRatio(lab, 1.0f);
 
       rightButtVL.addComponent(lab = new HtmlLabel(phase.getLoginButtonSubText()));
+      lab.addStyleName("m-text-align-center");
       lab.setEnabled(phase.isLoginButtonEnabled());
       rightButtVL.setComponentAlignment(lab, Alignment.MIDDLE_CENTER);
 
@@ -306,6 +309,7 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
       guestButtVL.setExpandRatio(lab, 1.0f);
 
       guestButtVL.addComponent(lab = new HtmlLabel(phase.getGuestButtonSubText()));
+      lab.addStyleName("m-text-align-center");
       guestButtVL.setComponentAlignment(lab, Alignment.MIDDLE_CENTER);
 
       guestButt.setDescription(phase.getGuestButtonToolTip());
@@ -430,7 +434,8 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
       return;
 
     if(event.getButton() == signupButt) {
-      String url = VaadinServletService.getCurrentServletRequest().getRequestURI();
+      //String url = VaadinServletService.getCurrentServletRequest().getRequestURI();
+      String url = AppMaster.getUrlString();
       if(url.endsWith("PUSH/"))         //todo figure this out
         url = url.substring(0, url.length()-5);
       if(url.endsWith("PUSH"))
