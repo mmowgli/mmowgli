@@ -30,6 +30,9 @@
 			<!-- Vaadin Add-on repository -->
 			<ibiblio name="vaadin-addons" usepoms="true" m2compatible="true" root="http://maven.vaadin.com/vaadin-addons" />
 
+			<!-- Vaadin Pre-releases repository -->
+			<ibiblio name="vaadin-addons" usepoms="true" m2compatible="true" root="http://maven.vaadin.com/vaadin-prereleases"/>
+			
 			<!-- Vaadin snapshots repository -->
 			<ibiblio name="vaadin-snapshots" usepoms="true" m2compatible="true" root="https://oss.sonatype.org/content/repositories/vaadin-snapshots" />
 
