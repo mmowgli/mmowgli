@@ -23,7 +23,6 @@
 package edu.nps.moves.mmowgli.signupServer;
 
 import com.vaadin.event.MouseEvents;
-import com.vaadin.server.ExternalResource;
 import com.vaadin.server.Page;
 import com.vaadin.shared.Position;
 import com.vaadin.ui.*;
@@ -34,8 +33,12 @@ import edu.nps.moves.mmowgli.AppMaster;
 import edu.nps.moves.mmowgli.components.HtmlLabel;
 import edu.nps.moves.mmowgli.db.Game;
 import edu.nps.moves.mmowgli.db.GameLinks;
+import edu.nps.moves.mmowgli.db.Media;
+import edu.nps.moves.mmowgli.db.Media.MediaType;
+import edu.nps.moves.mmowgli.db.Media.Source;
 import edu.nps.moves.mmowgli.db.pii.Query2Pii;
 import edu.nps.moves.mmowgli.markers.HibernateSessionThreadLocalConstructor;
+import edu.nps.moves.mmowgli.utility.MediaLocator;
 
 /**
  * SignupWindow.java
@@ -109,10 +112,11 @@ public class SignupWindow extends VerticalLayout//Window
       GameLinks gl = GameLinks.getTL();
       String signupImgLink = g.getCurrentMove().getCurrentMovePhase().getSignupHeaderImage();
       if(signupImgLink != null) {
-        if(!signupImgLink.toLowerCase().startsWith("http"))
-          signupImgLink = gameImagesUrl+signupImgLink;
+       // if(!signupImgLink.toLowerCase().startsWith("http"))
+       //   signupImgLink = gameImagesUrl+signupImgLink;
         
-        Embedded mmowBanner = new Embedded(null,new ExternalResource(signupImgLink));
+        Media m = new Media(signupImgLink, "signup", "signup", MediaType.IMAGE, Source.GAME_IMAGES_REPOSITORY);
+        Embedded mmowBanner = new Embedded(null,new MediaLocator().locate(m));
         mmowBanner.setWidth(bannerWidthPx);
         mmowBanner.setHeight(bannerHeightPx);
         mmowBanner.addClickListener(new headerListener());
