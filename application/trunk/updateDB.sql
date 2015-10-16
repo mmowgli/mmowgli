@@ -729,7 +729,7 @@ ALTER TABLE Game ADD KEY `headerBranding_id` (`headerBranding_id`);
 
 UPDATE Game SET
   actionPlanRequestLink='http://portal.mmowgli.nps.edu/action-plan-request',
-  backgroundImageLink='https://web.mmowgli.nps.edu/mmowMedia/images/nauticalBackground.jpg',
+  backgroundImageLink='VAADIN/art/nauticalBackground.jpg',
   blogLink='http://portal.mmowgli.nps.edu/game-blog',
   clusterMaster='web1',
   gameFullLink='http://mmowgli.nps.edu/pleaseWaitGameFull.html',
