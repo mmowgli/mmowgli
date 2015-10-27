@@ -161,12 +161,12 @@ public class CardSummaryListHeader extends AbsoluteLayout implements MmowgliComp
     if (textColorStyle != null)
       content.addStyleName(textColorStyle);
     // cause exception w/ 2 windows?
-    // content.setDebugId(CardTypeManager.getCardCreateClickDebugId(ct));
-    content.setId(CardDebug.getCardCreateClickDebugId(ct));//CardTypeManager.getCardCreateClickDebugId(ct));
+
+    content.setId(CardDebug.getCardCreateClickDebugId(ct));
     topHalfLay.addComponent(content, CARDLISTHEADER_CONTENT_POS);
     
     boolean cantCreateBecauseHiddenParent = checkNoCreateBecauseHiddenTL(parent);
-    boolean cantCreateBecauseParentMarkedNoChild = checkNoCreateBecauseParentMarkedNoChild(parent);
+    boolean cantCreateBecauseParentMarkedNoChild = false; //todo enable with gameswitch checkNoCreateBecauseParentMarkedNoChild(parent);
     
     if (globs.canCreateCard(ct.isIdeaCard())) {
       markedAsNoCreate = false;
@@ -189,7 +189,7 @@ public class CardSummaryListHeader extends AbsoluteLayout implements MmowgliComp
     setWidth(CARDLISTHEADER_W);
     setHeight(HEIGHT_NODRAWER);
 
-    if (!mockupOnly)// && !cantCreateBecauseHiddenParent && !cantCreateBecauseParentMarkedNoChild)
+    if (!mockupOnly)
       topHalfLay.addLayoutClickListener(new LayoutClickListener()
       {
         @Override
@@ -199,7 +199,7 @@ public class CardSummaryListHeader extends AbsoluteLayout implements MmowgliComp
         public void layoutClick(LayoutClickEvent event)
         {
           HSess.init();
-          if(checkNoCreateBecauseHiddenTL(parent) || checkNoCreateBecauseParentMarkedNoChild(parent)) {
+          if(checkNoCreateBecauseHiddenTL(parent)) { //todo enable with game switch || checkNoCreateBecauseParentMarkedNoChild(parent)) {
             if (drawerComponent.isVisible())
               closeDrawer();
           	HSess.close();
@@ -243,6 +243,7 @@ public class CardSummaryListHeader extends AbsoluteLayout implements MmowgliComp
     return c.isHidden() && !me.isGameMaster();
   }
   
+  //todo the "no child" marking needs to be enabled with game switch
   private boolean checkNoCreateBecauseParentMarkedNoChild(Card c)
   {
     if (c == null)

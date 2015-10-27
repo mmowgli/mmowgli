@@ -47,6 +47,7 @@ public class CardMarking implements Serializable
   public static String NOCHILDREN_LABEL        = "No More Children";
   public static String COMMON_KNOWLEDGE_LABEL  = "Common Knowledge";
   public static String HIDDEN_LABEL            = "Hidden";
+  public static String SCENARIO_FAIL_LABEL     = "Scenario Fail";
 
 //@formatter:off
   long   id;          // Primary key, auto-generated.

@@ -205,7 +205,9 @@ public class CardChainPage extends VerticalLayout implements MmowgliComponent,Ne
       CardMarking cm = CardMarking.getTL(o);
       if(cm == CardMarkingManager.getHiddenMarking())
         hiddencm = cm;
-      else 
+      else if(cm == CardMarkingManager.getNoChildrenMarking())
+        ; // todo enable with game switch
+      else       
         markingRadioGroup.addItem(cm);
     }
     

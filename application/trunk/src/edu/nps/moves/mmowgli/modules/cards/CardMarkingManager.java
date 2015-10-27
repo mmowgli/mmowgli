@@ -46,7 +46,7 @@ import edu.nps.moves.mmowgli.markers.HibernateSessionThreadLocalConstructor;
 @HibernateSessionThreadLocalConstructor
 public class CardMarkingManager
 {
-  private static CardMarking superinteresting, nochildren, commonknowledge, hidden;
+  private static CardMarking superinteresting, scenariofail, commonknowledge, hidden, nochildren;
   
   public static CardMarking getSuperInterestingMarking()
   {
@@ -59,6 +59,12 @@ public class CardMarkingManager
     if(nochildren == null)
     	nochildren = getMarking(CardMarking.NOCHILDREN_LABEL);
     return nochildren;
+  }
+  public static CardMarking getScenarioFailMarking()
+  {
+    if(scenariofail == null)
+      scenariofail = getMarking(CardMarking.SCENARIO_FAIL_LABEL);
+    return scenariofail;
   }
   public static CardMarking getCommonKnowledgeMarking()
   {
@@ -84,41 +90,41 @@ public class CardMarkingManager
       return types.get(0);
     return null;
   }
-  /**
-   * @param c
-   * @return
-   */
+
   public static boolean isHidden(Card c)
   {
-    Set<CardMarking> marks = c.getMarking();  // allows more than one, but we're only using one
-    CardMarking hidden = getHiddenMarking();
-    for(CardMarking mark : marks) {
-      if(mark.getId() == hidden.getId())
-        return true;
-    }
-    return false;
+    return _commonIs(c,getHiddenMarking());
   }
   
   public static boolean isSuperInteresting(Card c)
   {
-    Set<CardMarking> marks = c.getMarking();  // allows more than one, but we're only using one
-    CardMarking superInt = getSuperInterestingMarking();
-    for(CardMarking mark : marks)
-      if(mark.getId() == superInt.getId())
-        return true;
-    return false;   
+    return _commonIs(c,getSuperInterestingMarking());
   }
   
   public static boolean isNoChildren(Card c)
   {
-    Set<CardMarking> marks = c.getMarking();  // allows more than one, but we're only using one
-    CardMarking nochild = getNoChildrenMarking();
-    for(CardMarking mark : marks)
-      if(mark.getId() == nochild.getId())
-        return true;
-    return false;   
+    return _commonIs(c, getNoChildrenMarking());
   }
   
+  public static boolean isScenarioFail(Card c)
+  {
+    return _commonIs(c, getScenarioFailMarking());
+  }
+  
+  public static boolean isCommonKnowledge(Card c)
+  {
+    return _commonIs(c, getCommonKnowledgeMarking());
+  }
+  
+  private static boolean _commonIs(Card c, CardMarking cm)
+  {
+    Set<CardMarking> marks = c.getMarking();  // allows more than one, but we're only using one
+    for(CardMarking mark : marks)
+      if(mark.getId() == cm.getId())
+        return true;
+    return false;       
+    
+  }
   public static boolean isHiddenMarking(CardMarking cm)
   {
     return (getHiddenMarking().getId() == cm.getId());
