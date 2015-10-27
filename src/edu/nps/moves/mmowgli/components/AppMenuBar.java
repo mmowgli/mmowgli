@@ -256,6 +256,10 @@ public class AppMenuBar extends CustomComponent implements WantsGameUpdates
     ret.addItem("(Dev only) Add Image to database", addImageClicked).setIcon(VaadinIcons.TOOLS);
     ret.addItem("(Dev only) Display card cache counts", showCardCacheCounts).setIcon(VaadinIcons.TOOLS);
     ret.addItem("(Dev only) Rebuild card caches", rebuildCardCaches).setIcon(VaadinIcons.TOOLS);
+    ret.addSeparator();
+    ret.addItem("Begin resource load-time logging", new ResourceLogging(true)).setIcon(VaadinIcons.TOOLS);
+    ret.addItem("Stop resource load-time logging", new ResourceLogging(false)).setIcon(VaadinIcons.TOOLS);
+
     return ret;
   }
 
@@ -413,6 +417,24 @@ public class AppMenuBar extends CustomComponent implements WantsGameUpdates
       HSess.close();
     }
   };
+  
+  @SuppressWarnings("serial")
+  private class ResourceLogging implements Command
+  {
+    boolean onOff;
+    ResourceLogging(boolean onOff)
+    {
+      this.onOff = onOff;
+    }
+    @Override
+    public void menuSelected(MenuItem selectedItem)
+    {
+      if(onOff)
+        JavaScript.getCurrent().execute(JS_SHIP_STATS_ON); 
+      else
+        JavaScript.getCurrent().execute(JS_SHIP_STATS_OFF); 
+    }
+  }
 
   @SuppressWarnings("serial")
   private Command viewGamePermissionsClicked = new Command()
