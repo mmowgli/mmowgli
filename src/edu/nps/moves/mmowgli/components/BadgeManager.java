@@ -438,7 +438,7 @@ public class BadgeManager implements Runnable
       checkBadgeSixTL(ActionPlan.getTL(ap.getId()));  //@HibernateUserUpdate // ap author
 
     // todo: badge 8, logged in each day
-
+    HSess.closeAndReopen();
     checkLeaderBoardTL(); // top 50 of leader board
     
     HSess.close();
