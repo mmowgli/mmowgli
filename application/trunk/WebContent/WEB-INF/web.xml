@@ -43,6 +43,28 @@
     <param-name>dbName</param-name>
     <param-value>mmowgli_dev</param-value>
   </context-param>
+  <!--
+  <context-param>
+    <description>The db within the mysql server</description>
+    <param-name>debugDbUrl</param-name>
+    <param-value>jdbc:mysql://localhost:9908/</param-value>
+  </context-param>
+  <context-param>
+    <description>The db within the mysql server</description>
+    <param-name>debugDbName</param-name>
+    <param-value>ResourcePerformance</param-value>
+  </context-param>
+  <context-param>
+    <description>The db within the mysql server</description>
+    <param-name>debugDbUser</param-name>
+    <param-value>mmowgli</param-value>
+  </context-param>
+  <context-param>
+    <description>The db within the mysql server</description>
+    <param-name>debugDbPassword</param-name>
+    <param-value>gwtservelet</param-value>
+  </context-param>
+  --> 
   <context-param>
     <description>IP location of mmowgli mysql server</description>
     <param-name>dbUrl</param-name>
