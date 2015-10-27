@@ -178,15 +178,22 @@ public class MmowgliConstants
   // web.xml param names
 //@formatter:off
   public static String WEB_XML_DB_DROPCREATE_KEY    = "dbDropAndCreate"; 
+
   public static String WEB_XML_DB_NAME_KEY          = "dbName"; 
   public static String WEB_XML_DB_PASSWORD_KEY      = "dbPassword";
   public static String WEB_XML_DB_URL_KEY           = "dbUrl"; 
   public static String WEB_XML_DB_USER_KEY          = "dbUser"; 
+  
   public static String WEB_XML_PIIDB_URL_KEY        = "piiDbUrl";
   public static String WEB_XML_PIIDB_NAME_KEY       = "piiDbName";
   public static String WEB_XML_PIIDB_USER_KEY       = "piiDbUser";
   public static String WEB_XML_PIIDB_PASSWORD_KEY   = "piiDbPassword";
   
+  public static String WEB_XML_DEBUG_DB_URL_KEY      = "debugDbUrl";
+  public static String WEB_XML_DEBUG_DB_NAME_KEY     = "debugDbName";
+  public static String WEB_XML_DEBUG_DB_USER_KEY     = "debugDbUser";
+  public static String WEB_XML_DEBUG_DB_PASSWORD_KEY = "debugDbPassword";
+    
   public static String WEB_XML_C3P0_MAX_SIZE          = "c3p0MaxSize";
   public static String WEB_XML_C3P0_MIN_SIZE          = "c3p0MinSize";
   public static String WEB_XML_C3P0_ACQUIRE_INCREMENT = "c3p0AcquireIncrement";
@@ -313,6 +320,11 @@ public class MmowgliConstants
   public static final String SESSION_REPORT_ITEM_DELIMITER_WIRE = "&yen;";
   public static final String SESSION_REPORT_FIELD_DELIMITER = "\t";
   public static final String SESSION_REPORT_ITEM_DELIMITER = "\n";
+  
+  // Javascript functions used from Java
+  public static final String JS_SHIP_STATS     = "shipStats()";    //mmowgli1.js
+  public static final String JS_SHIP_STATS_ON  = "shipStatsOn()";  //mmowgli1.js
+  public static final String JS_SHIP_STATS_OFF = "shipStatsOff()"; //mmowgli1.js
   
   // Debug IDs for auto testing
   public static String GOOD_IDEA_CARD_OPEN_TEXT = "good_idea_card_open_text";

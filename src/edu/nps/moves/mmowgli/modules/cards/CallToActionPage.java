@@ -35,6 +35,7 @@ import edu.nps.moves.mmowgli.components.VideoWithRightTextPanel;
 import edu.nps.moves.mmowgli.db.Game;
 import edu.nps.moves.mmowgli.db.Media;
 import edu.nps.moves.mmowgli.db.MovePhase;
+import edu.nps.moves.mmowgli.hibernate.HSess;
 import edu.nps.moves.mmowgli.markers.HibernateSessionThreadLocalConstructor;
 import edu.nps.moves.mmowgli.utility.IDNativeButton;
 
@@ -69,6 +70,7 @@ public class CallToActionPage extends HorizontalLayout implements MmowgliCompone
   
   public void initGui()
   {
+    Object sessKey = HSess.checkInit();
     Label spacer = new Label();
     spacer.setWidth(CALLTOACTION_HOR_OFFSET_STR);
     addComponent(spacer);
@@ -103,6 +105,7 @@ public class CallToActionPage extends HorizontalLayout implements MmowgliCompone
     butt.setDescription("View existing cards and play new ones");
     mainVl.addComponent(butt);
     mainVl.setComponentAlignment(butt, Alignment.MIDDLE_CENTER);
+    HSess.checkClose(sessKey);
   }
   /*
    * View interface

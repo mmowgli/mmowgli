@@ -32,16 +32,21 @@ import org.hibernate.Session;
 import org.vaadin.cssinject.CSSInject;
 
 import com.vaadin.navigator.Navigator;
-import com.vaadin.server.*;
+import com.vaadin.server.Page;
+import com.vaadin.server.VaadinRequest;
+import com.vaadin.server.VaadinSession;
 import com.vaadin.ui.*;
 
 import edu.nps.moves.mmowgli.components.AppMenuBar;
 import edu.nps.moves.mmowgli.db.*;
 import edu.nps.moves.mmowgli.hibernate.DB;
 import edu.nps.moves.mmowgli.hibernate.HSess;
-import edu.nps.moves.mmowgli.markers.*;
+import edu.nps.moves.mmowgli.markers.HasUUID;
+import edu.nps.moves.mmowgli.markers.HibernateOpened;
+import edu.nps.moves.mmowgli.markers.MmowgliCodeEntry;
 import edu.nps.moves.mmowgli.messaging.*;
 import edu.nps.moves.mmowgli.modules.registrationlogin.RegistrationPageBase;
+import edu.nps.moves.mmowgli.utility.BrowserPerformanceLogger;
 import edu.nps.moves.mmowgli.utility.MediaLocator;
 import edu.nps.moves.mmowgli.utility.MiscellaneousMmowgliTimer.MSysOut;
 
@@ -77,7 +82,7 @@ abstract public class Mmowgli2UI extends UI implements WantsMoveUpdates, WantsMo
   private boolean firstUI = false;
   protected Mmowgli2UI(boolean firstUI)
   {
-    this.firstUI = firstUI;
+    this.firstUI = firstUI;    
     setPushParameters();
   }
   
@@ -93,6 +98,9 @@ abstract public class Mmowgli2UI extends UI implements WantsMoveUpdates, WantsMo
   protected void init(VaadinRequest request)
   {  
     MSysOut.println(SYSTEM_LOGS,"Into "+(firstUI?"Mmowgli2UILogin":"Mmowgli2UISubsequent") +".init()");
+    
+    BrowserPerformanceLogger.registerCurrentPage();
+    
     AppMaster.instance().oneTimeSetAppUrlFromUI();
     
     Object sessKey = HSess.checkInit();
@@ -211,6 +219,7 @@ abstract public class Mmowgli2UI extends UI implements WantsMoveUpdates, WantsMo
   public void navigateTo(AppEvent ev)
   {
     navigator.navigateTo(ev.getFragmentString());
+    JavaScript.getCurrent().execute(JS_SHIP_STATS);  // if debug enabled will update load numbers
   }
   
   public boolean isUiFullyInitted()
