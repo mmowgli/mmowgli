@@ -276,9 +276,11 @@ public class UserExporter extends BaseExporter
     // ExternalResource extR = (ExternalResource)app.globs().mediaLocator().locate(u.getAvatar().getMedia());
     // Hack
     Avatar av = u.getAvatar();
-    Media med = av.getMedia();
-    String url = med.getUrl();
-    uElem.setAttribute("iconUrl", "https://web.mmowgli.nps.edu/mmowMedia/images/avatars/"+url);
+    if(av != null) {              // incomplete login check
+      Media med = av.getMedia();
+      String url = med.getUrl();
+      uElem.setAttribute("iconUrl", "https://web.mmowgli.nps.edu/mmowMedia/images/avatars/"+url);
+    }
     
     addElementWithText(uElem,"Affiliation",toUtf8(nn(u.getAffiliation()).trim()));
     addElementWithText(uElem,"Location",toUtf8(nn(u.getLocation())));
