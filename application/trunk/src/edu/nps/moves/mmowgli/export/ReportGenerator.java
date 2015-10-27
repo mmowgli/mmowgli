@@ -71,15 +71,20 @@ public class ReportGenerator implements Runnable
   public ReportGenerator(AppMaster appMaster)
   {
     //this.appMaster = appMaster;
+    startThread();
+  }
+  
+  private void startThread()
+  {
     thread = new Thread(this,"ReportGeneratorThread");
     // Set thread priority down to not interfere with game play
     boolean priSense = Thread.MIN_PRIORITY < Thread.NORM_PRIORITY;
     thread.setPriority(priSense?Thread.NORM_PRIORITY-1:Thread.NORM_PRIORITY+1);
     
     thread.setDaemon(true);
-    thread.start();
+    thread.start();    
   }
-
+  
   public void kill()
   {
     killed = true;
@@ -89,7 +94,7 @@ public class ReportGenerator implements Runnable
     poke();
   }
 
-   @Override
+  @Override
   public void run()
   {
     while (!initted()) {
@@ -156,6 +161,7 @@ public class ReportGenerator implements Runnable
           }
           System.err.println("Report-generator shutting down.");
           killed = true;
+          thread=null;
           HSess.close();  // properly handles already closed
           return; // kills thread
         }
@@ -292,9 +298,16 @@ public class ReportGenerator implements Runnable
   public void poke()
   {
     MSysOut.println(REPORT_LOGS, "ReportGenerator.poke()");
-    if(asleep) {
-      poked = true;
-      thread.interrupt();
+    poked = true;
+    if (thread == null) {
+      killed=false;
+      startThread();
+    }
+    else {
+      if (asleep) {
+        //poked = true;
+        thread.interrupt();
+      }
     }
   }
 }
