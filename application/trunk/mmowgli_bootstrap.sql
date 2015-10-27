@@ -595,9 +595,10 @@ LOCK TABLES `CardMarking` WRITE;
 INSERT INTO `CardMarking` (`id`, `description`, `label`)
 VALUES
 	(1,'Use sparingly','Super-Interesting'),
-	(2,'No more children','No More Children'),
+	(2,'Scenario fail','Scenario Fail'),
 	(3,'Self-evident','Common Knowledge'),
-	(4,'Bad behavior or sensitive information','Hidden');
+	(4,'Bad behavior or sensitive information','Hidden')
+	(5,'No more children','No More Children');
 
 /*!40000 ALTER TABLE `CardMarking` ENABLE KEYS */;
 UNLOCK TABLES;
