@@ -575,7 +575,9 @@ public class CardSummaryListHeader extends AbsoluteLayout implements MmowgliComp
   {
   	parent = Card.getTL(parent.getId()); // refresh in case markings have changed
   	parent.getMarking(); // make sure it's retrieved
-  	if (drawerComponent.isVisible())
-      closeDrawer();
+  	
+  	// This would close the drawer (edit drop-down) of ANYBODY who is playing off this card at the moment, losing their work
+  	//if (drawerComponent.isVisible())
+    //  closeDrawer();
   }
 }
