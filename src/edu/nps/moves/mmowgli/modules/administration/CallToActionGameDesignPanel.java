@@ -43,12 +43,12 @@ import edu.nps.moves.mmowgli.db.MovePhase;
 public class CallToActionGameDesignPanel extends AbstractGameBuilderPanel implements MovePhaseChangeListener
 {
   private static final long serialVersionUID = -5151119059574019023L;
-
+  private VideoChangerComponent vidComp;
   public CallToActionGameDesignPanel(MovePhase phase, AuxiliaryChangeListener auxLis, GameDesignGlobals globs)
   {
     super(false,globs);
     
-    addEditComponent("1 Video", "MovePhase.callToActionBriefingVideo",new VideoChangerComponent(phase,"setCallToActionBriefingVideo",phase.getCallToActionBriefingVideo(),globs)).auxListener = auxLis;
+    addEditComponent("1 Video", "MovePhase.callToActionBriefingVideo",vidComp=new VideoChangerComponent(phase,"setCallToActionBriefingVideo",phase.getCallToActionBriefingVideo(),globs)).auxListener = auxLis;
     addEditLine("2 Summary", "MovePhase.callToActionBriefingSummary", phase, phase.getId(), "CallToActionBriefingSummary").auxListener = auxLis;
     EditLine edLine = addEditLine("3 Text ","MovePhase.callToActionBriefingText",phase, phase.getId(), "CallToActionBriefingText");
     TextArea ta = (TextArea)edLine.ta;
@@ -69,7 +69,7 @@ public class CallToActionGameDesignPanel extends AbstractGameBuilderPanel implem
   {
     okToUpdateDbFlag = false; 
     changeMovePhase(newPhase);
-    // todo do something with vidComp
+    vidComp.setNewPhase(newPhase, newPhase.getCallToActionBriefingVideo());
     okToUpdateDbFlag = true; 
   }
 

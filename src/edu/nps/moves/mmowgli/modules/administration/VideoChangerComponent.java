@@ -83,6 +83,15 @@ public class VideoChangerComponent extends HorizontalLayout implements ClickList
     butt.setEnabled(!butt.isReadOnly());
   }
   
+  public void setNewPhase(MovePhase mp, Media m)
+  {
+    this.mp = mp;
+    this.currentMedia = m;
+    roTF.setReadOnly(false);
+    roTF.setValue(currentMedia==null?"":currentMedia.getUrl());
+    roTF.setReadOnly(true);    
+  }
+
   @Override
   public void buttonClick(ClickEvent event)
   {
