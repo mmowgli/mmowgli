@@ -634,7 +634,7 @@ public class RegistrationPageBase extends VerticalLayout implements Button.Click
       doOtherUserInit(_usr);
       _usr.setOkSurvey(okSurvey);  // saved above
       Game g = Game.getTL();
-      _usr.setRegisteredInMove(g.getCurrentMove());
+      _usr.setRegisteredInMove(g.getCurrentMove());  // this is now redundant...done on new User()
       
       User.updateTL(_usr);
       

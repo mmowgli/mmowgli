@@ -212,7 +212,8 @@ public class RegistrationPagePopupFirstA extends MmowgliDialog
       VHibPii.save(uPii);
 
       u.setAvatar(Avatar.getTL(1L));  // put something in there to avoid null ptrs
-      
+      u.setRegisteredInMove(Game.getTL().getCurrentMove());
+
       u.setLevel(Level.getFirstLevelTL());
       u.setRegisterDate(new Date());
       VHibPii.setUserPiiEmail(u.getId(), email);
