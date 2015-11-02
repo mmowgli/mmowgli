@@ -934,51 +934,60 @@ public class AppMaster
   
   public void killAllSessionsTL()
   {
-    // First send a message to everybody else
     GameLinks links = GameLinks.getTL();
     String thanks = links.getThanksForPlayingLink();
     
-    Iterator<VaadinSession> itr = sessionsInThisMmowgliNode.iterator();
-    while(itr.hasNext()) {
-      VaadinSession sess = itr.next();
-      for(UI ui : sess.getUIs()) {
-        ui.getPage().setLocation(thanks);
-        ui.close();
+    synchronized (sessionsInThisMmowgliNode) {
+      Iterator<VaadinSession> itr = sessionsInThisMmowgliNode.iterator();
+      while (itr.hasNext()) {
+        VaadinSession sess = itr.next();
+        for (UI ui : sess.getUIs()) {
+          ui.getPage().setLocation(thanks);
+          ui.close();
+        }
+        sess.close();
       }
-      sess.close();
     }
   }
   
   public void pushPingAllSessionsInThisClusterNode()
   {
-  	Iterator<VaadinSession> itr = sessionsInThisMmowgliNode.iterator();
-    while(itr.hasNext()) {
-      VaadinSession sess = itr.next();
-      for(final UI ui : sess.getUIs()) {
-      	if(!ui.isClosing() && ui instanceof Mmowgli2UI) {
-          ui.access(new Runnable() {
-        	  public void run() {
-        		  ((Mmowgli2UI)ui).pingPush();
-        		  ui.push(); // empty push to keep connection alive over Akamai
-        		  MSysOut.println(TICK_LOGS,"Keep alive push, ui "+ui.hashCode());
-        	  }
-          });
-      	}
+    synchronized (sessionsInThisMmowgliNode) {
+      Iterator<VaadinSession> itr = sessionsInThisMmowgliNode.iterator();
+      while (itr.hasNext()) {
+        VaadinSession sess = itr.next();
+        for (final UI ui : sess.getUIs()) {
+          if (!ui.isClosing() && ui instanceof Mmowgli2UI) {
+            ui.access(new Runnable()
+            {
+              public void run()
+              {
+                ((Mmowgli2UI) ui).pingPush();
+                ui.push(); // empty push to keep connection alive over Akamai
+                MSysOut.println(TICK_LOGS, "Keep alive push, ui " + ui.hashCode());
+              }
+            });
+          }
+        }
       }
-    }  	
+    }
   }
   
-  private HashSet<VaadinSession> sessionsInThisMmowgliNode = new HashSet<VaadinSession>();
+  private Set<VaadinSession> sessionsInThisMmowgliNode = Collections.synchronizedSet(new HashSet<VaadinSession>());
   
-  // The synchronized methods below protect concurrent access to the hashset  
-  private synchronized void removeVaadinSession(VaadinSession sess)
+  // The synchronized blocks below protect concurrent access to the hashset  
+  private void removeVaadinSession(VaadinSession sess)
   {
-    sessionsInThisMmowgliNode.remove(sess);   
+    synchronized (sessionsInThisMmowgliNode) {
+      sessionsInThisMmowgliNode.remove(sess);
+    }
   }
   
   private synchronized void addVaadinSession(VaadinSession sess)
   {
-    sessionsInThisMmowgliNode.add(sess);    
+    synchronized (sessionsInThisMmowgliNode) {
+      sessionsInThisMmowgliNode.add(sess); 
+    }
   }
   
    /**
@@ -1074,38 +1083,40 @@ public class AppMaster
   {
     return "<b>Server</b>\t<b>User</b>\t<b>ID</b>\t<b>Start</b>\t<b>IP</b>\t<b>Browser</b>\t<b>Version</b>\t<b>OS</b>"+SESSION_REPORT_ITEM_DELIMITER;
   }
-  
-  // Synchronized to protect hashmap
+
   public synchronized StringBuilder getLocalNodeReportRaw()
   {
     StringBuilder sb = new StringBuilder();
-    Iterator<VaadinSession> itr = sessionsInThisMmowgliNode.iterator();
+    synchronized (sessionsInThisMmowgliNode) { // Synchronized to protect hashset
+      Iterator<VaadinSession> itr = sessionsInThisMmowgliNode.iterator();
 
-    while(itr.hasNext()) {
-      VaadinSession sess = itr.next();
-      MmowgliSessionGlobals sGlobs = sess.getAttribute(MmowgliSessionGlobals.class);
-      // empty first is servername
-      sb.append(SESSION_REPORT_FIELD_DELIMITER); //" User ");
-      String uname = sGlobs.getUserName();
-      sb.append(uname.length()<=0?"not logged in":uname);
-      sb.append(SESSION_REPORT_FIELD_DELIMITER);
-      Serializable id = sGlobs.getUserID();
-      sb.append(id==null?" ":id);
-      sb.append(SESSION_REPORT_FIELD_DELIMITER); //" at ");
-      sb.append(sGlobs.getUserLoginTimeData());
-      sb.append(SESSION_REPORT_FIELD_DELIMITER); //" from ");
-      sb.append(sGlobs.getBrowserAddress());
-      sb.append(SESSION_REPORT_FIELD_DELIMITER); //" using ");
-      sb.append(sGlobs.getBrowserMiniType()); 
-      sb.append(SESSION_REPORT_FIELD_DELIMITER);
-      sb.append(sGlobs.getBrowserMajorVersionString());
-      sb.append(SESSION_REPORT_FIELD_DELIMITER);
-      sb.append(sGlobs.getBrowserOS());
-      
-      sb.append(SESSION_REPORT_ITEM_DELIMITER);
-    }   
+      while (itr.hasNext()) {
+        VaadinSession sess = itr.next();
+        MmowgliSessionGlobals sGlobs = sess.getAttribute(MmowgliSessionGlobals.class);
+        // empty first is servername
+        sb.append(SESSION_REPORT_FIELD_DELIMITER); // " User ");
+        String uname = sGlobs.getUserName();
+        sb.append(uname.length() <= 0 ? "not logged in" : uname);
+        sb.append(SESSION_REPORT_FIELD_DELIMITER);
+        Serializable id = sGlobs.getUserID();
+        sb.append(id == null ? " " : id);
+        sb.append(SESSION_REPORT_FIELD_DELIMITER); // " at ");
+        sb.append(sGlobs.getUserLoginTimeData());
+        sb.append(SESSION_REPORT_FIELD_DELIMITER); // " from ");
+        sb.append(sGlobs.getBrowserAddress());
+        sb.append(SESSION_REPORT_FIELD_DELIMITER); // " using ");
+        sb.append(sGlobs.getBrowserMiniType());
+        sb.append(SESSION_REPORT_FIELD_DELIMITER);
+        sb.append(sGlobs.getBrowserMajorVersionString());
+        sb.append(SESSION_REPORT_FIELD_DELIMITER);
+        sb.append(sGlobs.getBrowserOS());
+
+        sb.append(SESSION_REPORT_ITEM_DELIMITER);
+      }
+    }
     return sb;
   }
+
   public static int SESS_RPT_SERVER_COLUMN = 0;
   public static int SESS_RPT_NAME_COLUMN = 1;
   public static int SESS_RPT_ID_COLUMN = 2;
